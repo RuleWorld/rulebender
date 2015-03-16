@@ -1,0 +1,6 @@
+# Who? #
+
+I've been working on RuleBender since nearly the beginning.
+
+### TODO ###
+photos, contacts, 'n'at

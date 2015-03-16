@@ -1,0 +1,678 @@
+# Introduction #
+
+This How-To builds on the [tutorial for getting BNGLModel objects](HowToGetBNGLModelAndListenForEditors.md) from the BNGLEditor when it is opened or changed.  We will be using the code from that example as a base, so make sure you can get it to work before you move on.
+
+Specifically, this tutorial will show how to build a model from and abstract syntax tree (!AST) that is retrieved from BNGLModel using the Builder Pattern.
+
+## Relevant Eclipse Frameworks ##
+
+Nothing new for this tutorial
+
+## The Builder Pattern ##
+
+The Builder Pattern is used when there is a complex data structure or file that needs to be read in order to construct another model.  It requires one Reader class that parses the complex data structure, an Interface of methods to be called when features of the model are read by the Reader, and many Builder objects that implement the Interface and construct a custom model.
+
+The Reader class is initialized with an instance of a Builder (that implements the interface), and then reads the complex data/file.  As the Reader processes the data, it calls the methods in the Builder which then builds the object.  (see the [WikiPedia page](http://en.wikipedia.org/wiki/Builder_pattern)).
+
+In the case of RuleBender, the !AST is an !XML based representation of a BNGL model.  The !BNGLASTReader.java class is the Reader for that !XML data.  !BNGLModelBuilderInterface.java is the Interface that defines the methods that will be called when elements are encountered (i.e. molecules, reactions, observables).   The Builder classes will be what you will write, but there is an example of one in `rulebender.contactmap.models.CMapModelBuilder.java`.
+
+## Relevant RuleBender Classes ##
+
+  * rulebender.editors.bngl.BNGLEditor: The BNGLEditor is used in the partActivated method, as in the previous tutorial, to get a model object and listen for changes to it.
+  * rulebender.editors.bngl.model.BNGASTReader: The BNGASTReader is the class that actually
+  * rulebender.editors.bngl.model.BNGLModel
+  * rulebender.editors.bngl.model.BNGLModelBuilderInterface
+  * rulebender.editors.bngl.model.ruledata.
+
+# Steps #
+
+> ## 1. Start with the ExampleView.java code that was defined in the [previous tutorial](HowToGetBNGLModelAndListenForEditors.md) ##
+
+```
+package rulebender.example;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.IPartListener2;
+import org.eclipse.ui.IWorkbenchPartReference;
+import org.eclipse.ui.part.ViewPart;
+
+import rulebender.editors.bngl.BNGLEditor;
+import rulebender.editors.bngl.model.BNGLModel;
+
+public class ExampleView extends ViewPart implements IPartListener2
+{
+
+	// A label for output
+	private Label m_label;
+	
+	// Generally nothing happens in the constructor
+	public ExampleView() {
+	
+	}
+
+	// This is where the view itself is defined using JFace widgets or SWT.
+	@Override
+	public void createPartControl(Composite parent) 
+	{
+		m_label = new Label(parent, SWT.BORDER);
+		m_label.setText("Hello from a new view!!!");
+
+		m_myModel = new ArrayList<String>();
+		
+		// Register the view as a part listener.
+		getSite().getPage().addPartListener(this);
+	}
+
+	// This gets called when the view gets focus from the user.  
+	// You do not have to implement it, but you can tell any of the
+	// view elements that you define about the focus event if you want to.
+	@Override
+	public void setFocus() {}
+
+	@Override
+	public void partActivated(IWorkbenchPartReference partRef) 
+	{
+		// If it's a bngl editor.   (Cannot remember why there is id and instanceof checking
+		// but I would not change it without serious testing.)
+		if(partRef.getId().equals("rulebender.editors.bngl") && partRef.getPart(false) instanceof BNGLEditor)
+		{	
+			// Get the model.
+			BNGLModel model = ((BNGLEditor) partRef.getPart(false)).getModel();
+		
+			// Create a property changed listener for when files are saved and 
+			// models are updated.
+			PropertyChangeListener pcl = new PropertyChangeListener()
+			{
+				public void propertyChange(PropertyChangeEvent propertyChangeEvent) 
+				{
+					String filePath = ((BNGLModel) propertyChangeEvent.getSource()).getPathID();
+					String propertyName = propertyChangeEvent.getPropertyName();
+					
+					if(propertyName.equals(BNGLModel.AST))
+					{
+						//Update the display object that is associated with the path and ast. 
+						m_label.setText("Property Changed on AST for " + filePath);
+						System.out.println("Property Changed on AST for " + filePath);
+					}
+				}
+			};
+				
+			model.addPropertyChangeListener(pcl);
+						
+			m_label.setText("New model opened!  " + model.getPathID());
+		} // end if it's an editor block	
+	}
+	
+	private void createAndSetMyModel(BNGLModel model)
+	{
+		
+	}
+
+	@Override
+	public void partBroughtToTop(IWorkbenchPartReference partRef) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void partClosed(IWorkbenchPartReference partRef) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void partDeactivated(IWorkbenchPartReference partRef) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void partOpened(IWorkbenchPartReference partRef) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void partHidden(IWorkbenchPartReference partRef) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void partVisible(IWorkbenchPartReference partRef) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void partInputChanged(IWorkbenchPartReference partRef) {
+		// TODO Auto-generated method stub
+		
+	}
+}
+
+```
+
+## 2. Create a new class `ExampleBuilder.java` that implements BNGLModelBuilderInterface ##
+
+```
+package rulebender.example;
+
+import rulebender.contactmap.models.Molecule;
+import rulebender.editors.bngl.model.BNGLModelBuilderInterface;
+import rulebender.editors.bngl.model.ruledata.RuleData;
+
+public class ExampleModelBuilder implements BNGLModelBuilderInterface 
+{
+
+	@Override
+	public void parameterFound(String id, String type, String value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void foundCompartment(String id, String volume, String outside) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void foundMoleculeInSeedSpecies(Molecule molecule) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void foundBondInSeedSpecies(String moleName1, String compName1,
+			int compID1, String state1, String moleName2, String compName2,
+			int compID2, String state2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void foundMoleculeType(Molecule molecule) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void foundRule(RuleData ruleData) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void foundObservable(String observableID, String observableName,
+			String observableType) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void foundObservablePattern(String observableID, String patternID) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void foundObservablePatternMolecule(String observableID,
+			String patternID, String moleculeID, String moleculeName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void foundObservablePatternMoleculeComponent(String observableID,
+			String patternID, String moleculeID, String componentID,
+			String componentName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void foundObservablePatternMoleculeComponentState(
+			String observableID, String patternID, String moleculeID,
+			String componentID, String componentState) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}
+
+```
+
+## 3. Design your data structure. ##
+
+Before we implement a model builder, we have to know what our model is.  To keep things simple, our data structure is going to be a list of molecules, but as you can see in the BNGLModelBuilderInterface it is possible to build a model using all of the information from a BNGL file.
+
+```
+package rulebender.example;
+
+import java.util.ArrayList;
+
+public class ExampleModel 
+{
+	private ArrayList<String> m_moleculeList;
+	
+	public ExampleModel()
+	{
+		m_moleculeList = new ArrayList<String>();
+	}
+	
+	public void add(String mol)
+	{
+		m_moleculeList.add(mol);
+	}
+	
+	public String toString()
+	{
+		String toReturn = "";
+				
+		for(String s : m_moleculeList)
+			toReturn += "\t" + s + "\n";
+				
+		return toReturn;
+	}
+}
+
+```
+
+
+## 4. Implement the methods in ExampleBuilder.java ##
+
+As the BNGLASTReader encounters the elements of the BNGL it calls the appropriate interface methods with information in the form of objects or primitives that describe the element.   As just said, our 'model' is going to be a list of all of the molecules that are found in the model.  To utilize the builder model we need to implement the methods of the interface that give us molecule information: `foundMoleculeInSeedSpecies(Molecule molecule) ` and `foundMoleculeType(Molecule molecule)`.
+
+In ExampleModelBuilder.java, add the following field, constructor, and method implementations:
+```
+ExampleModel m_exampleModel;
+	
+	public ExampleModelBuilder()
+	{
+		m_exampleModel = new ExampleModel();
+	}
+	
+	@Override
+	public void foundMoleculeInSeedSpecies(Molecule molecule) 
+	{
+		m_exampleModel.add(molecule.getName());
+	}
+	
+	public ExampleModel getModel()
+	{
+		return m_exampleModel;
+	}
+	
+	@Override
+	public void foundMoleculeType(Molecule molecule) 
+	{
+		m_exampleModel.add(molecule.getName());
+	}
+
+```
+
+## 5. Use an instance of BNGASTReader to build the object ##
+
+Now, we need to actually build the model when the abstract syntax tree is updated.  For this, we will edit the ExampleView.java class that was created in the [previous tutorial](HowToGetBNGLModelAndListenForEditors.md).
+
+First we will add a data field for our model object: `private ExampleModel m_myModel;`
+
+Next, we will change the two lines in `partActivated(IWorkbenchPartReference partRef) ` where we originally set the text on m\_label.
+
+```
+@Override
+	public void partActivated(IWorkbenchPartReference partRef) 
+	{
+		// If it's a bngl editor.   (Cannot remember why there is id and instanceof checking
+		// but I would not change it without serious testing.)
+		if(partRef.getId().equals("rulebender.editors.bngl") && partRef.getPart(false) instanceof BNGLEditor)
+		{	
+			// Get the model.
+			final BNGLModel model = ((BNGLEditor) partRef.getPart(false)).getModel();
+		
+			// Create a property changed listener for when files are saved and 
+			// models are updated.
+			PropertyChangeListener pcl = new PropertyChangeListener()
+			{
+				public void propertyChange(PropertyChangeEvent propertyChangeEvent) 
+				{
+					String filePath = ((BNGLModel) propertyChangeEvent.getSource()).getPathID();
+					String propertyName = propertyChangeEvent.getPropertyName();
+					
+					if(propertyName.equals(BNGLModel.AST))
+					{
+                                                 //NEW!
+						//Update the display object that is associated with the path and ast. 
+						updateModel(model);
+						System.out.println("Property Changed on AST for " + filePath);
+					}
+				}
+			};
+			
+	                // NEW!
+			model.addPropertyChangeListener(pcl);
+			
+			updateModel(model);
+		} // end if it's an editor block	
+	}
+	
+```
+
+Finally, we will fill in `updateModel(BNGLModel model` method.  We use our builder and reader to construct the model, and then update the view with the `toString()` method for our model.
+
+```
+private void updateModel(BNGLModel model)
+{
+	// Create the builder instance.
+	ExampleModelBuilder builder = new ExampleModelBuilder();
+		
+	// Create the reader instance with the builder as input.
+	BNGASTReader reader = new BNGASTReader(builder);
+		
+	// Build the model.
+	reader.buildWithAST(model.getAST());
+		
+	// Get the model.
+	m_myModel = builder.getModel();
+	
+	// Update the display.
+	m_label.setText(m_myModel.toString());	
+}
+```
+
+If you run RuleBender, display the view, and open a file you should see something like the screenshot below where all of the molecule names are displayed in a list.
+
+![http://rulebender.googlecode.com/svn/wiki/imgs/howTo/modelBuilder/modelBuilderFinal.png](http://rulebender.googlecode.com/svn/wiki/imgs/howTo/modelBuilder/modelBuilderFinal.png)
+
+
+# Full Source #
+The full source code examples are in the repository in rulebender.example, or the text is shown below.
+
+## ExampleView.java ##
+```
+
+package rulebender.example;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.IPartListener2;
+import org.eclipse.ui.IWorkbenchPartReference;
+import org.eclipse.ui.part.ViewPart;
+
+import rulebender.editors.bngl.BNGLEditor;
+import rulebender.editors.bngl.model.BNGASTReader;
+import rulebender.editors.bngl.model.BNGLModel;
+
+public class ExampleView extends ViewPart implements IPartListener2
+{
+
+	// A label for output
+	private Label m_label;
+	
+	private ExampleModel m_myModel;
+	
+	// Generally nothing happens in the constructor
+	public ExampleView() {
+	
+	}
+
+	// This is where the view itself is defined using JFace widgets or SWT.
+	@Override
+	public void createPartControl(Composite parent) 
+	{
+		m_label = new Label(parent, SWT.BORDER);
+		m_label.setText("Hello from a new view!!!");
+
+		m_myModel = new ExampleModel();
+		
+		// Register the view as a part listener.
+		getSite().getPage().addPartListener(this);
+	}
+
+	// This gets called when the view gets focus from the user.  
+	// You do not have to implement it, but you can tell any of the
+	// view elements that you define about the focus event if you want to.
+	@Override
+	public void setFocus() {}
+
+	@Override
+	public void partActivated(IWorkbenchPartReference partRef) 
+	{
+		// If it's a bngl editor.   (Cannot remember why there is id and instanceof checking
+		// but I would not change it without serious testing.)
+		if(partRef.getId().equals("rulebender.editors.bngl") && partRef.getPart(false) instanceof BNGLEditor)
+		{	
+			// Get the model.
+			final BNGLModel model = ((BNGLEditor) partRef.getPart(false)).getModel();
+		
+			// Create a property changed listener for when files are saved and 
+			// models are updated.
+			PropertyChangeListener pcl = new PropertyChangeListener()
+			{
+				public void propertyChange(PropertyChangeEvent propertyChangeEvent) 
+				{
+					String filePath = ((BNGLModel) propertyChangeEvent.getSource()).getPathID();
+					String propertyName = propertyChangeEvent.getPropertyName();
+					
+					if(propertyName.equals(BNGLModel.AST))
+					{
+						//Update the display object that is associated with the path and ast. 
+						updateModel(model);
+						System.out.println("Property Changed on AST for " + filePath);
+					}
+				}
+			};
+				
+			model.addPropertyChangeListener(pcl);
+			
+			updateModel(model);
+		} // end if it's an editor block	
+	}
+	
+	private void updateModel(BNGLModel model)
+	{
+		// Create the builder instance.
+		ExampleModelBuilder builder = new ExampleModelBuilder();
+		
+		// Create the reader instance with the builder as input.
+		BNGASTReader reader = new BNGASTReader(builder);
+		
+		// Build the model.
+		reader.buildWithAST(model.getAST());
+		
+		// Get the model.
+		m_myModel = builder.getModel();
+		
+		// Update the display.
+		m_label.setText(m_myModel.toString());	
+	}
+
+	@Override
+	public void partBroughtToTop(IWorkbenchPartReference partRef) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void partClosed(IWorkbenchPartReference partRef) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void partDeactivated(IWorkbenchPartReference partRef) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void partOpened(IWorkbenchPartReference partRef) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void partHidden(IWorkbenchPartReference partRef) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void partVisible(IWorkbenchPartReference partRef) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void partInputChanged(IWorkbenchPartReference partRef) {
+		// TODO Auto-generated method stub
+		
+	}
+}
+```
+
+## ExampleModel.java ##
+
+```
+package rulebender.example;
+
+import java.util.ArrayList;
+
+public class ExampleModel 
+{
+	private ArrayList<String> m_moleculeList;
+	
+	public ExampleModel()
+	{
+		m_moleculeList = new ArrayList<String>();
+	}
+	
+	public void add(String mol)
+	{
+		m_moleculeList.add(mol);
+	}
+	
+	public String toString()
+	{
+		String toReturn = "Molecules:\n";
+				
+		for(String s : m_moleculeList)
+			toReturn += "\t" + s + "\n";
+				
+		return toReturn;
+	}
+}
+```
+
+## ExampleModelBuilder.java ##
+```
+package rulebender.example;
+
+import rulebender.contactmap.models.Molecule;
+import rulebender.editors.bngl.model.BNGLModelBuilderInterface;
+import rulebender.editors.bngl.model.ruledata.RuleData;
+
+public class ExampleModelBuilder implements BNGLModelBuilderInterface 
+{
+	
+	ExampleModel m_exampleModel;
+	
+	public ExampleModelBuilder()
+	{
+		m_exampleModel = new ExampleModel();
+	}
+	
+	@Override
+	public void foundMoleculeInSeedSpecies(Molecule molecule) 
+	{
+		m_exampleModel.add(molecule.getName());
+	}
+	
+	public ExampleModel getModel()
+	{
+		return m_exampleModel;
+	}
+	
+	@Override
+	public void foundMoleculeType(Molecule molecule) 
+	{
+		m_exampleModel.add(molecule.getName());
+	}
+
+
+	@Override
+	public void parameterFound(String id, String type, String value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void foundCompartment(String id, String volume, String outside) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void foundBondInSeedSpecies(String moleName1, String compName1,
+			int compID1, String state1, String moleName2, String compName2,
+			int compID2, String state2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void foundRule(RuleData ruleData) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void foundObservable(String observableID, String observableName,
+			String observableType) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void foundObservablePattern(String observableID, String patternID) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void foundObservablePatternMolecule(String observableID,
+			String patternID, String moleculeID, String moleculeName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void foundObservablePatternMoleculeComponent(String observableID,
+			String patternID, String moleculeID, String componentID,
+			String componentName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void foundObservablePatternMoleculeComponentState(
+			String observableID, String patternID, String moleculeID,
+			String componentID, String componentState) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}
+```

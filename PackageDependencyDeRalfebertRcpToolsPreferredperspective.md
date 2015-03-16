@@ -1,0 +1,3 @@
+# Package dependency graph for de.ralfebert.rcp.tools.preferredperspective #
+For class level and interactive graphs, use the CDA tool (http://www.dependency-analyzer.org/) on the RuleBender class files.
+![http://rulebender.googlecode.com/svn/wiki/imgs/arch/de.ralfebert.rcp.tools.preferredperspective.png](http://rulebender.googlecode.com/svn/wiki/imgs/arch/de.ralfebert.rcp.tools.preferredperspective.png)

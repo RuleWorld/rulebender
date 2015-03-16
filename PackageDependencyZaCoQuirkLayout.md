@@ -1,0 +1,3 @@
+# Package dependency graph for za.co.quirk.layout #
+For class level and interactive graphs, use the CDA tool (http://www.dependency-analyzer.org/) on the RuleBender class files.
+![http://rulebender.googlecode.com/svn/wiki/imgs/arch/za.co.quirk.layout.png](http://rulebender.googlecode.com/svn/wiki/imgs/arch/za.co.quirk.layout.png)

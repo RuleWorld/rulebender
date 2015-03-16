@@ -1,0 +1,8 @@
+# Change the text on the Status Line #
+
+```
+IStatusLineManager statusline = getWindowConfigurer()
+		.getActionBarConfigurer().getStatusLineManager();
+
+statusline.setMessage(null, "Status line is ready");
+```

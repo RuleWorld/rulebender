@@ -1,0 +1,60 @@
+# Detailed Architecture #
+
+The architecture of the rulebender is organized on the wiki as dependency graphs for each package.  Each package also has a detailed description and information on how to use the classes in that package.  Where appropriate, there will be additional class dependency graphs.
+
+The package dependency graphs were acquired with the [CDA](http://www.dependency-analyzer.org/), and I highly recommend using its interactive features to explore the code interaction.
+
+For more goal oriented information see:
+
+[Random How-Tos](RandomHowTos.md)
+... (more coming soon)
+
+
+## Packages ##
+  * [All Packages](PackageDependencyRulebenderFull.md)
+  * [rulebender.contactmap.models](PackageDependencyRulebenderContactmapModels.md)
+  * [rulebender.contactmap.prefuse](PackageDependencyRulebenderContactmapPrefuse.md)
+  * [rulebender.contactmap.properties](PackageDependencyRulebenderContactmapProperties.md)
+  * [rulebender.contactmap.test](PackageDependencyRulebenderContactmapTest.md)
+  * [rulebender.contactmap.view](PackageDependencyRulebenderContactmapView.md)
+  * [rulebender.core.commands](PackageDependencyRulebenderCoreCommands.md)
+  * [rulebender.core.editorhider](PackageDependencyRulebenderCoreEditorhider.md)
+  * [rulebender.core.prefuse.collinsbubbleset.control](PackageDependencyRulebenderCorePrefuseCollinsbubblesetControl.md)
+  * [rulebender.core.prefuse.collinsbubbleset.layout](PackageDependencyRulebenderCorePrefuseCollinsbubblesetLayout.md)
+  * [rulebender.core.prefuse.collinsbubbleset.lib](PackageDependencyRulebenderCorePrefuseCollinsbubblesetLib.md)
+  * [rulebender.core.prefuse.networkviewer.contactmap](PackageDependencyRulebenderCorePrefuseNetworkviewerContactmap.md)
+  * [rulebender.core.prefuse.networkviewer.influencegraph](PackageDependencyRulebenderCorePrefuseNetworkviewerInfluencegraph.md)
+  * [rulebender.core.prefuse.networkviewer](PackageDependencyRulebenderCorePrefuseNetworkviewer.md)
+  * [rulebender.core.prefuse](PackageDependencyRulebenderCorePrefuse.md)
+  * [rulebender.core.utility](PackageDependencyRulebenderCoreUtility.md)
+  * [rulebender.core.workspace](PackageDependencyRulebenderCoreWorkspace.md)
+  * [rulebender.editors.bnga](PackageDependencyRulebenderEditorsBnga.md)
+  * [rulebender.editors.bnga.text](PackageDependencyRulebenderEditorsBngaText.md)
+  * [rulebender.editors.bngl.model](PackageDependencyRulebenderEditorsBnglModel.md)
+  * [rulebender.editors.bngl](PackageDependencyRulebenderEditorsBngl.md)
+  * [rulebender.editors.common](PackageDependencyRulebenderEditorsCommon.md)
+  * [rulebender.editors.net](PackageDependencyRulebenderEditorsNet.md)
+  * [rulebender.editors.simple](PackageDependencyRulebenderEditorsSimple.md)
+  * [rulebender.influencegraph.models](PackageDependencyRulebenderInfluencegraphModels.md)
+  * [rulebender.influencegraph.prefuse](PackageDependencyRulebenderInfluencegraphPrefuse.md)
+  * [rulebender.influencegraph.view](PackageDependencyRulebenderInfluencegraphView.md)
+  * [rulebender.navigator.actions](PackageDependencyRulebenderNavigatorActions.md)
+  * [rulebender.navigator.model](PackageDependencyRulebenderNavigatorModel.md)
+  * [rulebender.navigator.model2](PackageDependencyRulebenderNavigatorModel2.md)
+  * [rulebender.navigator.views](PackageDependencyRulebenderNavigatorViews.md)
+  * [rulebender](PackageDependencyRulebender.md)
+  * [rulebender.preferences](PackageDependencyRulebenderPreferences.md)
+  * [rulebender.preferences.views](PackageDependencyRulebenderPreferencesViews.md)
+  * [rulebender.results.view](PackageDependencyRulebenderResultsView.md)
+  * [rulebender.simulate.bngexecution](PackageDependencyRulebenderSimulateBngexecution.md)
+  * [rulebender.simulate.parameterscan](PackageDependencyRulebenderSimulateParameterscan.md)
+  * [rulebender.simulate](PackageDependencyRulebenderSimulate.md)
+  * [rulebender.simulate.view](PackageDependencyRulebenderSimulateView.md)
+  * [rulebender.speciesgraph.prefuse](PackageDependencyRulebenderSpeciesgraphPrefuse.md)
+  * [rulebender.speciesgraph.view](PackageDependencyRulebenderSpeciesgraphView.md)
+  * [rulebender.specieslist.view](PackageDependencyRulebenderSpecieslistView.md)
+  * [rulebender.text.parser.astreader](PackageDependencyRulebenderTextParserAstreader.md)
+  * [rulebender.views](PackageDependencyRulebenderViews.md)
+  * [SimpleArchitecture](PackageDependencySimpleArchitecture.md)
+  * [za.co.quirk.layout](PackageDependencyZaCoQuirkLayout.md)
+  * [de.ralfebert.rcp.tools.preferredperspective](PackageDependencyDeRalfebertRcpToolsPreferredperspective.md)

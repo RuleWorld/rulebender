@@ -1,0 +1,111 @@
+# WORK IN PROGRESS #
+_Not only is this page a work in progress, but release preparation as a whole should be improved as well.  Things have gotten rather complicated.  Soon I'll streamline things.  For now, see below. - [Adam](AdamMatthewSmith.md)_
+
+# Introduction #
+
+This page describes the process for preparing RuleBender releases.  The 1.x and 2.x versions are prepared in entirely different ways.  1.x uses an ant script to generate executables for each platform and copies all of the jars, simulators (with source), executables,  and icons to the appropriate release directories.  2.x uses the Eclipse Plugin Development Environment (PDE) build system.  Each of the processes are described below.
+
+# BioNetGen and NFSim #
+The simulators are maintained by their respective groups and RuleBender developers should obtain them in an executable form for inclusion in the RuleBender distributable.  BioNetGen is maintained by Jim Faeder and his lab, while NFSim is written by the Emonet lab.  BioNetGen can be downloaded in its latest release version from bionetgen.org, and more recent versions can sometimes be found on the BioNetGen google code site.  NFSim is downloaded from http://emonet.biology.yale.edu/nfsim/.
+
+The current simulator component of the distribution looks like:
+
+```
+/BioNetGen-2.2.0 
+/BioNetGen-2.2.0/bin/...
+/BioNetGen-2.2.0/BNG2.pl
+/BioNetGen-2.2.0/CREDITS.txt
+/BioNetGen-2.2.0/LICENSE.txt
+/BioNetGen-2.2.0/Network3/...
+/BioNetGen-2.2.0/Perl2/...
+/BioNetGen-2.2.0/PhiBPlot/...
+/BioNetGen-2.2.0/README_FIRST.txt
+/BioNetGen-2.2.0/Validate/...
+/BioNetGen-2.2.0/VERSION
+/NFSim-1.10-src/
+/NFSim-1.10-src/NFcode/...
+/NFSim-1.10-src/NFtools/...
+/SampleModels/...
+```
+
+BioNetGen-2.2.0 contains all of the BioNetGen related code and executables.  The BNG distribution from bionetgen.org also includes a Models2 directory that is renamed to SampleModels and moved outside of the BioNetGen-2.2.0 directory.  The BioNetGen-2.2.0/bin directory includes all of the executables (including NFSim).  The NFSim-1.10-src directory holds all of the NFSim source.
+
+This directory structure should be inside of the 'distributionResources/Simulation' directory in both of the projects.  Right now there is some manual build construction after the build process has finished, but eventually the scripts and build processes will be able to automatically move all of the appropriate files into place for the release.
+
+# !BNGParser #
+
+Currently, the BNGParser jar file is created by updating the BNGParser code from the bionetgen repository, importing the project into Eclipse as an ANTLR project, and producing the jar via Eclipse export.  Then, simply include the jar file in the lib dependencies for RuleBender.
+
+# 2.x #
+
+## Setup ##
+The 2.x build is created with the Eclipse Plugin Development Environment Build system (PDE Build).  Specifically, we create a _product configuration_ that represents all of the files for a release, and then PDE Build does all of the heavy lifting.  [The Vogella Tutorial](http://www.vogella.com/articles/EclipseRCP/article.html#product) explains products reasonably well.
+
+One important thing that you need to do is set up the Eclipse "Delta Pack".  This set of libraries is what allows us to export for multiple target platforms.  In short, you must download the correct delta pack for the version of Eclipse that your RCP application is supposed to run on (the "target platform").  Your target platform does not have to be the same as the Eclipse platform on which you are working, but it is easier to set up that way.  There are detailed instructions for setting up the delta pack [here](http://ugosan.org/eclipse-rcp-delta-pack/).
+
+(If ever there is an ambitious developer for RuleBender, one area to improve in the build process would be to set up a separate platform definition file so that there are no dependencies between working environments and target environments.  See [this](http://www.modumind.com/2009/09/01/creating-an-eclipse-rcp-target-platform/)).
+
+## Product Definition File ##
+It should not be necessary to generate a product file very often, as they generally do not need to be changed and are stored in the repository; however, I am including detailed instructions just in case something breaks.
+
+There are a few ways to create a product definition file.  It is possible to do it by right clicking on the project and selecting "New->Other..." and then filtering for "Product Configuration" and using the wizard.  The wizard has options for manually building it, building it based on another product, and building it based on a launch configuration.  Using a launch configuration is easiest way to create a product.  So, before you continue make sure that you have a [running launch configuration](HowToCreateLaunchConfig.md)
+
+Once you have a launch configuration, go ahead and open the New Project Configuration Wizard as described above and select the option to build it from a launch configuration.  Name the new product and make sure you put it in the rulebender project.
+
+**TODO: Image for creating the new product**
+
+After clicking 'Finish' the .product file should open, revealing 7 tabs for customizing the product.
+
+### Overview ###
+Leave 'ID' and 'Version' blank, but fill in "RuleBender" for the 'Name'.
+
+You will need to define a new product (button on the right).  This will bring up a wizard that will let you choose the plugin to use ("rulebender"), the name of the product (whatever you want), and the actual application to run ("rulebender.application").
+
+**TODO: image for defining the new product.**
+
+The 'Application' drop down should say "rulebender.application", and the product will be based on plug-ins.
+
+The Testing frame on the bottom left will let you update this product file whenever there are changes to the launch configuration (such as adding dependencies). The Exporting frame is where you will initiate a build for distribution.
+
+### Dependencies ###
+The dependencies tab is where all of the plug-ins on which Rulebender depends.  It is possible to use the buttons on the right to automatically import the correct plug-ins if you create plugins without using a launch configuration.
+
+### Configuration ###
+The configuration panel allows for the specification of config files, properties, and start levels for each platform.  RuleBender does not currently use any of these, however, it may be useful in the future.
+
+### Launching ###
+The launching panel is where you can specify the JRE version to use and whether or not to bundle it.  RuleBender is currently using 1.6.  You can also select the name of the program launcher, and specify icons to use for the launcher.  Be sure to follow the instructions on the resolution and file type for each system.
+
+It is important here to specify the launching arguments for each system:
+All:
+> Program: -data @noDefault
+> JVM: -Xms40m -Xmx512m (these are fine to change if we run into problems)
+
+OSX:
+> JVM: -XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts -Xdock:icon=../Resources/Eclipse.icns -d64
+
+None of the other platforms have specific arguments.  It is important to include -XstartOnFirstThread, otherwise the program will not even start.  -d64 will force the jvm to run in 64 bit mode if it is available (I think...may need to look into why this is here).
+
+### Splash ###
+The splash tab lets you define the location of the splash screen bmp file for when the program is launching.
+
+### Branding ###
+The Branding tab is for defining more icons, the about page, and a possible welcome workbench (as shown on the first Eclipse launch).
+
+### Licensing ###
+
+The licensing tab allows the specification of the license.
+
+## Running and Exporting ##
+
+After the product file is defined, return to the Overview tab and click "Launch an Eclipse application" to test your product.  This should bring up RuleBender.  If it does not, then generally something is not right in the product file.  After this test works, use the Eclipse Product Export Wizard on the right to export.  Be sure to select 'Export for Multiple Platforms' before clicking 'Next' so that you can select all of the platforms that should be supported.  This will put all of the RuleBender files wherever you specify, but you will have to manually put the simulators in place before zipping up for the release.  Also, be sure to manually delete all of the exported RuleBender files before each export, otherwise the release exports stack and bloat the directory.
+
+
+TODO ADD:
+- script for packaging
+- better delta instructions (now in repo, how to set up in eclipse).
+
+
+# 1.x #
+
+Coming soon... The short version is run 'ant package-all'.  See build.xml for full details until this tutorial is finished.

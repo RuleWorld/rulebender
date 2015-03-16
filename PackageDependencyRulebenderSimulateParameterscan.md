@@ -1,0 +1,3 @@
+# Package dependency graph for rulebender.simulate.parameterscan #
+For class level and interactive graphs, use the CDA tool (http://www.dependency-analyzer.org/) on the RuleBender class files.
+![http://rulebender.googlecode.com/svn/wiki/imgs/arch/rulebender.simulate.parameterscan.png](http://rulebender.googlecode.com/svn/wiki/imgs/arch/rulebender.simulate.parameterscan.png)

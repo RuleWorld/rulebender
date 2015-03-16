@@ -1,0 +1,139 @@
+# Infrastructure #
+
+## Version 1. ##
+
+### Source Code ###
+RuleBender is written in Java and is cross-platform for use and development.
+
+### Frameworks ###
+Prefuse: prefuse.org.  Prefuse is a visualization framework that allows for the definition of visual models, rendering, and interaction.  It is used for the Contact Map, Influence Graph, and Species Browser.
+
+SWT: http://www.eclipse.org/swt/.  SWT is a windowing toolkit written by IBM.  It requires the version of swt.jar that is native to whatever system is running RuleBender.
+
+JFreeChart: http://www.jfree.org/jfreechart/
+
+JFace: http://wiki.eclipse.org/index.php/JFace
+
+### Jar Libraries ###
+com.ibm.icu.jar
+
+gnujaxp.jar
+
+itext-2.0.6.jar
+
+javax.servlet.jar
+
+jcommon-1.0.12.jar
+
+jfreechart-1.0.9-experimental.jar
+
+jfreechart-1.0.9-swt.jar
+
+jfreechart-1.0.9.jar
+
+junit-4.10.jar
+
+org.eclipse.core.commands.jar
+
+org.eclipse.core.contenttype.jar
+
+org.eclipse.core.jobs.jar
+
+org.eclipse.core.runtime.compatibility.auth.jar
+
+org.eclipse.core.runtime.compatibility.registry.jar
+
+org.eclipse.core.runtime.jar
+
+org.eclipse.equinox.app.jar
+
+org.eclipse.equinox.common.jar
+
+org.eclipse.equinox.preferences.jar
+
+org.eclipse.equinox.registry.jar
+
+org.eclipse.jface.jar
+
+org.eclipse.jface.text.jar
+
+org.eclipse.osgi.jar
+
+org.eclipse.osgi.services.jar
+
+org.eclipse.swt.jar
+
+org.eclipse.text.jar
+
+prefuse.jar
+
+servlet.jar
+
+swtgraphics2d.jar
+
+swt.jar (must be native)
+
+## Version 2 ##
+
+
+
+
+### Source Code ###
+RuleBender 2.0 is an Eclipse !RCP application, but is still written in Java and is cross-platform for use and development.
+
+### Frameworks ###
+
+Eclipse Rich Client Platform: The Eclipse RCP is platform for constructing general purpose gui applications.  It uses JFace, OSGI, and SWT as primary libraries, but is built on many more.  The purpose of Eclipse RCP is to allow developers to create modular programs (called plugins) that can be combined to create an end product.  Eclipse RCP development can be difficult at first, but once the framework is learned it is a powerful tool for robust application development.  It was chosen due to the many standard gui and text editing features that our collaborators required.  The RuleBender developers can focus on implementing novel visualizations and interactions while the platform supports more common gui needs.
+
+Prefuse: prefuse.org.  Prefuse is a visualization framework that allows for the definition of visual models, rendering, and interaction.  It is used for the Contact Map, Influence Graph, and Species Browser.
+
+SWT: http://www.eclipse.org/swt/.  SWT is a windowing toolkit written by IBM.
+
+JFreeChart: http://www.jfree.org/jfreechart/
+
+JFace: http://wiki.eclipse.org/index.php/JFace
+
+### Required Jar Libraries ###
+antlr-3.3-complete.jar - For some testing of the BNGASTReader
+BNGParser.jar - All parsing.
+jdom.jar - Reading xml.
+jcommon-1.0.12.jar - Charting
+jfreechart-1.0.9-experimental.jar - Charting
+jfreechart-1.0.9-swt.jar - Charting
+jfreechart-1.0.9.jar - Charting
+junit.jar - Testing
+prefuse.jar - Visualizations
+
+### Required Plugins ###
+/Applications/eclipse/plugins/org.eclipse.ui\_3.7.0.I20110602-0100.jar
+/Applications/eclipse/plugins/org.eclipse.swt\_3.7.0.v3735b.jar
+/Applications/eclipse/deltapack/eclipse/plugins/org.eclipse.swt.cocoa.macosx.x86\_64\_3.7.0.v3735b.jar
+/Applications/eclipse/plugins/org.eclipse.jface\_3.7.0.I20110522-1430.jar
+/Applications/eclipse/plugins/org.eclipse.core.commands\_3.6.0.I20110111-0800.jar
+/Applications/eclipse/plugins/org.eclipse.ui.workbench\_3.7.0.I20110519-0100.jar
+/Applications/eclipse/plugins/org.eclipse.core.runtime\_3.7.0.v20110110.jar
+/Applications/eclipse/plugins/org.eclipse.osgi\_3.7.0.v20110613.jar
+/Applications/eclipse/plugins/org.eclipse.equinox.common\_3.6.0.v20110523.jar
+/Applications/eclipse/plugins/org.eclipse.core.jobs\_3.5.100.v20110404.jar
+/Applications/eclipse/plugins/org.eclipse.core.runtime.compatibility.registry\_3.5.0.v20110505/runtime\_registry\_compatibility.jar
+/Applications/eclipse/plugins/org.eclipse.equinox.registry\_3.5.100.v20110502.jar
+/Applications/eclipse/plugins/org.eclipse.equinox.preferences\_3.4.0.v20110502.jar
+/Applications/eclipse/plugins/org.eclipse.core.contenttype\_3.4.100.v20110423-0524.jar
+/Applications/eclipse/plugins/org.eclipse.equinox.app\_1.3.100.v20110321.jar
+/Applications/eclipse/plugins/org.eclipse.ui.ide\_3.7.0.I20110519-0100.jar
+/Applications/eclipse/plugins/org.eclipse.core.resources\_3.7.100.v20110510-0712.jar
+/Applications/eclipse/plugins/org.eclipse.ui.navigator\_3.5.100.I20110524-0800.jar
+/Applications/eclipse/plugins/org.eclipse.ui.navigator.resources\_3.4.300.I20110421-1800.jar
+/Applications/eclipse/plugins/org.eclipse.ui.console\_3.5.100.v20110511.jar
+/Applications/eclipse/plugins/org.eclipse.ui.editors\_3.7.0.v20110517-0800.jar
+/Applications/eclipse/plugins/org.eclipse.core.filebuffers\_3.5.200.v20110505-0800.jar
+/Applications/eclipse/plugins/org.eclipse.jface.text\_3.7.0.v20110505-0800.jar
+/Applications/eclipse/plugins/org.eclipse.text\_3.5.100.v20110505-0800.jar
+/Applications/eclipse/plugins/org.junit\_4.8.2.v4\_8\_2\_v20110321-1705/junit.jar
+/Applications/eclipse/plugins/org.hamcrest.core\_1.1.0.v20090501071000.jar
+/Applications/eclipse/plugins/org.eclipse.jdt.core\_3.7.0.v\_B61.jar
+/Applications/eclipse/plugins/org.eclipse.jdt.compiler.apt\_1.0.400.v0110509-1300.jar
+/Applications/eclipse/plugins/org.eclipse.jdt.compiler.tool\_1.0.100.v\_B61.jar
+/Applications/eclipse/plugins/org.eclipse.core.filesystem\_1.3.100.v20110423-0524.jar
+/Applications/eclipse/plugins/org.eclipse.ui.views\_3.6.0.I20110412-0800.jar
+/Applications/eclipse/plugins/org.eclipse.ui.workbench.texteditor\_3.7.0.v20110505-0800.jar

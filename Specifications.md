@@ -1,0 +1,6 @@
+# Specifications #
+
+## Specs ##
+
+## Use-cases ##
+graphs of possible interaction/interfaces/states
