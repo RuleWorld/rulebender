@@ -1,5 +1,4 @@
 package rulebender.simulate;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -26,13 +25,22 @@ public class BioNetGenConsole {
 	private static File currentModel = null;
 
 	private static void invokeBNGConsole() {
-		String bngPath = PreferencesClerk.getFullBNGPath();
+		String     bngPath  = PreferencesClerk.getFullBNGPath();
+		//String     bngPath1 = PreferencesClerk.getBNGPath();
+		//String     bngPath2 = PreferencesClerk.getBNGRoot();
 		// String bngPath = bng.toString();
 
 		boolean prereq = BioNetGenUtility.checkPreReq();
 		boolean bng = validateBNGPath(bngPath);
 
 		if (bng && prereq) {
+
+			Console.displayOutput(currentModel.toString(), 
+		     "\nBioNetGen has been located on your system. "
+	           + "\nPlease cut-and-paste model data above, and " 
+                   + "\nthen click File->Save. ");
+
+
 			List<String> commands = new ArrayList<String>();
 			commands.add("perl");
 			commands.add(bngPath);
@@ -61,7 +69,13 @@ public class BioNetGenConsole {
 			    + ".\nThe Contact Map cannot be displayed if BioNetGen is not "
 			    + "included in the RuleBender path.\n"
 			    + "To add BioNetGen to the path click on "
-			    + "'Simulator' under 'Preferences'.\n");
+			    + "'Simulator' under 'Preferences'.\n\n\n");
+//			Console.displayOutput(currentModel.toString(), 
+ //                              "FullPath " + bngPath + "\n\n");
+//			Console.displayOutput(currentModel.toString(), 
+ //                              "Path " + bngPath1 + "\n\n");
+//			Console.displayOutput(currentModel.toString(), 
+ //                              "Root " + bngPath2 + "\n\n");
 		}
 
 	}

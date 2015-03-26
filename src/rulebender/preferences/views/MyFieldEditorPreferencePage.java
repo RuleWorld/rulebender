@@ -4,6 +4,7 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import rulebender.preferences.PreferencesClerk;
 
 import rulebender.Activator;
 
@@ -36,6 +37,9 @@ public class MyFieldEditorPreferencePage extends FieldEditorPreferencePage imple
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
 		setDescription("RuleBender Preferences");
 		
+			Activator.getDefault().getPreferenceStore().setDefault("SIM_PATH", PreferencesClerk.getBNGRoot());
+
+
 		/*
 		System.out.println("" + System.getProperty("user.dir") + "/BioNetGen-2.2.0/");
 		

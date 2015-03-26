@@ -12,11 +12,11 @@ public class PreferencesClerk
   
   static
   {
-    String dir = 
-        Activator
-        .getDefault()
-        .getPreferenceStore()
-        .getString(MyFieldEditorPreferencePage.PREF_SIM_PATH);
+    String dir = "";
+        //Activator
+        //.getDefault()
+        //.getPreferenceStore()
+        //.getString(MyFieldEditorPreferencePage.PREF_SIM_PATH);
 
     if (null == dir || "".equals(dir))
     {
@@ -33,7 +33,7 @@ public class PreferencesClerk
 	private static String BNGName = "BNG2.pl";
 
 	// The path from the root directory to the main BNG file.
-	private static String BNGPathFromRoot = "";
+	private static String BNGPathFromRoot = "BioNetGen-2.2.6";
 
 	// Private constructor for static access only.
 	private PreferencesClerk() {
@@ -48,8 +48,12 @@ public class PreferencesClerk
 	 */
 	public static String getBNGPath() 
 	{
-		return Activator.getDefault().getPreferenceStore().getString("SIM_PATH")
-		    + System.getProperty("file.separator") + BNGPathFromRoot;
+//           return Activator.getDefault().getPreferenceStore().getString("SIM_PATH")
+//	   + System.getProperty("file.separator") + BNGPathFromRoot;
+		return  System.getProperty("user.dir")
+		    + System.getProperty("file.separator")
+                    + BNGPathFromRoot
+		    + System.getProperty("file.separator");
 	}
 
 	/**
@@ -68,8 +72,9 @@ public class PreferencesClerk
 	 * @return String root path to BNG directory.
 	 */
 	public static String getBNGRoot() {
-		return Activator.getDefault().getPreferenceStore().getString("SIM_PATH")
-		    + System.getProperty("file.separator");
+//		return Activator.getDefault().getPreferenceStore().getString("SIM_PATH")
+//		    + System.getProperty("file.separator");
+		return  System.getProperty("user.dir");
 	}
 
 	/**
@@ -78,7 +83,7 @@ public class PreferencesClerk
 	 * @return String path to main bng file.
 	 */
 	public static String getFullBNGPath() {
-		return getBNGRoot() + BNGPathFromRoot + BNGName;
+		return getBNGPath() + BNGName;
 	}
 
 	public static OS getOS() {
