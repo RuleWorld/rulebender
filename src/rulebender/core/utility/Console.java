@@ -310,7 +310,7 @@ public class Console implements IStartup, ISelectionListener, IPartListener2 {
 		// If it's not a bngl file
 		else {
 			Logger.log(LOG_LEVELS.WARNING, Console.class,
-			    "Selection changed, but I don't care.");
+			    "Selection changed with no change in focus.");
 		}
 	}
 
