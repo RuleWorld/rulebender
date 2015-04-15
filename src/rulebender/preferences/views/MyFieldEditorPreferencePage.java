@@ -2,10 +2,10 @@ package rulebender.preferences.views;
 
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
-import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbench; 
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.core.commands.AbstractHandler;
 import rulebender.preferences.PreferencesClerk;
-
 import rulebender.Activator;
 
 public class MyFieldEditorPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage 
@@ -17,6 +17,7 @@ public class MyFieldEditorPreferencePage extends FieldEditorPreferencePage imple
 	}
 
 	public void createFieldEditors() {
+		System.out.println("Opening up the field editor");
 		addField(new DirectoryFieldEditor("SIM_PATH", "&Path to simulator root (contains bin/):", getFieldEditorParent()));
 		
 		/*
@@ -32,12 +33,24 @@ public class MyFieldEditorPreferencePage extends FieldEditorPreferencePage imple
 				getFieldEditorParent()));		
 		*/
 	}
+	
+	/*
+	public String getUserBNGPath() {
+		System.out.println("The user has selected " +
+			 Activator.getDefault().getPreferenceStore().getDefaultString("SIM_PATH")
+	);
+		return  Activator.getDefault().getPreferenceStore().getDefaultString("SIM_PATH");
+	}
+	*/
 
 	public void init(IWorkbench workbench) {
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
 		setDescription("RuleBender Preferences");
 		
-			Activator.getDefault().getPreferenceStore().setDefault("SIM_PATH", PreferencesClerk.getBNGRoot());
+//		
+//		    System.out.println("Setting default for  bngPath");
+//			bngPath =  PreferencesClerk.getBNGRoot();
+			Activator.getDefault().getPreferenceStore().setDefault("SIM_PATH",PreferencesClerk.getBNGRoot());
 
 
 		/*

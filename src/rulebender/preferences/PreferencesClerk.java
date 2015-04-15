@@ -3,9 +3,28 @@
  */
 package rulebender.preferences;
 
+import java.io.File;
+
 import rulebender.Activator;
 import rulebender.core.workspace.PickWorkspaceDialog;
 import rulebender.preferences.views.MyFieldEditorPreferencePage;
+
+import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.DirectoryFieldEditor;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPreferencePage;
+
+import rulebender.preferences.PreferencesClerk;
+import rulebender.Activator;
+
+import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.DirectoryFieldEditor;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPreferencePage;
+
+import rulebender.preferences.PreferencesClerk;
+import rulebender.simulate.BioNetGenUtility;
+import rulebender.Activator;
 
 public class PreferencesClerk 
 {
@@ -46,7 +65,8 @@ public class PreferencesClerk
 	 * 
 	 * @return String path to 'BNGName'
 	 */
-	public static String getBNGPath() 
+
+	public static String getDefaultBNGPath() 
 	{
 //           return Activator.getDefault().getPreferenceStore().getString("SIM_PATH")
 //	   + System.getProperty("file.separator") + BNGPathFromRoot;
@@ -55,7 +75,6 @@ public class PreferencesClerk
                     + BNGPathFromRoot
 		    + System.getProperty("file.separator");
 	}
-
 	/**
 	 * Returns the name of the main BNG file in 'BNGName'.
 	 * 
@@ -74,6 +93,7 @@ public class PreferencesClerk
 	public static String getBNGRoot() {
 //		return Activator.getDefault().getPreferenceStore().getString("SIM_PATH")
 //		    + System.getProperty("file.separator");
+		// System.out.println("calling getBNGRoot()");
 		return  System.getProperty("user.dir");
 	}
 
@@ -82,10 +102,50 @@ public class PreferencesClerk
 	 * 
 	 * @return String path to main bng file.
 	 */
+	
+	public static String getUserBNGPath() {
+		return Activator.getDefault().getPreferenceStore().getString("SIM_PATH")
+				+ System.getProperty("file.separator");
+	}
+	
+	public static String getFullUserBNGPath() {
+		return getUserBNGPath() + BNGName;
+	}
+	public static String getFullDefaultBNGPath() {
+		return getDefaultBNGPath() + BNGName;
+	}
+	public static String getBNGPath() {
+
+		boolean prereq = BioNetGenUtility.checkPreReq();
+		if (prereq) {
+			 String     bngPath2  = PreferencesClerk.getFullUserBNGPath();		 
+			 // System.out.println(" clerk, bngPath2 " + bngPath2);
+	   		 boolean bng2 = validateBNGPath(bngPath2);
+			 if (bng2) { return PreferencesClerk.getUserBNGPath(); }
+
+	  	     String     bngPath   = PreferencesClerk.getFullDefaultBNGPath();
+		     boolean bng  = validateBNGPath(bngPath);
+		     // System.out.println(" clerk, bngPath " + bngPath);
+		     if (bng) { return PreferencesClerk.getDefaultBNGPath(); }
+		}
+		
+		return "No_Valid_Path_";  //  This is not a good way to handle the situation, but it's
+		               //  better than what we had before.
+	}
 	public static String getFullBNGPath() {
 		return getBNGPath() + BNGName;
 	}
 
+	
+	private static boolean validateBNGPath(String path) {
+		if ((new File(path)).exists()) {
+			return true;
+		}
+		return false;
+	}
+
+	
+	
 	public static OS getOS() {
 		String stemp = System.getProperty("os.name");
 

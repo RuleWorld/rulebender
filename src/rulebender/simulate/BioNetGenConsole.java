@@ -25,15 +25,20 @@ public class BioNetGenConsole {
 	private static File currentModel = null;
 
 	private static void invokeBNGConsole() {
-		String     bngPath  = PreferencesClerk.getFullBNGPath();
+		 String     bngPath   = PreferencesClerk.getFullDefaultBNGPath();
+		 String     bngPath2  = PreferencesClerk.getFullUserBNGPath();
 		//String     bngPath1 = PreferencesClerk.getBNGPath();
 		//String     bngPath2 = PreferencesClerk.getBNGRoot();
 		// String bngPath = bng.toString();
+		 
+//		 System.out.println(" bngPath " + bngPath);
+//		 System.out.println(" bngPath2 " + bngPath2);
 
 		boolean prereq = BioNetGenUtility.checkPreReq();
-		boolean bng = validateBNGPath(bngPath);
+		boolean bng  = validateBNGPath(bngPath);
+		boolean bng2 = validateBNGPath(bngPath2);
 
-		if (bng && prereq) {
+		if ((bng || bng2) && prereq) {
 
 			Console.displayOutput(currentModel.toString(), 
 		     "\nBioNetGen has been located on your system. "
@@ -43,7 +48,8 @@ public class BioNetGenConsole {
 
 			List<String> commands = new ArrayList<String>();
 			commands.add("perl");
-			commands.add(bngPath);
+			if (bng) { commands.add(bngPath); }
+			else     { commands.add(bngPath2); }
 			commands.add("-console");
 			ProcessBuilder builder = new ProcessBuilder(commands);
 			try {
@@ -70,7 +76,10 @@ public class BioNetGenConsole {
 			    + "included in the RuleBender path.\n"
 			    + "To add BioNetGen to the path click on "
 			    + "'Simulator' under 'Preferences'.\n\n\n");
-//			Console.displayOutput(currentModel.toString(), 
+
+
+			
+			//			Console.displayOutput(currentModel.toString(), 
  //                              "FullPath " + bngPath + "\n\n");
 //			Console.displayOutput(currentModel.toString(), 
  //                              "Path " + bngPath1 + "\n\n");

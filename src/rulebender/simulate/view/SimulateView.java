@@ -204,6 +204,11 @@ public class SimulateView extends ViewPart {
 
 				// Run the simulation. This returns a boolean,
 				// but for now I am ignoring it.
+				
+				String finalPath = PreferencesClerk.getFullBNGPath();
+				
+//				System.out.println(" Finally using the path " + finalPath);
+				
 				BioNetGenUtility.runBNGLFile(getSelectedFile(), PreferencesClerk
 				    .getFullBNGPath(), ResultsFileUtility
 				    .getSimulationResultsDirectoryForIFile(getSelectedFile()));
