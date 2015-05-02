@@ -5,6 +5,7 @@ Adam M. Smith
 John Wenskovich
 Leonard A. Harris
 Robert Engelke
+Robert H. Clark
 
 Previous Committers:
 Yao Sun
