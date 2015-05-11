@@ -1,5 +1,6 @@
 package rulebender.editors.bngl;
 
+
 import java.io.File;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -19,6 +20,8 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
@@ -36,6 +39,10 @@ import rulebender.editors.bngl.model.BNGLModel;
 import rulebender.errorview.model.BNGLError;
 import rulebender.logging.Logger;
 import rulebender.simulate.BioNetGenConsole;
+import rulebender.contactmap.prefuse.CMapClickControlDelegate;
+import rulebender.contactmap.properties.MoleculePropertySource;
+import rulebender.contactmap.view.ContactMapSelectionListener;
+import rulebender.contactmap.view.ContactMapView;
 import bngparser.BNGParseData;
 import bngparser.BNGParserUtility;
 
@@ -50,19 +57,27 @@ import bngparser.BNGParserUtility;
  * 
  */
 public class BNGLEditor extends TextEditor implements ISelectionListener,
-    IResourceChangeListener {
+    IResourceChangeListener, ISelectionChangedListener {
 	// The model for the text
 	private BNGLModel m_model;
 	// The color manager for the syntax highlighting.
 	private final BNGLColorManager m_colorManager;
 
+        // This is non-static.  Each instance has its own copy of
+        // ListenerRegistrations so there should be one listener
+        // per model.	
+	private int ListenerRegistrations;
+
 	// private String m_path;
 	public BNGLEditor() {
 		// Call the TextEditor constructor
 		super();
-
+		
+		ListenerRegistrations = 0;
+		
 		// Create the colormanager.
 		m_colorManager = new BNGLColorManager();
+
 
 		// Set the SourceViewerConfiguration which takes care of many different
 		// types of configs and decoration.
@@ -82,6 +97,7 @@ public class BNGLEditor extends TextEditor implements ISelectionListener,
 
 		// Register as a resource change listener.
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
+
 	}
 
 	/*
@@ -97,6 +113,8 @@ public class BNGLEditor extends TextEditor implements ISelectionListener,
 			    .toOSString());
 		}
 
+
+		
 		m_model.setAST(getAST());
 	}
 
@@ -115,6 +133,9 @@ public class BNGLEditor extends TextEditor implements ISelectionListener,
 		// Get the text in the document.
 		String text = this.getSourceViewer().getDocument().get();
 
+		
+		
+		
 		return BNGParserUtility.produceParserInfoForBNGLText(text);
 	}
 
@@ -128,7 +149,7 @@ public class BNGLEditor extends TextEditor implements ISelectionListener,
 			m_model = new BNGLModel(((FileEditorInput) (getEditorInput())).getPath()
 			    .toOSString());
 			m_model.setAST(getAST());
-		}
+		 }
 
 		return m_model;
 	}
@@ -308,6 +329,7 @@ public class BNGLEditor extends TextEditor implements ISelectionListener,
 		} else {
 			clearMarkers("rulebender.markers.textinstance");
 		}
+		
 	}
 
 	private void searchableTextObjectCollectionSelected(
@@ -328,6 +350,10 @@ public class BNGLEditor extends TextEditor implements ISelectionListener,
 		Logger.log(Logger.LOG_LEVELS.INFO, this.getClass(), "Search for regex: "
 		    + regExp);
 
+		char[] cArr = regExp.toCharArray();
+		if ((cArr[0]!='\\') || (cArr[1]!='s') || (cArr[2]!='*') || (cArr[3]!='\\') ||  
+		    (cArr[4]!='\\') || (cArr[5]!='?') || (cArr[6]!='\\') || (cArr[7]!='s') ||
+		    (cArr[8]!='*')) {
 		// Get the ifile reference for this editor input.
 		IFile file = ((FileEditorInput) (getEditorInput())).getFile();
 
@@ -347,9 +373,11 @@ public class BNGLEditor extends TextEditor implements ISelectionListener,
 				marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
 				marker.setAttribute(IMarker.CHAR_START, m.start());
 				marker.setAttribute(IMarker.CHAR_END, m.end());
+				
 			} catch (Exception exception) {
 				exception.printStackTrace();
 			}
+		}
 		}
 	}
 
@@ -423,4 +451,70 @@ public class BNGLEditor extends TextEditor implements ISelectionListener,
 		// event.getDelta().getKind();
 		// }
 	}
+	
+	
+
+//      Register this text editor as a listener to the Contact Map view.	
+	public void timeToRegister(CMapClickControlDelegate  cmccd) {
+		try {
+			if (ListenerRegistrations < 1) {
+			  cmccd.addSelectionChangedListener(this);
+			}
+		} catch (Exception e) {
+			// log.error(e.getMessage(), e);
+		}
+        }
+
+
+	
+	
+	
+	@Override
+	public void selectionChanged(SelectionChangedEvent ee) {
+		
+	IStructuredSelection my_sSelection = 	(IStructuredSelection)(ee).getSelection();
+
+		
+		if (my_sSelection instanceof IStructuredSelection) {
+			if (my_sSelection instanceof IStructuredSelection) {
+                            // Get the object that was selected
+		            IStructuredSelection iSSelection = (IStructuredSelection) my_sSelection;
+		            Object item = iSSelection.getFirstElement();
+
+		            // If it's the object implements IBNLLinkedElement, ie if it
+                            // has methods to get the path of the source file and a regular
+                            // expression for text search.
+			    if (item instanceof IBNGLLinkedElement) {
+			       // Get the current path that is listening.
+			       String thisPath = 
+                                 ((FileEditorInput) getEditorInput())
+                                 .getPath().toOSString();
+
+                               // If it is for this file.
+                               if (((IBNGLLinkedElement) item).getLinkedBNGLPath().equals(thisPath)) {
+				 searchableTextObjectSelected((IBNGLLinkedElement) item);
+						}
+                               } else if (item instanceof IBNGLLinkedElementCollection) {
+			       // Get the current path that is listening.
+			       String thisPath = 
+                                 ((FileEditorInput) (getEditorInput()))
+                                 .getPath().toOSString();
+
+                               // If it is for this file.
+	                       if (((IBNGLLinkedElementCollection) item).getLinkedBNGLPath().equals( thisPath))  {
+                                  searchableTextObjectCollectionSelected((IBNGLLinkedElementCollection) item);
+                                 }
+                               } else {
+			         clearMarkers("rulebender.markers.textinstance");
+                                      }
+                               }
+		} else {
+			
+//			System.out.println("   ee  is not structured" + ee.toString());
+		}
+		
+	}
+
+	
+	
 }

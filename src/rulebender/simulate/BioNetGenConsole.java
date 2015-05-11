@@ -41,9 +41,7 @@ public class BioNetGenConsole {
 		if ((bng || bng2) && prereq) {
 
 			Console.displayOutput(currentModel.toString(), 
-		     "\nBioNetGen has been located on your system. "
-	           + "\nPlease cut-and-paste model data above, and " 
-                   + "\nthen click File->Save. ");
+		     "\nBioNetGen has been located on your system. ");
 
 
 			List<String> commands = new ArrayList<String>();

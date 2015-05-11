@@ -1,5 +1,4 @@
 package rulebender.contactmap.prefuse;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -22,11 +21,15 @@ import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.editors.text.TextEditor;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.IEditorPart;
 
 import prefuse.Constants;
 import prefuse.Visualization;
@@ -61,6 +64,8 @@ import rulebender.core.prefuse.networkviewer.contactmap.JMenuItemRuleHolder;
 import rulebender.core.prefuse.networkviewer.contactmap.VisualRule;
 import rulebender.preferences.OS;
 import rulebender.preferences.PreferencesClerk;
+import rulebender.core.utility.Console;
+import rulebender.editors.bngl.BNGLEditor;
 
 /**
  * The ContactMapClickControlDelagate is used to handle all of the mouse
@@ -138,6 +143,7 @@ public class CMapClickControlDelegate extends ControlAdapter implements
 	 */
 	public CMapClickControlDelegate(ContactMapView view, String sourcePath,
 	    Visualization v) {
+		
 		m_view = view;
 
 		m_sourcePath = sourcePath;
@@ -207,6 +213,16 @@ public class CMapClickControlDelegate extends ControlAdapter implements
 		m_listeners = new ListenerList();
 
 		m_view.getSite().setSelectionProvider(this);
+		
+//   This long string of references looks risky, but this constructor always 
+//   seems to be called when the .bngl editor is open, visible and active. So 
+//   I don't expect to see any null references resulting from the calls below.
+//   More importantly, I believe that this will always run in the 
+//   UI thread, and that should eliminate any null references.
+ 	        IEditorPart my_active_editor = PlatformUI.getWorkbench()
+                .getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		BNGLEditor my_active_bngl_editor = (BNGLEditor)my_active_editor;
+		my_active_bngl_editor.timeToRegister(this);		
 
 	}
 
@@ -770,7 +786,7 @@ public class CMapClickControlDelegate extends ControlAdapter implements
 		// TODO organize clear selections.
 		clearSelection(true);
 		setVisualItemAsSelected(item);
-
+		
 		setSelection(new StructuredSelection(new EdgePropertySource(item,
 		    m_sourcePath)));
 	}
@@ -906,6 +922,10 @@ public class CMapClickControlDelegate extends ControlAdapter implements
 			    m_sourcePath)));
 			System.out.println("Molecule selection: \n\tListeners: "
 			    + m_listeners.size());
+			
+			
+			
+
 		}
 		// Compartment
 		else if (item.getString("type").equals("compartment")) {
@@ -1485,6 +1505,7 @@ public class CMapClickControlDelegate extends ControlAdapter implements
 	}
 
 	/*
+	 * 
 	 * ---------------------------------------------------------
 	 * ISelectionProvider stuff below.
 	 */
@@ -1516,10 +1537,10 @@ public class CMapClickControlDelegate extends ControlAdapter implements
 	public void setSelection(ISelection selection) {
 		m_selection = selection;
 		final CMapClickControlDelegate thisInstance = this;
-
+		
 		Object[] listeners = m_listeners.getListeners();
 
-		System.out.println("Listeners: " + listeners.length);
+//		System.out.println("setSelection Called:  Listeners: " + listeners.length);
 
 		for (Object listener : listeners) {
 			final ISelectionChangedListener scl = (ISelectionChangedListener) listener;
