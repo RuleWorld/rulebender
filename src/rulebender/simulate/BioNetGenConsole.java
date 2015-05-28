@@ -98,7 +98,10 @@ public class BioNetGenConsole {
 		currentModel = bngModel;
 		if (!prepareConsole()) {
 			return null;
-		}
+		} 
+		if (out != null) { out.clearLineNumbers(); }
+		
+		
 		// If a previous error was thrown, but not reported yet.
 		out.reportError();
 		String fileName = bngModel.getParentFile().toString() + "/"
@@ -201,7 +204,11 @@ public class BioNetGenConsole {
 	}
 
         public static String getLineNumbers() {
-          return out.getLineNumbers();
+          if (out != null) {
+            return out.getLineNumbers();
+          } else {
+            return ""; 
+          }
         }
 
 }

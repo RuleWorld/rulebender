@@ -114,4 +114,12 @@ public class ConsoleReader extends StreamDisplayThread {
           return line_numbers;
         }
 
+        public String clearLineNumbers() {
+           String old_line_numbers = line_numbers;        	
+           line_numbers = "";
+           return old_line_numbers;
+        }
+
+        
+        
 }
