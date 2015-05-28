@@ -6,6 +6,8 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.lang.Integer;
+import java.lang.NumberFormatException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -202,6 +204,28 @@ public class BNGLEditor extends TextEditor implements ISelectionListener,
 			// e.printStackTrace();
 			// System.out.println("Caught in the getAST Method.");
 		}
+
+
+                String eSe = BioNetGenConsole.getLineNumbers().trim();
+                while (eSe != "") {
+                  String sEs = "temp variable";
+                  if (eSe.indexOf(" ") > -1) {
+                    sEs = eSe.substring(eSe.indexOf(" "));
+                    eSe = eSe.substring(eSe.indexOf(" ")).trim();
+                  } else {
+                    sEs = eSe; eSe = "";
+                  }
+
+                  int next_num = 0;
+                  try {
+                    next_num = Integer.parseInt(sEs.trim());
+                    //  This is inelligant and error prone.  A more direct
+                    //  link with the parser would make this unnecessary.
+                    System.err.println("line " + next_num + ":8  Error Text");
+                  }
+                  catch (NumberFormatException nfe) { ;}
+                }
+
 
 		setErrors(errorStream.getErrorList());
 

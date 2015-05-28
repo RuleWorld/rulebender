@@ -4,6 +4,7 @@ import java.io.InputStream;
 
 public class ConsoleReader extends StreamDisplayThread {
 
+	private String line_numbers = "";
 	private String errors = "";
 	private boolean errorLast = false;
 	private String warnings = "";
@@ -32,6 +33,15 @@ public class ConsoleReader extends StreamDisplayThread {
 	@Override
 	protected void processLine(String line) {
 		super.processLine(line);
+
+                if (line.startsWith("  at line")) {
+                  String s = line;
+                  s = s.substring(s.indexOf(" ")).trim();
+                  s = s.substring(s.indexOf(" ")).trim();
+                  s = s.substring(s.indexOf(" ")).trim();
+                  line_numbers += " " + s + " ";                      
+                } 
+
 		if (line.startsWith("ERROR")
 		    || (line.startsWith("WARNING: Some problem processing"))) {
 			errors += line + "\n";
@@ -69,7 +79,7 @@ public class ConsoleReader extends StreamDisplayThread {
 	public void reportError() {
 		super.processLine("ERRORS occurred during the processing in BioNetGen\n"
 		    + errors);
-		errors = "";
+		//  errors = "";
 	}
 
 	public String getError() {
@@ -93,10 +103,15 @@ public class ConsoleReader extends StreamDisplayThread {
 	public void reportWarnings() {
 		super.processLine("WARNINGS occurred during the processing in BioNetGen\n"
 		    + warnings);
-		warnings = "";
+		//  warnings = "";
 	}
 
 	public String getWarnings() {
 		return warnings;
 	}
+
+        public String getLineNumbers() {
+          return line_numbers;
+        }
+
 }

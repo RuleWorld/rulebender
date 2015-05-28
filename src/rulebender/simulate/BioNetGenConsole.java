@@ -125,10 +125,10 @@ public class BioNetGenConsole {
 				Thread.sleep(check);
 				if (out.hadError()) {
 					String err = out.getError();
-					out.reportError();
 					errorStream.println(err);
 					// throw new Error("An error occurred while processing the file: " +
 					// err);
+					out.reportError();
 					xmlFile = null;
 					break;
 				} else if (waitTime > creationTimeOut) {
@@ -199,4 +199,9 @@ public class BioNetGenConsole {
 			e.printStackTrace();
 		}
 	}
+
+        public static String getLineNumbers() {
+          return out.getLineNumbers();
+        }
+
 }
