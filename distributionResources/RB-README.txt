@@ -1,25 +1,23 @@
 RuleBender is licensed under the Eclipse Public License v 1.0 and 
 includes the BioNetGen (BNG) modeling and simulation package along 
-with the NFsim simulator package.
+with the NFsim simulator.
 
 For more information:
+---------------------
 RuleBender: rulebender.org 
-RuleBender source: rulebender.googlecode.com
 BioNetGen: bionetgen.org 
 NFsim: nfsim.org
 
-Also, the 'Simulation' directory includes additional resources and 
-README files for both BNG and NFSim.
+All source codes are available at http://github.com/RuleWorld.
 
-BioNetGen source is packaged with RuleBender in BioNetGen-2.2.5/Perl2,
-and the BioNetGen-2.2.5/bin/ directory includes all necessary binary 
-files.
+BioNetGen source code is packaged with RuleBender in the 
+'BioNetGen-2.2.6' directory. All necessary binary files are included in 
+the 'BioNetGen-2.2.6/bin' directory.
 
-For NFsim, the binary is included in the BioNetGen-2.2.5/bin/ directory, 
-and the source is included separately in NFSim-1.11-src.  If you want to 
-replace this packaged version, you must replace the NFsim executables in 
-BioNetGen-2.2.5/bin/.
-
+For NFsim, the binary is included in the 'BioNetGen-2.2.6/bin' directory. 
+The source code is included separately in 'NFsim_v1.11-src'. If you want 
+to replace this packaged version, you must replace the NFsim executables 
+in 'BioNetGen-2.2.6/bin'.
 
 ######################################################################
 
@@ -53,19 +51,17 @@ Justin Hogg <justinshogg@gmail.com>
 
 Leonard Harris <lh64@cornell.edu>
    * Network3 development: global functions, accelerated stochastics (PLA)
+   * General maintenance.
 
 Ilya Korsunsky
    * Initial deployment of global functions for Network3.
 
 John Sekar <johnarul.sekar@gmail.com>
-   * Development team member.
+   * Model visualization methods.
 
 Jose Juan Tapia <jjtapia@pitt.edu>
    * BioNetGen grammars development and implementation
    * SBML2BNGL developer
-
-Adam Smith
-   * RuleBender developer
       
 Michael Sneddon <michael.sneddon@yale.edu>
    * Author and maintainer of NFsim.
