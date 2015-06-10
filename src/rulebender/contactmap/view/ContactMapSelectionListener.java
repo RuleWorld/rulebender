@@ -10,8 +10,13 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.IEditorPart;
+
 
 import rulebender.contactmap.models.CMapModelBuilder;
 import rulebender.contactmap.models.ContactMapModel;
@@ -247,7 +252,27 @@ public class ContactMapSelectionListener implements ISelectionListener,
 	 * Called by Eclipse RCP when a part is opened. (we care if it is an editor)
 	 */
 	@Override
-	public void partOpened(IWorkbenchPartReference partRef) {
+	public void partOpened(IWorkbenchPartReference in_partRef) {		
+    IWorkbenchPartReference partRef = in_partRef;
+		 
+		
+		IEditorPart my_active_editor = PlatformUI.getWorkbench()
+	               .getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		 if (my_active_editor != null) {
+			 // This if-block covers the case where the species graph when RuleBender
+			 // is started.  To see the Contact Map, the user will then click on the
+			 // Contact Map tab, which will bring the UI thread in here.  
+	
+			 IWorkbenchPart              wpart     = (IWorkbenchPart) my_active_editor;
+			 IWorkbenchPartSite       wpartSite    = wpart.getSite();
+			 IWorkbenchPage           wpartPage    = wpartSite.getPage();
+			 IWorkbenchPartReference  wpartRef     = wpartPage.getReference(wpart);
+			 
+			if ((wpartRef.getId().equals("rulebender.editors.bngl")
+				    && wpartRef.getPart(false) instanceof BNGLEditor)) {
+			       partRef = wpartRef;
+			}		 
+		 }
 
 		// If it's a bngl editor. (Cannot remember why there is id and instanceof
 		// checking but I would not change it without serious testing.)
