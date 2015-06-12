@@ -79,7 +79,7 @@ public class ConsoleReader extends StreamDisplayThread {
 	public void reportError() {
 		super.processLine("ERRORS occurred during the processing in BioNetGen\n"
 		    + errors);
-		//  errors = "";
+		    errors = "";
 	}
 
 	public String getError() {
@@ -103,7 +103,7 @@ public class ConsoleReader extends StreamDisplayThread {
 	public void reportWarnings() {
 		super.processLine("WARNINGS occurred during the processing in BioNetGen\n"
 		    + warnings);
-		//  warnings = "";
+		    warnings = "";
 	}
 
 	public String getWarnings() {
