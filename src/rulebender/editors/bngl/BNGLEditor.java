@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import java.lang.Integer;
 import java.lang.NumberFormatException;
 
+import org.antlr.runtime.RecognitionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -186,7 +187,7 @@ public class BNGLEditor extends TextEditor implements ISelectionListener,
 		// Set the error out to a new printstream that will only display the antlr
 		// output.
 		String path = ((FileEditorInput) (getEditorInput())).getPath().toOSString();
-
+			
 		Console.clearConsole(path);
 		ANTLRFilteredPrintStream errorStream = new ANTLRFilteredPrintStream(
 		    Console.getMessageConsoleStream(path),
@@ -200,12 +201,15 @@ public class BNGLEditor extends TextEditor implements ISelectionListener,
 			    Console.getMessageConsoleStream(path));
 			// Just for syntax analysis!!
 			produceParseData().getParser().prog();
-		} catch (Exception e) {
-			// e.printStackTrace();
-			// System.out.println("Caught in the getAST Method.");
+		} catch (NullPointerException e) {
+			//e.printStackTrace();
+			System.out.println("Caught in the getAST Method.");
+		} catch (RecognitionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
-
+				/*
                 String eSe = BioNetGenConsole.getLineNumbers().trim();
                 while (eSe != "") {
                   String sEs = "temp variable";
@@ -225,8 +229,7 @@ public class BNGLEditor extends TextEditor implements ISelectionListener,
                   }
                   catch (NumberFormatException nfe) { ;}
                 }
-
-
+*/
 		setErrors(errorStream.getErrorList());
 
 		System.err.flush();
