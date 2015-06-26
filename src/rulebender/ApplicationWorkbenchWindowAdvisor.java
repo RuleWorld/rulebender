@@ -1,5 +1,13 @@
 package rulebender;
 
+import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+
+
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.swt.graphics.Point;
@@ -81,5 +89,15 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		// can contribute to the PreferenceManager, so we must manually remove the ones that we do 
 		// not want to include.
 		pm.remove("org.eclipse.team.ui.TeamPreferences");
+		
+		// Activate the Contact Map so that it's not concealed by the Spieces Graph 
+		// or the Simulation View.
+	    try {
+		  IWorkbenchPart   wpart     = (IWorkbenchPart) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView("rulebender.contactmap.view.ContactMapView");
+          PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().activate(wpart);
+		} catch (Exception e2) {
+          System.out.printf("There was an error while attempting to activate the Contact Map.");		
+          e2.printStackTrace();
+        }
 	}
 }
