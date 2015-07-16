@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
 
+import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -16,6 +17,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -25,9 +27,14 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Label;
 
 import za.co.quirk.layout.LatticeData;
 import za.co.quirk.layout.LatticeLayout;
+import rulebender.preferences.PreferencesClerk;
+import rulebender.Activator;
+
+
 
 /**
  * Dialog that lets/forces a user to enter/select a workspace that will be used when saving all configuration files and
@@ -45,13 +52,17 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
     private static final String _KeyRememberWorkspace  = "wsRemember";
     private static final String _KeyLastUsedWorkspaces = "wsLastUsedWorkspaces";
     
+    private static final String _KeyBioNetGenRootDir   = "bngRootDir";
+    private static final String _KeyRememberBioNetGen  = "bngRemember";
+    private static final String _KeyLastUsedBioNetGen  = "bngLastUsedWorkspaces";
+
     private static final String _KeyDidSwitchRestart = "wsSwitchRestart";
 
     // this are our preferences we will be using as the IPreferenceStore is not available yet
     private static Preferences  _preferences           = Preferences.userNodeForPackage(PickWorkspaceDialog.class);
 
     // various dialog messages
-    private static final String _StrMsg                = "Your workspace is where settings and various important files will be stored.";
+    private static final String _StrMsg                = "Your workspace is where settings and various important files will be stored.  BioNetGen is a simulator that's installed separately.";
     private static final String _StrInfo               = "Please select a directory that will be the workspace root";
     private static final String _StrError              = "You must set a directory";
 
@@ -59,6 +70,10 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
     private Combo               _workspacePathCombo;
     private List<String>        _lastUsedWorkspaces;
     private Button              _RememberWorkspaceButton;
+
+    private Combo               _BioNetGenPathCombo;
+    private List<String>        _lastUsedBioNetGen;
+    private Button              _RememberBioNetGenButton;
 
     // used as separator when we save the last used workspace locations
     private static final String _SplitChar             = "#";
@@ -136,6 +151,13 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
     public static String getLastSetWorkspaceDirectory() {
         return _preferences.get(_KeyWorkspaceRootDir, null);
     }
+    public static String getLastSetBioNetGenDirectory() {
+        return _preferences.get(_KeyBioNetGenRootDir, null);
+    }
+    public static String setLastSetBioNetGenDirectory(String keyString) {
+        _preferences.put(_KeyBioNetGenRootDir, keyString);
+        return keyString; 
+    }
 
     @Override
     protected Control createDialogArea(Composite parent) {
@@ -144,30 +166,24 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
 
         try {
             Composite inner = new Composite(parent, SWT.NONE);
-            double[][] layout = new double[][] { { 5, LatticeLayout.PREFERRED, 5, 250, 5, LatticeLayout.PREFERRED, 5 },
-                    { 5, LatticeLayout.PREFERRED, 5, LatticeLayout.PREFERRED, 40 } };
-            inner.setLayout(new LatticeLayout(layout));
-            inner.setLayoutData(new GridData(GridData.FILL_VERTICAL | GridData.VERTICAL_ALIGN_END | GridData.GRAB_HORIZONTAL));
+            GridLayout gridLayout = new GridLayout();
+            gridLayout.numColumns = 3;
+            inner.setLayout(gridLayout);
 
             // label on left
             CLabel label = new CLabel(inner, SWT.NONE);
             label.setText("Workspace Root Path");
-            label.setLayoutData(new LatticeData("1, 1"));
+            label.setLayoutData(new GridData(GridData.FILL_VERTICAL | GridData.VERTICAL_ALIGN_END | GridData.GRAB_HORIZONTAL));
 
             // combo in middle
             _workspacePathCombo = new Combo(inner, SWT.BORDER);
-            _workspacePathCombo.setLayoutData(new LatticeData("3, 1"));
+            _workspacePathCombo.setLayoutData(new GridData(GridData.FILL_VERTICAL | GridData.VERTICAL_ALIGN_END | GridData.FILL_HORIZONTAL));
             String wsRoot = _preferences.get(_KeyWorkspaceRootDir, "");
             if (wsRoot == null || wsRoot.length() == 0) {
                 wsRoot = getWorkspacePathSuggestion();
             }
             _workspacePathCombo.setText(wsRoot == null ? "" : wsRoot);
 
-            // checkbox below
-            _RememberWorkspaceButton = new Button(inner, SWT.CHECK);
-            _RememberWorkspaceButton.setText("Remember workspace");
-            _RememberWorkspaceButton.setLayoutData(new LatticeData("3, 3, 5, 3"));
-            _RememberWorkspaceButton.setSelection(_preferences.getBoolean(_KeyRememberWorkspace, false));
 
             String lastUsed = _preferences.get(_KeyLastUsedWorkspaces, "");
             _lastUsedWorkspaces = new ArrayList<String>();
@@ -182,9 +198,11 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
             // browse button on right
             Button browse = new Button(inner, SWT.PUSH);
             browse.setText("Browse...");
-            browse.setLayoutData(new LatticeData("5, 1, 5, 1"));
-            browse.addListener(SWT.Selection, new Listener() {
 
+                                                                                        
+            browse.setSelection(_preferences.getBoolean(_KeyRememberWorkspace, false));
+
+            browse.addListener(SWT.Selection, new Listener() { 
                 public void handleEvent(Event event) {
                     DirectoryDialog dd = new DirectoryDialog(getParentShell());
                     dd.setText("Select Workspace Root");
@@ -201,6 +219,89 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
 
             });
 
+            
+            // checkbox below
+            CLabel label2 = new CLabel(inner, SWT.NONE);
+            label2.setText("");
+            _RememberWorkspaceButton = new Button(inner, SWT.CHECK);
+            _RememberWorkspaceButton.setText("Remember All Workspace Directories");
+            _RememberWorkspaceButton.setLayoutData(new GridData(GridData.FILL_VERTICAL | GridData.VERTICAL_ALIGN_END | GridData.GRAB_HORIZONTAL));
+            _RememberWorkspaceButton.setSelection(_preferences.getBoolean(_KeyRememberWorkspace, false));
+
+            
+            
+            
+            // BioNetGen Location            
+            // label on left
+            CLabel label4 = new CLabel(inner, SWT.NONE);  label4.setText("");  
+            CLabel label3 = new CLabel(inner, SWT.NONE);
+            label3.setText("BioNetGen Root Path");
+            label3.setLayoutData(new GridData(GridData.FILL_VERTICAL | GridData.VERTICAL_ALIGN_END | GridData.GRAB_HORIZONTAL));
+
+            // combo in middle
+            _BioNetGenPathCombo = new Combo(inner, SWT.BORDER);
+            _BioNetGenPathCombo.setLayoutData(new GridData(GridData.FILL_VERTICAL | GridData.VERTICAL_ALIGN_END | GridData.FILL_HORIZONTAL));
+            String bngRoot = _preferences.get(_KeyBioNetGenRootDir, "");
+            if (bngRoot == null || bngRoot.length() == 0 || bngRoot.equals("No_Valid_Path_")) {
+                bngRoot = PreferencesClerk.getBNGPath();
+            }
+            _BioNetGenPathCombo.setText(bngRoot == null ? "" : bngRoot);
+
+
+            
+            String lastBNGUsed = _preferences.get(_KeyLastUsedBioNetGen, "");
+            _lastUsedBioNetGen = new ArrayList<String>();
+            if (lastBNGUsed != null) {
+                String[] bngall = lastBNGUsed.split(_SplitChar);
+                for (String str : bngall)
+                    _lastUsedBioNetGen.add(str);
+            }
+            for (String last : _lastUsedBioNetGen)
+                _BioNetGenPathCombo.add(last);
+
+            
+            
+            
+            // browse button on right
+            Button browse2 = new Button(inner, SWT.PUSH);
+            browse2.setText("Browse...");
+
+                                                                                        
+            browse2.setSelection(_preferences.getBoolean(_KeyBioNetGenRootDir, false));
+
+            browse2.addListener(SWT.Selection, new Listener() {
+                public void handleEvent(Event event) {
+                    DirectoryDialog dd = new DirectoryDialog(getParentShell());
+                    dd.setText("Select BioNetGen Directory");
+                    dd.setMessage(_StrInfo);
+                    dd.setFilterPath(_BioNetGenPathCombo.getText());
+                    String pick = dd.open();
+                    if (pick == null && _BioNetGenPathCombo.getText().length() == 0) {
+                        setMessage(_StrError, IMessageProvider.ERROR);
+                    } else {
+                        setMessage(_StrMsg);
+                        _BioNetGenPathCombo.setText(pick);
+                    }
+                }
+
+            });
+
+
+            
+            // checkbox below
+            CLabel label5 = new CLabel(inner, SWT.NONE);
+            label5.setText("");
+            _RememberBioNetGenButton = new Button(inner, SWT.CHECK);
+            _RememberBioNetGenButton.setText("Remember All BioNetGen Directories");
+            _RememberBioNetGenButton.setLayoutData(new GridData(GridData.FILL_VERTICAL | GridData.VERTICAL_ALIGN_END | GridData.GRAB_HORIZONTAL));
+            _RememberBioNetGenButton.setSelection(_preferences.getBoolean(_KeyRememberBioNetGen, false));
+
+            
+			Activator.getDefault().getPreferenceStore().setDefault("SIM_PATH",PickWorkspaceDialog.getLastSetBioNetGenDirectory());
+                                                       
+            
+            
+            
             return inner;
         } catch (Exception err) {
             err.printStackTrace();
@@ -296,7 +397,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
                         _workspacePathCombo.setText(directory);
                     }
                 } catch (Exception err) {
-                    MessageDialog.openError(Display.getDefault().getActiveShell(), "Error", "There was an internal error, please check the logs");
+                           MessageDialog.openError(Display.getDefault().getActiveShell(), "Error", "There was an internal error, please check the logs");
                     err.printStackTrace();
                 }
             }
@@ -387,7 +488,8 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
 
     @Override
     protected void okPressed() {
-        String str = _workspacePathCombo.getText();
+        String str    = _workspacePathCombo.getText();
+        String strBNG = _BioNetGenPathCombo.getText();
 
         if (str.length() == 0) {
             setMessage(_StrError, IMessageProvider.ERROR);
@@ -402,10 +504,10 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
 
         // save it so we can show it in combo later
         _lastUsedWorkspaces.remove(str);
+        _lastUsedBioNetGen.remove(strBNG);
 
-        if (!_lastUsedWorkspaces.contains(str)) {
-            _lastUsedWorkspaces.add(0, str);
-        }
+        if (!_lastUsedWorkspaces.contains(str))    {  _lastUsedWorkspaces.add(0, str); }
+        if (!_lastUsedBioNetGen.contains(strBNG))  {  _lastUsedBioNetGen.add(0, strBNG); }
 
         // deal with the max history
         if (_lastUsedWorkspaces.size() > _MaxHistory) {
@@ -417,6 +519,18 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
             _lastUsedWorkspaces.removeAll(remove);
         }
 
+        
+        // deal with the max history
+        if (_lastUsedBioNetGen.size() > _MaxHistory) {
+            List<String> remove = new ArrayList<String>();
+            for (int i = _MaxHistory; i < _lastUsedBioNetGen.size(); i++) {
+                remove.add(_lastUsedBioNetGen.get(i));
+            }
+
+            _lastUsedBioNetGen.removeAll(remove);
+        }
+
+        
         // create a string concatenation of all our last used workspaces
         StringBuffer buf = new StringBuffer();
         for (int i = 0; i < _lastUsedWorkspaces.size(); i++) {
@@ -426,9 +540,33 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
             }
         }
 
+        
+        
+        // create a string concatenation of all our last used workspaces
+        StringBuffer bufBNG = new StringBuffer();
+        for (int i = 0; i < _lastUsedBioNetGen.size(); i++) {
+            bufBNG.append(_lastUsedBioNetGen.get(i));
+            if (i != _lastUsedBioNetGen.size() - 1) {
+                bufBNG.append(_SplitChar);
+            }
+        }
+  
+        
         // save them onto our preferences
         _preferences.putBoolean(_KeyRememberWorkspace, _RememberWorkspaceButton.getSelection());
-        _preferences.put(_KeyLastUsedWorkspaces, buf.toString());
+        if (_RememberWorkspaceButton.getSelection()) {
+          _preferences.put(_KeyLastUsedWorkspaces, buf.toString());
+        } else {
+          _preferences.put(_KeyLastUsedWorkspaces, "");        	
+        }
+
+        // save them onto our preferences
+        _preferences.putBoolean(_KeyRememberBioNetGen, _RememberBioNetGenButton.getSelection());
+        if (_RememberBioNetGenButton.getSelection()) {
+          _preferences.put(_KeyLastUsedBioNetGen, bufBNG.toString()); 
+        } else {
+          _preferences.put(_KeyLastUsedBioNetGen, ""); 
+        }
 
         // now create it 
         boolean ok = checkAndCreateWorkspaceRoot(str);
@@ -442,6 +580,9 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
 
         // and on our preferences as well
         _preferences.put(_KeyWorkspaceRootDir, str);
+        _preferences.put(_KeyBioNetGenRootDir, strBNG);		
+        Activator.getDefault().getPreferenceStore().setValue("SIM_PATH",PickWorkspaceDialog.getLastSetBioNetGenDirectory());
+
 
         super.okPressed();
     }

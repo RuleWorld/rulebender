@@ -38,7 +38,11 @@ public class BioNetGenConsole {
 		boolean bng  = validateBNGPath(bngPath);
 		boolean bng2 = validateBNGPath(bngPath2);
 
-		if ((bng || bng2) && prereq) {
+		String myPath = PreferencesClerk.getBNGPath();
+		
+		
+//		if ((bng || bng2) && prereq) {
+        if (!myPath.equals("No_Valid_Path_")) {
 
 			Console.displayOutput(currentModel.toString(), 
 		     "\nBioNetGen has been located on your system. ");
@@ -46,8 +50,9 @@ public class BioNetGenConsole {
 
 			List<String> commands = new ArrayList<String>();
 			commands.add("perl");
-			if (bng) { commands.add(bngPath); }
-			else     { commands.add(bngPath2); }
+			commands.add(PreferencesClerk.getFullBNGPath());
+//			if (bng) { commands.add(bngPath); }
+//			else     { commands.add(bngPath2); }
 			commands.add("-console");
 			ProcessBuilder builder = new ProcessBuilder(commands);
 			try {
@@ -76,13 +81,6 @@ public class BioNetGenConsole {
 			    + "'Simulator' under 'Preferences'.\n\n\n");
 
 
-			
-			//			Console.displayOutput(currentModel.toString(), 
- //                              "FullPath " + bngPath + "\n\n");
-//			Console.displayOutput(currentModel.toString(), 
- //                              "Path " + bngPath1 + "\n\n");
-//			Console.displayOutput(currentModel.toString(), 
- //                              "Root " + bngPath2 + "\n\n");
 		}
 
 	}

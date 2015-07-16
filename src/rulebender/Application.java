@@ -14,6 +14,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
 import rulebender.core.workspace.PickWorkspaceDialog;
+import rulebender.preferences.PreferencesClerk;
 import rulebender.prereq.PreReqChecker;
 
 /**
@@ -54,6 +55,9 @@ public class Application implements IApplication {
 			}
 			return IApplication.EXIT_OK;
 		} finally {
+			// This seems like the best place to copy the name of the BioNetGen directory
+			// from the PreferencesClerk database into the _preferences database.
+			String mm = PickWorkspaceDialog.setLastSetBioNetGenDirectory(PreferencesClerk.getUserBNGPath());
 			display.dispose();
 		}
 	}
@@ -62,6 +66,7 @@ public class Application implements IApplication {
 	 * @see org.eclipse.equinox.app.IApplication#stop()
 	 */
 	public void stop() {
+		
 		if (!PlatformUI.isWorkbenchRunning())
 			return;
 		final IWorkbench workbench = PlatformUI.getWorkbench();
@@ -75,9 +80,10 @@ public class Application implements IApplication {
 	}
 	
 	private boolean selectWorkspace(Display display)
-	{
+	{		
 		 // fetch the Location that we will be modifying 
 	    Location instanceLoc = Platform.getInstanceLocation(); 
+	    
 	    	
 	    try { 
 			 
@@ -128,17 +134,48 @@ public class Application implements IApplication {
 	            else { 
 	            // tell Eclipse what the selected location was and continue 
 	            instanceLoc.set(new URL("file", null, pwd.getSelectedWorkspaceLocation()), false); 
+	            //  The dialog for picking the workspace will not be shown, so copy the path to BioNetGen.
+				Activator.getDefault().getPreferenceStore().setDefault("SIM_PATH",PickWorkspaceDialog.getLastSetBioNetGenDirectory());
 	            } 
 	        } 
 	        else { 
 	            // set the last used location and continue 
-	            instanceLoc.set(new URL("file", null, lastUsedWs), false); 
+	            instanceLoc.set(new URL("file", null, lastUsedWs), false);
+	            //  The dialog for picking the workspace will not be shown, so copy the path to BioNetGen.
+				Activator.getDefault().getPreferenceStore().setDefault("SIM_PATH",PickWorkspaceDialog.getLastSetBioNetGenDirectory());
 	        }   
 	    } 
 	    catch (Exception err) 
 	    { 
-	     
+	       
 	    }
+	    
+	    
+	    /*
+        String     bngPath   = PreferencesClerk.getFullDefaultBNGPath();
+        String     bngPath2  = PreferencesClerk.getFullUserBNGPath();
+       // String bngPath = bng.toString();
+
+//      System.out.println(" bngPath " + bngPath);
+//      System.out.println(" bngPath2 " + bngPath2);
+
+       boolean prereq = BioNetGenUtility.checkPreReq();
+       boolean bng  = validateBNGPath(bngPath);
+       boolean bng2 = validateBNGPath(bngPath2);
+
+	    
+       if (bng || bng2) {
+//         System.out.println("\nBioNetGen has been located on your system. ");
+             TableItem item = new TableItem(table, SWT.NONE);
+       //      item.setText(0, "BioNetGen Found");
+       //      item.setText(1, "Level 2.2.6");
+         } else {
+         TableItem item = new TableItem(table, SWT.NONE);
+       //          item.setText(0, "BioNetGen Not Found");
+       //          item.setText(1, "Please Click OK and Follow Instructions");
+         }
+
+          */
 		
 		return true; 
 	}

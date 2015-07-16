@@ -72,8 +72,7 @@ public class PreferencesClerk
 //	   + System.getProperty("file.separator") + BNGPathFromRoot;
 		return  System.getProperty("user.dir")
 		    + System.getProperty("file.separator")
-                    + BNGPathFromRoot
-		    + System.getProperty("file.separator");
+                    + BNGPathFromRoot;
 	}
 	/**
 	 * Returns the name of the main BNG file in 'BNGName'.
@@ -104,36 +103,49 @@ public class PreferencesClerk
 	 */
 	
 	public static String getUserBNGPath() {
-		return Activator.getDefault().getPreferenceStore().getString("SIM_PATH")
-				+ System.getProperty("file.separator");
+		return Activator.getDefault().getPreferenceStore().getString("SIM_PATH");
+	}
+	public static String getFullUserBNGPath() {
+		return getUserBNGPath()  + System.getProperty("file.separator") + BNGName;
 	}
 	
-	public static String getFullUserBNGPath() {
-		return getUserBNGPath() + BNGName;
-	}
 	public static String getFullDefaultBNGPath() {
-		return getDefaultBNGPath() + BNGName;
+		return getDefaultBNGPath() + System.getProperty("file.separator") + BNGName;
 	}
+	
+	
+	/*  This returns either a valid directory name with no file.separator, or No_Valid_Path_. */
 	public static String getBNGPath() {
-
 		boolean prereq = BioNetGenUtility.checkPreReq();
-		if (prereq) {
-			 String     bngPath2  = PreferencesClerk.getFullUserBNGPath();		 
-			 // System.out.println(" clerk, bngPath2 " + bngPath2);
-	   		 boolean bng2 = validateBNGPath(bngPath2);
-			 if (bng2) { return PreferencesClerk.getUserBNGPath(); }
-
-	  	     String     bngPath   = PreferencesClerk.getFullDefaultBNGPath();
-		     boolean bng  = validateBNGPath(bngPath);
-		     // System.out.println(" clerk, bngPath " + bngPath);
-		     if (bng) { return PreferencesClerk.getDefaultBNGPath(); }
+		if (prereq) {		  
+		  String     bngPath2  = PreferencesClerk.getFullUserBNGPath();		 
+		  boolean bng2 = validateBNGPath(bngPath2);
+		  if (bng2) { 
+            System.out.println(" From PreferenceClerk   bngPath2 " + bngPath2);
+  		    bngPath2  = PreferencesClerk.getUserBNGPath();		 
+			String mm = PickWorkspaceDialog.setLastSetBioNetGenDirectory(PreferencesClerk.getUserBNGPath());
+	        Activator.getDefault().getPreferenceStore().setValue("SIM_PATH",PreferencesClerk.getUserBNGPath());
+	        return bngPath2; 
+	      }
+	      
+	  	  String     bngPath   = PreferencesClerk.getFullDefaultBNGPath();
+	      boolean bng  = validateBNGPath(bngPath);
+	      if (bng) { 
+            System.out.println(" Latest installed version, bngPath  " + bngPath);
+  	  	    bngPath = PreferencesClerk.getDefaultBNGPath();
+			String mm = PickWorkspaceDialog.setLastSetBioNetGenDirectory(PreferencesClerk.getDefaultBNGPath());
+            Activator.getDefault().getPreferenceStore().setValue("SIM_PATH",PreferencesClerk.getDefaultBNGPath());
+            return bngPath; 
+          }
 		}
-		
+
 		return "No_Valid_Path_";  //  This is not a good way to handle the situation, but it's
 		               //  better than what we had before.
 	}
 	public static String getFullBNGPath() {
-		return getBNGPath() + BNGName;
+		String ssss =  getBNGPath() + System.getProperty("file.separator") + BNGName;
+		System.out.println("returning " + ssss);
+		return ssss;
 	}
 
 	
@@ -163,5 +175,8 @@ public class PreferencesClerk
 
 	public static String getWorkspace() {
 		return PickWorkspaceDialog.getLastSetWorkspaceDirectory();
+	}
+	public static String getBioNetGen() {
+		return PickWorkspaceDialog.getLastSetBioNetGenDirectory();
 	}
 }

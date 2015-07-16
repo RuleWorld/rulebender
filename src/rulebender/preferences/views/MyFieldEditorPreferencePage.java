@@ -5,7 +5,9 @@ import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.ui.IWorkbench; 
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
 import rulebender.preferences.PreferencesClerk;
+import rulebender.core.workspace.PickWorkspaceDialog;
 import rulebender.Activator;
 
 public class MyFieldEditorPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage 
@@ -17,7 +19,6 @@ public class MyFieldEditorPreferencePage extends FieldEditorPreferencePage imple
 	}
 
 	public void createFieldEditors() {
-		System.out.println("Opening up the field editor");
 		addField(new DirectoryFieldEditor("SIM_PATH", "&Path to simulator root (contains bin/):", getFieldEditorParent()));
 		
 		/*
@@ -32,36 +33,17 @@ public class MyFieldEditorPreferencePage extends FieldEditorPreferencePage imple
 		addField(new StringFieldEditor("MySTRING2", "A &text preference:",
 				getFieldEditorParent()));		
 		*/
+		
 	}
 	
-	/*
-	public String getUserBNGPath() {
-		System.out.println("The user has selected " +
-			 Activator.getDefault().getPreferenceStore().getDefaultString("SIM_PATH")
-	);
-		return  Activator.getDefault().getPreferenceStore().getDefaultString("SIM_PATH");
-	}
-	*/
 
 	public void init(IWorkbench workbench) {
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
 		setDescription("RuleBender Preferences");
 		
-//		
-//		    System.out.println("Setting default for  bngPath");
-//			bngPath =  PreferencesClerk.getBNGRoot();
-			Activator.getDefault().getPreferenceStore().setDefault("SIM_PATH",PreferencesClerk.getBNGRoot());
+           Activator.getDefault().getPreferenceStore().setValue("SIM_PATH",PreferencesClerk.getUserBNGPath());
+        // Activator.getDefault().getPreferenceStore().setValue("SIM_PATH",PickWorkspaceDialog.getLastSetBioNetGenDirectory());
 
-
-		/*
-		System.out.println("" + System.getProperty("user.dir") + "/BioNetGen-2.2.0/");
-		
-		if(Activator.getDefault().getPreferenceStore().getString("SIM_PATH").equals(""))
-		{
-			System.out.println("Setting the default preference");
-			Activator.getDefault().getPreferenceStore().setDefault("SIM_PATH", System.getProperty("user.dir") + "/BioNetGen-2.2.0/");
-		}
-		*/
 	}
 
 }

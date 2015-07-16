@@ -282,10 +282,9 @@ public class ParameterScanComposite extends Composite {
 				// Run the parameter scan. This returns a boolean, but for now I am
 				// ignoring it.
 				BioNetGenUtility.parameterScan(m_parentView.getSelectedFile(),
-				    scanData, PreferencesClerk.getBNGPath(),
-				    PreferencesClerk.getBNGPath() + "Perl2/scan_var.pl",
-				    ResultsFileUtility
-				        .getParameterScanResultsDirectoryForIFile(m_parentView
+				    scanData, PreferencesClerk.getBNGPath() + System.getProperty("file.separator"),
+				    PreferencesClerk.getBNGPath() + System.getProperty("file.separator") + "Perl2/scan_var.pl",
+				    ResultsFileUtility.getParameterScanResultsDirectoryForIFile(m_parentView
 				            .getSelectedFile()));
 			}
 		});
