@@ -123,6 +123,12 @@ public class SMClickControlDelegate extends ControlAdapter implements ISelection
 	private JMenuItem hideCompartmentsMenuItem;
 	private JMenuItem hideAllCompartmentsMenuItem;
 	
+	// Popup Menu items (Sythetic Nodes)
+	private JMenuItem showSynthNodesMenuItem;
+	private JMenuItem hideSynthNodesMenuItem;
+	private JMenuItem showAllSynthNodesMenuItem;
+	private JMenuItem hideAllSynthNodesMenuItem;
+	
 	// Variable to hold the most recent mouseclick info to pass along
 	private MouseEvent mostRecentClick;
 	
@@ -132,6 +138,7 @@ public class SMClickControlDelegate extends ControlAdapter implements ISelection
 	// Whether or not the states and/or compartments are shown in this SmallMultiple
 	private boolean m_statesShown;
 	private boolean m_compartmentsShown;
+	private boolean m_synthNodesShown;
 	
 	// Variables to measure delay for single vs double click
 	private int delay;
@@ -162,6 +169,7 @@ public class SMClickControlDelegate extends ControlAdapter implements ISelection
 		
 		m_currentlySelected = false;
 		m_statesShown = false;
+		m_synthNodesShown = true;
 		
 		delay = (Integer)Toolkit.getDefaultToolkit().getDesktopProperty("awt.multiClickInterval");
 		//delay = 250;
@@ -486,11 +494,40 @@ public class SMClickControlDelegate extends ControlAdapter implements ISelection
 				
 			} //if-else
 			
+			if (m_synthNodesShown) {
+				JMenuItem m = new JMenu("Hide Synth Nodes");
+
+				hideSynthNodesMenuItem = new JMenuItem("...on this model");
+				hideSynthNodesMenuItem.addActionListener(this);
+				
+				hideAllSynthNodesMenuItem = new JMenuItem("...on all models");
+				hideAllSynthNodesMenuItem.addActionListener(this);
+				
+				m.add(hideSynthNodesMenuItem);
+				m.add(hideAllSynthNodesMenuItem);
+				
+				popupMenu.add(m);
+			} else {
+				JMenuItem m = new JMenu("Show Synth Nodes");
+
+				showSynthNodesMenuItem = new JMenuItem("...on this model");
+				showSynthNodesMenuItem.addActionListener(this);
+				
+				showAllSynthNodesMenuItem = new JMenuItem("...on all models");
+				showAllSynthNodesMenuItem.addActionListener(this);
+				
+				m.add(showSynthNodesMenuItem);
+				m.add(showAllSynthNodesMenuItem);
+				
+				popupMenu.add(m);
+			}
+			
+			
 			// Open model menu option
 			openModelMenuItem = new JMenuItem("Open model");
 			popupMenu.add(openModelMenuItem);
 			openModelMenuItem.addActionListener(this);
-			
+
 			// Open simulations menu option
 			if ((smPanel.isCurrentlyHighlighted())) {
 				JMenu m = new JMenu("Open simulations...");
@@ -779,6 +816,22 @@ public class SMClickControlDelegate extends ControlAdapter implements ISelection
 			// If we select this menu item, we are deselecting the visibility of compartments in this small multiple only
 			showCompartments();
 			
+		} else if (e2.getSource() == hideAllSynthNodesMenuItem) {
+			// If we select this menu item, we are deselecting the visibility of all compartments
+			hideAllSynthNodes(smPanel, panels);
+			
+		} else if (e2.getSource() == hideSynthNodesMenuItem) {
+			// If we select this menu item, we are deselecting the visibility of compartments in this small multiple only
+			hideSynthNodes();
+			
+		} else if (e2.getSource() == showAllSynthNodesMenuItem) {
+			// If we select this menu item, we are deslecting the visibility of all compartments
+			showAllSynthNodes(smPanel, panels);
+			
+		} else if (e2.getSource() == showSynthNodesMenuItem) {
+			// If we select this menu item, we are deselecting the visibility of compartments in this small multiple only
+			showSynthNodes();
+			
 		} else if (e2.getSource() == openSingleSimulationMenuItem) {
 			// If we select this menu item, we are opening the most recent simulation of the model clicked
 			openSimulation(smPanel, panelIndexClicked);
@@ -1038,6 +1091,120 @@ public class SMClickControlDelegate extends ControlAdapter implements ISelection
 			((SMClickControlDelegate)smPanel.getMultiple(i).getCMAPNetworkViewer().getClickControl()).showStates();
 		} //for		
 	} //showAllStates
+
+	private void hideAllSynthNodes(SmallMultiplesPanel smPanel, JPanel[] panels) {
+		for (int i = 0; i < panels.length; i++) {
+			((SMClickControlDelegate)smPanel.getMultiple(i).getCMAPNetworkViewer().getClickControl()).hideSynthNodes();
+		} //for
+	} //hideAllCompartments
+
+	private void showAllSynthNodes(SmallMultiplesPanel smPanel, JPanel[] panels) {
+		for (int i = 0; i < panels.length; i++) {
+			((SMClickControlDelegate)smPanel.getMultiple(i).getCMAPNetworkViewer().getClickControl()).showSynthNodes();
+		} //for
+	} //hideAllCompartments
+
+	private void showSynthNodes() {
+		
+		Iterator iter = m_vis.items("component_graph");
+
+		// Iterate across all compartments, making them hidden
+		while (iter.hasNext()) {
+			VisualItem item = (VisualItem) iter.next();
+			// make hub nodes invisible
+			if (item instanceof NodeItem) {
+				String type = item.getString("type");
+				if (type != null && type.equals("hub")) {
+					item.setVisible(true);
+				}
+			}
+			// make edges linked to hub nodes invisible and
+			// show edges linked to molecules according to the visibility of
+			// the states
+			else if (item instanceof EdgeItem) {
+				String type = item.getString("type");
+				// edges connected to hubs
+				if (type == "moleConnection") {
+					item.setVisible(true);
+				}
+			}
+			
+		} //while
+		
+		// apply color/layout actions
+		applyActions();
+		applyActions();  //  This second applyActions() is needed 
+		
+		// compartments are now shown
+		m_synthNodesShown = true;		
+	}	
+	
+	private void hideSynthNodes() {
+		
+		Iterator iter = m_vis.items("component_graph");
+
+		// Iterate across all compartments, making them hidden
+		while (iter.hasNext()) {
+			VisualItem item = (VisualItem) iter.next();
+			// make hub nodes invisible
+			if (item instanceof NodeItem) {
+				String type = item.getString("type");
+				if (type != null && type.equals("hub")) {
+					item.setVisible(false);
+				}
+			}
+			// make edges linked to hub nodes invisible and
+			// show edges linked to molecules according to the visibility of
+			// the states
+			else if (item instanceof EdgeItem) {
+				String type = item.getString("type");
+				// edges connected to hubs
+				if (type == "moleConnection") {
+					item.setVisible(false);
+				}
+				// edges between molecules
+				// if (type == "moleConnection") {
+				//   String displaymode = item.getString("displaymode");
+				//   if (displaymode != null) {
+				//     if (1 == 0) {  // was showStates
+				//       if (displaymode.equals("both") || displaymode.equals("state")) {
+				//         item.setVisible(true);
+				//       } else if (displaymode.equals("component")) {
+				//         item.setVisible(false);
+				//       }
+				//
+				//     } else {
+				//       if (displaymode.equals("both") || displaymode.equals("component")) {
+				//         item.setVisible(true);
+				//       } else if (displaymode.equals("state")) {
+				//         item.setVisible(false);
+				//       }
+				//     }
+				//   } else {
+				//     item.setVisible(true);
+				//   }
+				// }
+			}
+			
+			
+//			VisualItem item = (VisualItem) iter.next();
+//			item.setVisible(false);
+		} //while
+		
+		// apply color/layout actions
+		applyActions();
+		applyActions();
+		applyActions();
+		applyActions();  //  These applyActions() are needed because the first one 
+		                 //  will sometimes leave a little bit of the deleted items still 
+		                 //  visible, especially arrow heads for directed arcs.
+		
+		// compartments are now shown
+		m_synthNodesShown = false;
+		
+	} //hideCompartments
+	
+	
 	
 	/**
 	 * Hides all compartments in all SmallMultiples
