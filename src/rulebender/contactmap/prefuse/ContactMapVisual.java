@@ -1095,11 +1095,11 @@ public class ContactMapVisual {
 					if (toHub) {
 						e = m_componentGraph.addEdge(moleNode, hubNode);
 
-						System.out.println("Forward Edge");
+						// System.out.println("Forward Edge");
 					} else {
 						e = m_componentGraph.addEdge(hubNode, moleNode);
 
-						System.out.println("Reverse Edge");
+						// System.out.println("Reverse Edge");
 					}
 					e.set("type", "hubMoleConnection");
 					m_vis.getVisualItem(COMPONENT_GRAPH, e).setVisible(true);
@@ -1182,11 +1182,11 @@ public class ContactMapVisual {
 						if (forward) {
 							e = m_componentGraph.addEdge(moleNode, hubNode);
 
-							System.out.println("Forward Edge");
+							// System.out.println("Forward Edge");
 						} else {
 							e = m_componentGraph.addEdge(hubNode, moleNode);
 
-							System.out.println("Reverse Edge");
+							// System.out.println("Reverse Edge");
 						}
 						e.set("type", "hubMoleConnection");
 						m_vis.getVisualItem(COMPONENT_GRAPH, e).setVisible(true);
