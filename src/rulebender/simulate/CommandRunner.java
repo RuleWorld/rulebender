@@ -152,7 +152,9 @@ public class CommandRunner<T extends CommandInterface>
     writeLogToResults();
 
     // DEBUG
-    System.out.println("Errors: \n" + m_errorLog);
+	if ("minimal" != PreferencesClerk.getOutputSetting()) {
+      System.out.println("Errors: \n" + m_errorLog);
+	}
 
     if (!m_errorLog.equals(""))
     {
@@ -200,9 +202,11 @@ public class CommandRunner<T extends CommandInterface>
   }
 
   private void writeLogToResults()
-  {
-    System.out.println("Writing log to " + m_workingDirectory);
-
+  {	  
+	if ("minimal" != PreferencesClerk.getOutputSetting()) {
+      System.out.println("Writing log to " + m_workingDirectory);
+	}
+	
     String logFileName = m_workingDirectory
         + System.getProperty("file.separator") + "sim_log.log";
 

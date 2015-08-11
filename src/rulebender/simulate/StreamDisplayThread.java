@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import rulebender.core.utility.Console;
+import rulebender.preferences.PreferencesClerk;
 
 public class StreamDisplayThread extends Thread {
 	private final InputStream m_stream;
@@ -44,7 +45,9 @@ public class StreamDisplayThread extends Thread {
 
 		if (line.startsWith("[simulation PID is:")) {
 			String[] split = line.split("\\s+");
-			System.out.println("split[3]: " + split[3]);
+			if ("minimal" != PreferencesClerk.getOutputSetting()) {
+			  System.out.println("Process number ?  split[3]: " + split[3]);
+			}
 			m_pid = Integer.parseInt(split[3].substring(0, split[3].indexOf("]"))
 			    .trim());
 		}

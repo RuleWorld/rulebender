@@ -88,8 +88,6 @@ public class LayeredPane extends JLayeredPane
 	public void setDisplay(Display display)
 	{
 		
-		//DEBUG
-		System.out.println("setDisplay Called: ");
 		
 		// Remove any component children
 		if(mainJPanel.getComponentCount() > 0)

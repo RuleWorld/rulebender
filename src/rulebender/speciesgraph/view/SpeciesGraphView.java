@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
 import rulebender.core.prefuse.LayeredPane;
+import rulebender.preferences.PreferencesClerk;
 
 public class SpeciesGraphView extends ViewPart 
 {
@@ -101,7 +102,9 @@ public class SpeciesGraphView extends ViewPart
 	 */
 	public void setSpeciesGraph(prefuse.Display d)
 	{
+      if ("minimal" != PreferencesClerk.getOutputSetting()) {
 		System.out.println("\tSetting Species Graph Display: " + (d == null? "null" : "not null"));
+      }
 		
 		layeredPane.setDisplay(d);
 	}

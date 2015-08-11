@@ -44,7 +44,6 @@ public class CompareAction extends Action
 	@Override
 	public boolean isEnabled()
 	{
-		System.out.println("Compare isEnabled()");
 		IPerspectiveDescriptor activePerspective  = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getPerspective();
 		
 		//FIXME This is another ugly connection.

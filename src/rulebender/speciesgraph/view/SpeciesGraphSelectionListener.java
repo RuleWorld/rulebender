@@ -8,6 +8,7 @@ import org.eclipse.ui.IWorkbenchPart;
 
 import rulebender.editors.dat.DATMultiPageEditor;
 import rulebender.speciesgraph.prefuse.SpeciesGraphVisual;
+import rulebender.preferences.PreferencesClerk;
 
 public class SpeciesGraphSelectionListener implements ISelectionListener
 {
@@ -27,9 +28,12 @@ public class SpeciesGraphSelectionListener implements ISelectionListener
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) 
 	{	
 		// DEBUG
+	 String actval =   PreferencesClerk.getOutputSetting();
+	 if (actval != "minimal") {
 		System.out.println("Selection:\n" + "\tpart: " + part.getTitle() +
 				           "\n\tselection: " + selection.toString());
 		System.out.println("\tclass: " + part.getClass().toString());
+	 }
 		
 		if(part.getClass() == DATMultiPageEditor.class && !selection.equals(""))
 		{
@@ -49,9 +53,9 @@ public class SpeciesGraphSelectionListener implements ISelectionListener
 	 */
 	public prefuse.Display generateSpeciesGraph(String speciesString)
 	{
-		System.out.println("***Generating Species Graph: " + speciesString);
+		// System.out.println("***Generating Species Graph: " + speciesString);
 		speciesString = speciesString.substring(1, speciesString.length()-1);
-		System.out.println("***Cleaned Species Graph: " + speciesString);
+		//  System.out.println("***Cleaned Species Graph: " + speciesString);
 		
 		String[] splitTypeAndExpression = speciesString.split("\t");
 		
@@ -60,14 +64,12 @@ public class SpeciesGraphSelectionListener implements ISelectionListener
 			return null;
 		}
 		
-		System.out.println("\tLong enough...");
 		
 		String type = splitTypeAndExpression[0];
 		String itemExp = splitTypeAndExpression[1];
 		
 		prefuse.Display toReturn = null;
 		
-		System.out.println("\ttype: " + type);
 		
 		if (type.equals("species") || type.equals("pattern")) 
 		{

@@ -100,7 +100,7 @@ public class PreferencesClerk
 	
 	
 	public static String getOutputSetting() {
-      return = Activator.getDefault().getPreferenceStore().getString("OUTPUT_SETTING");
+      return Activator.getDefault().getPreferenceStore().getString("OUTPUT_SETTING");
 	}
 	
 	public static String setOutputSetting(String ssss) {
@@ -135,7 +135,6 @@ public class PreferencesClerk
 		  String     bngPath2  = PreferencesClerk.getFullUserBNGPath();		 
 		  boolean bng2 = validateBNGPath(bngPath2);
 		  if (bng2) { 
-            System.out.println(" From PreferenceClerk   bngPath2 " + bngPath2);
   		    bngPath2  = PreferencesClerk.getUserBNGPath();		 
 			String mm = PickWorkspaceDialog.setLastSetBioNetGenDirectory(PreferencesClerk.getUserBNGPath());
 	        Activator.getDefault().getPreferenceStore().setValue("SIM_PATH",PreferencesClerk.getUserBNGPath());
@@ -145,7 +144,6 @@ public class PreferencesClerk
 	  	  String     bngPath   = PreferencesClerk.getFullDefaultBNGPath();
 	      boolean bng  = validateBNGPath(bngPath);
 	      if (bng) { 
-            System.out.println(" Latest installed version, bngPath  " + bngPath);
   	  	    bngPath = PreferencesClerk.getDefaultBNGPath();
 			String mm = PickWorkspaceDialog.setLastSetBioNetGenDirectory(PreferencesClerk.getDefaultBNGPath());
             Activator.getDefault().getPreferenceStore().setValue("SIM_PATH",PreferencesClerk.getDefaultBNGPath());
@@ -157,9 +155,7 @@ public class PreferencesClerk
 		               //  better than what we had before.
 	}
 	public static String getFullBNGPath() {
-		String ssss =  getBNGPath() + System.getProperty("file.separator") + BNGName;
-		System.out.println("returning " + ssss);
-		return ssss;
+		return  getBNGPath() + System.getProperty("file.separator") + BNGName;
 	}
 
 	
