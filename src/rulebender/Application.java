@@ -39,6 +39,9 @@ public class Application implements IApplication {
 	    // the old Eclipse generated code 
         Display display = PlatformUI.createDisplay(); 
 
+        // Set command prompt output at a minimum.
+        Activator.getDefault().getPreferenceStore().setValue("OUTPUT_SETTING","minimal");
+
         
         // Get the workspace and only continue if it is set correctly.
 	    if(!selectWorkspace(display))

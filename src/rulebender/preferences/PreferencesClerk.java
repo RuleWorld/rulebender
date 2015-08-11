@@ -96,6 +96,20 @@ public class PreferencesClerk
 		return  System.getProperty("user.dir");
 	}
 
+
+	
+	
+	public static String getOutputSetting() {
+      return = Activator.getDefault().getPreferenceStore().getString("OUTPUT_SETTING");
+	}
+	
+	public static String setOutputSetting(String ssss) {
+      Activator.getDefault().getPreferenceStore().setValue("OUTPUT_SETTING",ssss);
+      return "Ret_String";
+	}
+	
+	
+	
 	/**
 	 * Returns the entire path from the root to the 'BNGName' file.
 	 * 

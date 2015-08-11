@@ -423,6 +423,11 @@
             id="rulebender.views.preferences.preferencePage"
             name="Simulator">
       </page>
+      <page
+            class="rulebender.preferences.views.MySettingsPreferencePage"
+            id="rulebender.views.preferences.preferencePage"
+            name="Settings">
+      </page>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
@@ -493,7 +498,7 @@
          </property>
          <property
                name="aboutText"
-               value="RuleBender 2.0r63&#x0A;&#x0A;RuleBender is currently developed by Adam M. Smith at the University of Pittsburgh under the direction of James R. Faeder and Elisabeta G. Marai. &#x0A;&#x0A;Please send all feedback and questions to help@rulebender.org.">
+               value="RuleBender 2.1.0&#x0A;&#x0A;RuleBender is currently developed by Adam M. Smith at the University of Pittsburgh under the direction of James R. Faeder and Elisabeta G. Marai. &#x0A;&#x0A;Please send all feedback and questions to help@rulebender.org.">
          </property>
          <property
                name="startupProgressRect"
