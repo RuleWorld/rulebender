@@ -1,0 +1,41 @@
+
+    Two non-essential changes have been made to Prefuse before building 
+the Prefuse .jar file:
+
+    1)  Line number 497 of the file  ExpressionParser.java  has been
+        commented out as follows:
+
+            //  s_logger.info("Parsed Expression: "+e);
+
+        This stops the printing of certain informational messages from
+        Prefuse.
+
+    2)  In the file  EdgeRenderer.java,  the method setBounds(VisualItem item)
+        has been modified as follows:
+
+        The lines:
+
+         if ( m_curArrow != null ) {
+            Rectangle2D bbox = (Rectangle2D)item.get(VisualItem.BOUNDS);
+            Rectangle2D.union(bbox, m_curArrow.getBounds2D(), bbox);
+         }
+
+         Are now:
+
+         if ( m_curArrow != null ) {
+            Rectangle2D bbox = (Rectangle2D)item.get(VisualItem.BOUNDS);
+            if ( 1 == 0 ) {
+                Rectangle2D.union(bbox, m_curArrow.getBounds2D(), bbox);
+            }
+         }
+
+         By commenting out the second line of the stanza, the effect of
+         the stanza has been changed.  But since the stanza seems to be a
+         no-op anyway, I decided to just eliminate the line.
+
+         The proper way to handle this would be to calculate the space
+         consumed by the arrowhead, and add that space correctly to the
+         space required by the visual item.  The calculation would be 
+         the union of the space required by the arrow head and the space
+         required by the visual item.
+         
