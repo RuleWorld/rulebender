@@ -1122,14 +1122,24 @@ public class ContactMapVisual {
 
 				if (compNode != null) {
 					// connect to component node
-					Edge e_comp = m_componentGraph.addEdge(hubNode, compNode);
+					Edge e_comp;
+					if (toHub) {
+					  e_comp = m_componentGraph.addEdge(compNode, hubNode);
+					} else {
+					  e_comp = m_componentGraph.addEdge(hubNode, compNode);						
+					}
 					e_comp.set("type", "hubMoleConnection");
 					e_comp.set("displaymode", "component");
 
 					m_vis.getVisualItem(COMPONENT_GRAPH, e_comp).setVisible(true);
 					// connect to state node
 					if (hasState && stateNode != null) {
-						Edge e_state = m_componentGraph.addEdge(hubNode, stateNode);
+						Edge e_state;
+						if (toHub) {
+						  e_state = m_componentGraph.addEdge(stateNode, hubNode);
+						} else {
+						  e_state = m_componentGraph.addEdge(hubNode, stateNode);
+						}
 						e_state.set("type", "hubMoleConnection");
 						e_state.set("displaymode", "state");
 						stateNode.set("hasedge", true);
@@ -1209,14 +1219,24 @@ public class ContactMapVisual {
 
 					if (compNode != null) {
 						// connect to component node
-						Edge e_comp = m_componentGraph.addEdge(hubNode, compNode);
+						Edge e_comp;
+						if (forward) {
+				          e_comp = m_componentGraph.addEdge(compNode, hubNode);
+						} else {
+						  e_comp = m_componentGraph.addEdge(hubNode, compNode);
+						}
 						e_comp.set("type", "hubMoleConnection");
 						e_comp.set("displaymode", "component");
 
 						m_vis.getVisualItem(COMPONENT_GRAPH, e_comp).setVisible(true);
 						// connect to state node
 						if (hasState && stateNode != null) {
-							Edge e_state = m_componentGraph.addEdge(hubNode, stateNode);
+							Edge e_state;
+							if (forward) {
+							  e_state = m_componentGraph.addEdge(stateNode, hubNode);
+							} else {
+							  e_state = m_componentGraph.addEdge(hubNode, stateNode);
+							}
 							e_state.set("type", "hubMoleConnection");
 							e_state.set("displaymode", "state");
 							stateNode.set("hasedge", true);
@@ -1293,6 +1313,8 @@ public class ContactMapVisual {
 		productItem.setVisible(true);
 
 		Edge e;
+		// Here productNode is the second parameter, so this should ensure 
+		// that any directed arc will point in the right direction.
 		e = m_componentGraph.addEdge(reactantNode, productNode);
 		e.set("type", "moleConnection");
 		// if (reactantSingleComponent) {
@@ -1319,6 +1341,8 @@ public class ContactMapVisual {
 				productState.set("hasedge", true);
 			}
 
+			// Here productState is the second parameter, so this should ensure 
+			// that any directed arc will point in the right direction.
 			Edge state = m_componentGraph.addEdge(reactantState, productState);
 			state.set("type", "moleConnection");
 			state.set("displaymode", "state");

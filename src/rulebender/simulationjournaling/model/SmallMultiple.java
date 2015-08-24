@@ -1168,11 +1168,11 @@ public class SmallMultiple {
 						if (forward) {
 							e = m_componentGraph.addEdge(moleNode, hubNode);
 
-							System.out.println("Forward Edge");
+							// System.out.println("Forward Edge");
 						} else {
 							e = m_componentGraph.addEdge(hubNode, moleNode);
 
-							System.out.println("Reverse Edge");
+							// System.out.println("Reverse Edge");
 						} // if-else
 						e.set("type", "moleConnection");
 					} // if
@@ -1194,13 +1194,24 @@ public class SmallMultiple {
 
 					if (compNode != null) {
 						// connect to component node
-						Edge e_comp = m_componentGraph.addEdge(hubNode, compNode);
+						Edge e_comp;
+						if (forward) {
+						  e_comp = m_componentGraph.addEdge(compNode, hubNode);
+						} else {
+						  e_comp = m_componentGraph.addEdge(hubNode, compNode);
+						}
+												
 						e_comp.set("type", "moleConnection");
 						e_comp.set("displaymode", "component");
 
 						// connect to state node
-						if (hasState && stateNode != null) {
-							Edge e_state = m_componentGraph.addEdge(hubNode, stateNode);
+						if (hasState && stateNode != null) {							
+						    Edge e_state;
+							if (forward) {
+							  e_state = m_componentGraph.addEdge(stateNode, hubNode);
+							} else {
+							  e_state = m_componentGraph.addEdge(hubNode, stateNode);
+							}
 							e_state.set("type", "moleConnection");
 							e_state.set("displaymode", "state");
 							stateNode.set("hasedge", true);
