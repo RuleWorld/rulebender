@@ -522,7 +522,10 @@ public class CMAPNetworkViewer
 		
 		// edge fill color, for arrows
 		ColorAction edgeFill = new ColorAction(COMPONENT_GRAPH + ".edges",
-				VisualItem.FILLCOLOR, ColorLib.rgba(105, 105, 105, 50));
+				VisualItem.FILLCOLOR, ColorLib.rgba(105, 105, 105, 200));
+		// Previously this was
+		//      VisualItem.FILLCOLOR, ColorLib.rgba(105, 105, 105, 50));
+		// It was changed for Issue #155
 
 		// create an action list containing all color assignments
 		ActionList color = new ActionList();

@@ -295,8 +295,12 @@ public class IGraphVisual
 		edgeStrokea.add(inhibitn0dashes, StrokeLib.getStroke(3.0f, dashes));
 		
 		// edge fill color, for arrows
+		int alpha3 = 3 * alpha;
 		ColorAction edgeFill = new ColorAction("igraph.edges",
-				VisualItem.FILLCOLOR, ColorLib.rgba(105, 105, 105, alpha));
+				VisualItem.FILLCOLOR, ColorLib.rgba(105, 105, 105, alpha3));
+//      This line was:
+//      		VisualItem.FILLCOLOR, ColorLib.rgba(105, 105, 105, alpha));
+//      but was changed for Issue #155.
 
 		// This predicate tells our fill ColorAction to use a different color
 		// for nodes with states.

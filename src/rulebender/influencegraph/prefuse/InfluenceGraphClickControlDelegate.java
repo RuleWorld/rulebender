@@ -357,11 +357,16 @@ public class InfluenceGraphClickControlDelegate extends ControlAdapter
 				.parse("inhibition == 0 && highlight == false");
 		edgeStroke.add(inhibitn0, ColorLib.rgba(197, 27, 125, alpha));
 		
-		// edge fill color, for arrows
+        // edge fill color, for arrows
+	    // hightlight arrow color
+		int alpha3 = 3 * alpha;
 		ColorAction edgeFill = new ColorAction("igraph.edges",
-				VisualItem.FILLCOLOR, ColorLib.rgba(105, 105, 105,
-						alpha));
-		// hightlight arrow color
+				VisualItem.FILLCOLOR, ColorLib.rgba(105, 105, 105, alpha3));
+        // This line used to look like:
+		//      VisualItem.FILLCOLOR, ColorLib.rgba(105, 105, 105, alpha));
+		// but it was changed for Issue #155.
+		
+		
 		edgeFill.add(highlight_activate1,
 				ColorLib.rgba(77, 146, 33, hightlight_alpha));
 		edgeFill.add(highlight_activate0,
