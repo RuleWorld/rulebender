@@ -498,7 +498,7 @@
          </property>
          <property
                name="aboutText"
-               value="RuleBender 2.1.0&#x0A;&#x0A;RuleBender is currently developed by Adam M. Smith at the University of Pittsburgh under the direction of James R. Faeder and Elisabeta G. Marai. &#x0A;&#x0A;Please send all feedback and questions to help@rulebender.org.">
+               value="RuleBender 2.1.0&#x0A;&#x0A;RuleBender was developed in collaboration between the groups of Dr. James R. Faeder and Dr. Elisabeta G. Marai at the University of Pittsburgh. It is currently maintained by the Faeder Lab in the Department of Computational and Systems Biology, School of Medicine, University of Pittsburgh.&#x0A;&#x0A;Please send all feedback and questions to help@rulebender.org.">
          </property>
          <property
                name="startupProgressRect"

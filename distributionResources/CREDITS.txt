@@ -1,13 +1,14 @@
-RuleBender was developed at the University of Pittsburgh under the direction of Dr. G. Elisabeta Marai in the Department of Computer Science, and Dr. James R. Faeder in the Department of Systems and Computational Biology.  
+RuleBender was developed in collaboration between the groups of Dr. James R. Faeder and Dr. Elisabeta G. Marai at the University of Pittsburgh. It is currently maintained by the Faeder Lab in the Department of Computational and Systems Biology, School of Medicine, University of Pittsburgh.
 
-RuleBender Committers:
-Adam M. Smith
-John Wenskovich
-Leonard A. Harris
-Robert Engelke
-Robert H. Clark
+Major Contributors:
+Adam M. Smith (Marai Lab)
+Wen Xu (Marai Lab)
+John Wenskovitch (Marai Lab)
+Yao Sun (Marai Lab)
+Robert Engelke (Faeder Lab)
+Leonard Harris (Faeder Lab)
 
-Previous Committers:
-Yao Sun
-Wen Xu
+Current Developers:
+Robert Clark (Faeder Lab)
+Jose Juan Tapia (Faeder Lab)
 
