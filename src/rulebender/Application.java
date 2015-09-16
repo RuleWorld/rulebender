@@ -41,6 +41,8 @@ public class Application implements IApplication {
 
         // Set command prompt output at a minimum.
         Activator.getDefault().getPreferenceStore().setValue("OUTPUT_SETTING","minimal");
+        // Set maximum graph density at a reasonable level.
+        Activator.getDefault().getPreferenceStore().setValue("MAX_GRAPH_COLUMNS","10000");
 
         
         // Get the workspace and only continue if it is set correctly.

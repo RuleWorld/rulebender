@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.util.Vector;
 
 import org.jfree.data.xy.XYDataItem;
 import org.jfree.data.xy.XYSeries;
@@ -20,7 +21,8 @@ import rulebender.editors.dat.model.ObservableFolderNode;
 import rulebender.editors.dat.model.ObservableNode;
 import rulebender.editors.dat.model.SpeciesFolderNode;
 import rulebender.editors.dat.model.SpeciesNode;
-
+import rulebender.preferences.PreferencesClerk;
+import rulebender.Activator;
 /**
  * 
  * Store all the information for CDAT, GDAT and SCAN files
@@ -34,8 +36,8 @@ public class DATFileData extends FileData {
 
 	// data for plotting
 	private final XYSeriesCollection seriesCollection;
-	private final ArrayList<XYSeries> seriesList;
-
+	private final ArrayList<XYSeries>      seriesList;
+	
 	private boolean allValueLargerThanZero_X = true;
 	private boolean allValueLargerThanZero_Y = true;
 	private double minX = Double.MAX_VALUE;
@@ -125,6 +127,8 @@ public class DATFileData extends FileData {
 	 */
 	@Override
 	protected void readData() {
+		Vector<Double> timeTemp = new Vector<Double>();       
+		Vector<String> lineTemp = new Vector<String>();  
 
 		// Read numbers from DAT file
 		try {
@@ -174,6 +178,8 @@ public class DATFileData extends FileData {
 			 * values space number number ...
 			 */
 
+			
+			int icount=0;
 			while (in.hasNext()) {
 				String line = in.nextLine();
 				line = line.substring(line.indexOf(' '), line.length()).trim();
@@ -182,17 +188,52 @@ public class DATFileData extends FileData {
 				if (time <= 0) {
 					allValueLargerThanZero_X = false;
 				} else if (time < minX) {
-					minX = time;
+					minX = time;					
 				}
 
 				// delete time
 				line = line.substring(line.indexOf(' '), line.length()).trim();
 
 				// concentrations
-				processConcentrations(line, time);
-			}
+                // was processConcentrations(line, time);
+				
+				timeTemp.add(new Double(time)); 
+				lineTemp.add(line);
+				icount++;
+            }
 			in.close();
 
+			int max_graph_columns = 0;			
+			try
+		    {
+		       max_graph_columns = Integer.parseInt(				
+		         PreferencesClerk.getMaxGraphDensity().trim());
+		    }
+		    catch (NumberFormatException nfe)
+		    {
+		       max_graph_columns = 10000;				
+		    }
+			System.out.println("MAX_GRAPH_COLUMNS = " + max_graph_columns);
+			
+			int last_iind=0;
+			if (icount > max_graph_columns) {
+			  for (int n=0; n < max_graph_columns; n++) {
+				 // int variables can range from -2 billion to 2 billion
+		         int iind = (int) Math.ceil(Double.valueOf(n) *
+         		 Double.valueOf(icount)/Double.valueOf(max_graph_columns));
+			     processConcentrations(lineTemp.get(iind),timeTemp.get(iind));
+			     			     
+			     last_iind = iind;
+			  }
+			  if ((icount-1) != last_iind) {
+                processConcentrations(lineTemp.get(icount-1),timeTemp.get(icount-1));
+			  }
+			}  else {
+              for (int n=0; n<icount; n++) {
+			    processConcentrations(lineTemp.get(n),timeTemp.get(n));              				  
+              }			
+			}
+			
 		} catch (FileNotFoundException e) {
 			System.out.println("File: " + file.getName() + " not found!");
 			e.printStackTrace();
@@ -584,7 +625,6 @@ public class DATFileData extends FileData {
 
 			return speciesList;
 		} catch (FileNotFoundException e) {
-			System.out.println("NET File not found!");
 			return varName;
 		}
 	}
@@ -674,7 +714,6 @@ public class DATFileData extends FileData {
 			}
 			return componentsList;
 		} catch (FileNotFoundException e) {
-			System.out.println("NET File not found!");
 			return componentsList;
 		}
 	}

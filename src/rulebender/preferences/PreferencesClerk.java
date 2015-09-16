@@ -109,6 +109,16 @@ public class PreferencesClerk
 	}
 	
 	
+	public static String getMaxGraphDensity() {
+	  return Activator.getDefault().getPreferenceStore().getString("MAX_GRAPH_COLUMNS");
+	}
+		
+    public static String setMaxGraphDensity(String ssss) {
+	  Activator.getDefault().getPreferenceStore().setValue("MAX_GRAPH_COLUMNS",ssss);
+	  return "Ret_String";
+    }
+		
+		
 	
 	/**
 	 * Returns the entire path from the root to the 'BNGName' file.
