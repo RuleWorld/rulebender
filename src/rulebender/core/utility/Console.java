@@ -1,5 +1,6 @@
 package rulebender.core.utility;
 
+import java.lang.*;
 import java.util.HashMap;
 
 import org.eclipse.core.resources.IFile;
@@ -21,6 +22,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.internal.PartSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.ConsolePlugin;
@@ -381,11 +383,49 @@ public class Console implements IStartup, ISelectionListener, IPartListener2 {
 
 	@Override
 	public void partHidden(IWorkbenchPartReference partRef) {
+		
 		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void partVisible(IWorkbenchPartReference partRef) {
+		int logilock = 0;
+
+		
+		if (logilock == 10) {
+            logilock = 1;
+    		System.out.println(" Get registered name " + partRef.getPartName());
+		
+		if (partRef.getPartName().equals("Console")) {
+			
+		  IWorkbenchPage page 
+            = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		  System.out.println(" Console state is " + page.getPartState(partRef));
+		
+		  IWorkbenchPartReference editRef = null;
+		  IEditorPart epart 
+            = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+            .getActiveEditor();
+		  if (epart != null) {
+		    editRef = ((PartSite) epart.getSite()).getPartReference();
+		    System.out.println(" Editor state is " + page.getPartState(editRef));
+		  }
+
+		  //  Check for null here.
+		  if (page.getPartState(partRef) == 0) {
+            if (page.getPartState(editRef) == 1) {
+		        System.out.println(" Trying to maximize the editor. ");
+
+  		        page.setPartState(partRef,1);
+  		        page.setPartState(editRef,1);
+
+  		        page.setPartState(partRef,1);
+  		        page.setPartState(editRef,1);
+  		        
+              }
+		    }  
+		  }
+		}
 		// TODO Auto-generated method stub
 	}
 
