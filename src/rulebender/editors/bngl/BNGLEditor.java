@@ -8,6 +8,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.lang.Integer;
 import java.lang.NumberFormatException;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
+
 
 import org.antlr.runtime.RecognitionException;
 import org.eclipse.core.resources.IFile;
@@ -27,14 +30,20 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartReference;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.ui.texteditor.AbstractTextEditor;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.widgets.Control;
 
 import rulebender.core.utility.ANTLRFilteredPrintStream;
 import rulebender.core.utility.Console;
@@ -100,7 +109,49 @@ public class BNGLEditor extends TextEditor implements ISelectionListener,
 
 		// Register as a resource change listener.
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
+		
+/*		//  This code will likely be part of the code that permits 
+        //  frequent parsing of the BNGL file.
+          
+		System.out.println("Calling the BNGLEditor construtor ");
+		
+		  CaretListener listener = new CaretListener() {
+		      public void caretUpdate(CaretEvent caretEvent) {
+		        System.out.println("dot:"+ caretEvent.getDot());
+		        System.out.println("mark"+caretEvent.getMark());
+		      }
+		    };
 
+		    System.out.println("here 2");		    
+	try {    
+        IWorkbenchPage iwpage = 
+		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		if (iwpage == null) {  System.out.println("iwpage == null"); }
+
+        
+//		IEditorSite iwpart = iwpage.getActiveEditor().getEditorSite();
+//		IWorkbenchPart iwpart = iwpage.getActiveEditor().getEditorSite();
+//		IWorkbenchPart iwpart = iwpage.getActiveEditor().getEditorSite().getPart();
+		
+//		if (iwpart == null) {  System.out.println("iwpart == null"); }
+	} catch (Exception e2) {
+        System.out.printf("Error getting active page.");		
+        e2.printStackTrace();
+    }
+
+		
+	//	IWorkbenchPartReference iwpr = iwpage.getReference(iwpart);
+		
+//		AbstractTextEditor e = (AbstractTextEditor)((IEditorReference) iwpr)
+//		.getEditor(false);
+		
+	//	// StyledText styledText = (StyledText)getAdapter(Control.class);
+//		// styledText.addCaretListener(listener);
+		
+//		org.eclipse.swt.custom.CaretListener listener2 = (org.eclipse.swt.custom.CaretListener) listener;  
+		
+	//	((StyledText)e.getAdapter(Control.class)).addCaretListener(listener2);
+*/		
 	}
 
 	/*
