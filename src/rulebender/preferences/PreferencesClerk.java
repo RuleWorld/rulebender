@@ -99,6 +99,18 @@ public class PreferencesClerk
 
 	
 	
+	public static String getUpgradeCheck() {
+      return Activator.getDefault().getPreferenceStore().getString("UPGRADE_CHECK");
+	}
+	
+	public static String setUpgradeCheck(String ssss) {
+      Activator.getDefault().getPreferenceStore().setValue("UPGRADE_CHECK",ssss);
+      return "Ret_String";
+	}
+	
+
+	
+	
 	public static String getOutputSetting() {
       return Activator.getDefault().getPreferenceStore().getString("OUTPUT_SETTING");
 	}
@@ -142,14 +154,19 @@ public class PreferencesClerk
 	public static String getBNGPath() {
 		boolean prereq = BioNetGenUtility.checkPreReq();
 		if (prereq) {		  
-		  String     bngPath2  = PreferencesClerk.getFullUserBNGPath();		 
-		  boolean bng2 = validateBNGPath(bngPath2);
-		  if (bng2) { 
-  		    bngPath2  = PreferencesClerk.getUserBNGPath();		 
-			String mm = PickWorkspaceDialog.setLastSetBioNetGenDirectory(PreferencesClerk.getUserBNGPath());
-	        Activator.getDefault().getPreferenceStore().setValue("SIM_PATH",PreferencesClerk.getUserBNGPath());
-	        return bngPath2; 
-	      }
+          // Check to see that RuleBender uses the latest BioNetGen for the first run.  The effect of 
+          // this check is to make sure that the PreferenceStore does not cause RuleBender to use an 
+          // older version. After this, the user can reset the location of BioNetGen. 
+          if (getUpgradeCheck().equals(BNGPathFromRoot)) { 
+  		    String     bngPath2  = PreferencesClerk.getFullUserBNGPath();		 
+		    boolean bng2 = validateBNGPath(bngPath2);
+		    if (bng2) { 
+  		      bngPath2  = PreferencesClerk.getUserBNGPath();		 
+			  String mm = PickWorkspaceDialog.setLastSetBioNetGenDirectory(PreferencesClerk.getUserBNGPath());
+	          Activator.getDefault().getPreferenceStore().setValue("SIM_PATH",PreferencesClerk.getUserBNGPath());
+	          return bngPath2; 
+	        }
+          }
 	      
 	  	  String     bngPath   = PreferencesClerk.getFullDefaultBNGPath();
 	      boolean bng  = validateBNGPath(bngPath);
@@ -157,6 +174,7 @@ public class PreferencesClerk
   	  	    bngPath = PreferencesClerk.getDefaultBNGPath();
 			String mm = PickWorkspaceDialog.setLastSetBioNetGenDirectory(PreferencesClerk.getDefaultBNGPath());
             Activator.getDefault().getPreferenceStore().setValue("SIM_PATH",PreferencesClerk.getDefaultBNGPath());
+            mm = setUpgradeCheck(BNGPathFromRoot);
             return bngPath; 
           }
 		}

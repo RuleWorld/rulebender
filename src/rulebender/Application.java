@@ -155,32 +155,6 @@ public class Application implements IApplication {
 	       
 	    }
 	    
-	    
-	    /*
-        String     bngPath   = PreferencesClerk.getFullDefaultBNGPath();
-        String     bngPath2  = PreferencesClerk.getFullUserBNGPath();
-       // String bngPath = bng.toString();
-
-//      System.out.println(" bngPath " + bngPath);
-//      System.out.println(" bngPath2 " + bngPath2);
-
-       boolean prereq = BioNetGenUtility.checkPreReq();
-       boolean bng  = validateBNGPath(bngPath);
-       boolean bng2 = validateBNGPath(bngPath2);
-
-	    
-       if (bng || bng2) {
-//         System.out.println("\nBioNetGen has been located on your system. ");
-             TableItem item = new TableItem(table, SWT.NONE);
-       //      item.setText(0, "BioNetGen Found");
-       //      item.setText(1, "Level 2.2.6");
-         } else {
-         TableItem item = new TableItem(table, SWT.NONE);
-       //          item.setText(0, "BioNetGen Not Found");
-       //          item.setText(1, "Please Click OK and Follow Instructions");
-         }
-
-          */
 		
 		return true; 
 	}
