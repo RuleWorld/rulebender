@@ -2,19 +2,19 @@
 # #########################################################################
 #   Build Script for BNGParser
 # #########################################################################
+echo ' '
+echo ' '
+echo ' '
+echo ' This script should be called right after cloning the GitHub code.'
+echo ' Building the parser before importing the code into Eclipse will'
+echo ' ensure that Eclipse is using the right parser.'
+echo ' '
 
   /bin/rm -r -f  bionetgen
   git clone https://github.com/RuleWorld/bionetgen.git
 #  /bin/cp -r bionetgen.safe  bionetgen
   cd bionetgen/parsers/BNGParser/src/bngparser/grammars
 
-
-# cd src/bngparser/grammars
-#   /home/roc60/eclipse_bngparser/plugins/antlr4ide.core_0.3.5.jar  \
-#antlr4ide.ui_0.3.5.jar
-#org.antlr.runtime_3.2.0.v201101311130.jar
-#antlr4ide.core_0.3.5.jar
-#org.apache.ant_1.9.2.v201404171502/lib/ant-antlr.jar
 
 echo '-------------------------------------------------------------------'
 echo ' Generate grammars'
@@ -102,6 +102,20 @@ javac -cp antlr-3.3-complete.jar:BNGParser.jar:commons-lang3-3.1.jar:. \
     bngparser/Tester.java 
 java  -cp antlr-3.3-complete.jar:BNGParser.jar:commons-lang3-3.1.jar:. \
     bngparser/Tester
+
+echo '-------------------------------------------------------------------'
+echo ' Deploy BNGParser.jar '
+echo '-------------------------------------------------------------------'
+
+cd ../../../..
+echo ' '
+echo ' Moving lib/BNGParser.jar to archive/BNGParser.old.jar '
+rm -f archive/BNGParser.old.jar
+mv    lib/BNGParser.jar  archive/BNGParser.old.jar
+
+echo ' Copying the newly built parser to lib/BNGParser.jar '
+cp   bionetgen/parsers/BNGParser/src/BNGParser.jar  lib/BNGParser.jar
+echo ' '
 
 echo '-------------------------------------------------------------------'
 echo ' Done '
