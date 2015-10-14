@@ -157,6 +157,7 @@ public class PreferencesClerk
           // Check to see that RuleBender uses the latest BioNetGen for the first run.  The effect of 
           // this check is to make sure that the PreferenceStore does not cause RuleBender to use an 
           // older version. After this, the user can reset the location of BioNetGen. 
+          if (getUpgradeCheck() != null) { 
           if (getUpgradeCheck().equals(BNGPathFromRoot)) { 
   		    String     bngPath2  = PreferencesClerk.getFullUserBNGPath();		 
 		    boolean bng2 = validateBNGPath(bngPath2);
@@ -166,6 +167,7 @@ public class PreferencesClerk
 	          Activator.getDefault().getPreferenceStore().setValue("SIM_PATH",PreferencesClerk.getUserBNGPath());
 	          return bngPath2; 
 	        }
+          }
           }
 	      
 	  	  String     bngPath   = PreferencesClerk.getFullDefaultBNGPath();
