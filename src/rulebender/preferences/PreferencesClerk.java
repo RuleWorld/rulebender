@@ -4,6 +4,7 @@
 package rulebender.preferences;
 
 import java.io.File;
+import java.util.prefs.*;
 
 import rulebender.Activator;
 import rulebender.core.workspace.PickWorkspaceDialog;
@@ -28,26 +29,12 @@ import rulebender.Activator;
 
 public class PreferencesClerk 
 {
-  
-  static
-  {
-    String dir = "";
-        //Activator
-        //.getDefault()
-        //.getPreferenceStore()
-        //.getString(MyFieldEditorPreferencePage.PREF_SIM_PATH);
-
-    if (null == dir || "".equals(dir))
-    {
-//      Activator
-//      .getDefault()
-//      .getPreferenceStore()
-//      .setDefault(MyFieldEditorPreferencePage.PREF_SIM_PATH, 
-//          System.getProperty("user.dir") + MyFieldEditorPreferencePage.DEF_SIM_DIR);
-      
-      // TODO Check the os and set the default or set the actual value appropriately
-    }
-  }
+  // This is a more "native" type of preference store, and values seem to be stored immediately
+  // after a .put() call.  It seems like the PreferenceStore() package saves the values only
+  // at shutdown, and not at all if the application restarts itself.	
+  private static Preferences  _preferences   = Preferences.userNodeForPackage(PreferencesClerk.class);
+  private static final String _upgrade_check = "upgradecheck";	
+	
 	// The name of the main BNG file.
 	private static String BNGName = "BNG2.pl";
 
@@ -90,22 +77,19 @@ public class PreferencesClerk
 	 * @return String root path to BNG directory.
 	 */
 	public static String getBNGRoot() {
-//		return Activator.getDefault().getPreferenceStore().getString("SIM_PATH")
-//		    + System.getProperty("file.separator");
-		// System.out.println("calling getBNGRoot()");
-		return  System.getProperty("user.dir");
+      return  System.getProperty("user.dir");
 	}
 
 
 	
 	
 	public static String getUpgradeCheck() {
-      return Activator.getDefault().getPreferenceStore().getString("UPGRADE_CHECK");
+	  return _preferences.get(_upgrade_check, null);
 	}
 	
-	public static String setUpgradeCheck(String ssss) {
-      Activator.getDefault().getPreferenceStore().setValue("UPGRADE_CHECK",ssss);
-      return "Ret_String";
+	public static void setUpgradeCheck(String ssss) {
+      _preferences.put(_upgrade_check, ssss);
+      return;
 	}
 	
 
@@ -165,6 +149,7 @@ public class PreferencesClerk
   		      bngPath2  = PreferencesClerk.getUserBNGPath();		 
 			  String mm = PickWorkspaceDialog.setLastSetBioNetGenDirectory(PreferencesClerk.getUserBNGPath());
 	          Activator.getDefault().getPreferenceStore().setValue("SIM_PATH",PreferencesClerk.getUserBNGPath());
+              setUpgradeCheck(BNGPathFromRoot);
 	          return bngPath2; 
 	        }
           }
@@ -176,7 +161,7 @@ public class PreferencesClerk
   	  	    bngPath = PreferencesClerk.getDefaultBNGPath();
 			String mm = PickWorkspaceDialog.setLastSetBioNetGenDirectory(PreferencesClerk.getDefaultBNGPath());
             Activator.getDefault().getPreferenceStore().setValue("SIM_PATH",PreferencesClerk.getDefaultBNGPath());
-            mm = setUpgradeCheck(BNGPathFromRoot);
+            setUpgradeCheck(BNGPathFromRoot);
             return bngPath; 
           }
 		}

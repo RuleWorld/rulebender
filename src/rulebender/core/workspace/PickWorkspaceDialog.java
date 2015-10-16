@@ -242,9 +242,8 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
             _BioNetGenPathCombo = new Combo(inner, SWT.BORDER);
             _BioNetGenPathCombo.setLayoutData(new GridData(GridData.FILL_VERTICAL | GridData.VERTICAL_ALIGN_END | GridData.FILL_HORIZONTAL));
             String bngRoot = _preferences.get(_KeyBioNetGenRootDir, "");
-            if (bngRoot == null || bngRoot.length() == 0 || bngRoot.equals("No_Valid_Path_")) {
-                bngRoot = PreferencesClerk.getBNGPath();
-            }
+            
+            bngRoot = PreferencesClerk.getBNGPath();
             _BioNetGenPathCombo.setText(bngRoot == null ? "" : bngRoot);
 
 
