@@ -11,7 +11,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -30,6 +29,7 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import rulebender.preferences.PreferencesClerk;
 import rulebender.core.workspace.PickWorkspaceDialog;
 import rulebender.core.workspace.HiderFilter;
+import rulebender.logging.Logger;
 
 /**
  * Eclipse RCP Generated Class.  This class manages the windows of the 
@@ -113,11 +113,10 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	     String markerStr = "_recovery_" + PreferencesClerk.getRuleBenderVersion();	
 	     int marklen = markerStr.length();
 	    	
-	     System.out.println("restoring projects   workspace = " + workspace_directory);
+	      Logger.log(Logger.LOG_LEVELS.INFO, this.getClass(),"restoring projects   workspace = " + workspace_directory);
 	     
 	     // Put the correct version stamp into this workspace.   
 	     String file_contents = PickWorkspaceDialog.checkWorkspaceVersion(workspace_directory);
-	     System.out.println("999 " + file_contents);
 	     if (file_contents.equals("CleanWorkspace")) {
            String rtcode = PickWorkspaceDialog.writeWorkspaceVersion(workspace_directory,1);
            if (rtcode != null) {
@@ -125,7 +124,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         	   System.out.println("authority for the workspace.");
            }
 	     }
-	     System.out.println("999.1");
 	    	
 	      // This should probably return a boolean to indicate whether it was successful or not.
 	      File dir = new File(workspace_directory);
@@ -133,12 +131,13 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	      File[] files = dir.listFiles(new HiderFilter());
 	      for (File f : files)
 	      {
-	          System.out.println("Restoring project: " + f.getName());
+	          Logger.log(Logger.LOG_LEVELS.INFO, this.getClass(),
+                    "Restoring project: " + f.getName());
 	          int fnamelen = f.toString().length();
 	          String newStr = f.toString().substring(0,fnamelen-marklen);
-	          // System.out.println("new name: " + newStr);
 	          File tempDir = new File(newStr);
-		      System.out.println(" Deleting directory " + tempDir.getName());
+		      Logger.log(Logger.LOG_LEVELS.INFO, this.getClass(),
+                        " Deleting directory " + tempDir.getName());
 		      if (!tempDir.exists()) {
 		    	  //  This next line is a little bit of a fudge to get things to work cleanly.
 		    	  //  Ideally, you would first create the project, then delete the project 
@@ -160,7 +159,10 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 			    IProject project = root.getProject(tempDir.getName());
 			
 			    if (project.exists()) {
-				  System.out.println(" Project " + tempDir.getName() + " already exists. It will not be recreated. ");
+		              Logger.log(Logger.LOG_LEVELS.INFO, 
+                                this.getClass(),
+                                " Project " + tempDir.getName() + 
+                                " already exists. It will not be recreated.");
 			    } else {
 			      project.create(null);
 			      project.open(null);
@@ -169,7 +171,8 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 				System.out.println(" Core exception while recreating project " + tempDir.getName());
 			  }
 	      }
-	      System.out.println(" Done processing files ");
+	      Logger.log(Logger.LOG_LEVELS.INFO, this.getClass(),
+                " Done processing files ");
 	}
 	
 	

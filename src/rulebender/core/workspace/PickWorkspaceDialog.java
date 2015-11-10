@@ -782,11 +782,11 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
        	   int result = dialog.open();
        	   
        	   if (result == 1 ) { 
-       		  String conMssg = "You have chosen to reset your workspace. This procedure gives\n\n" +
-       		                   "you a way to eliminate unwanted tracebacks and to recover projects\n" +
-       		                   "that are missing after doing the usual Upgrade.";
+       		  String conMssg = "You have chosen to reset your workspace. This procedure gives\n" +
+       		                   "you a way to eliminate unwanted tracebacks while recovering any\n" +
+       		                   "projects that might be missing after doing an initial Upgrade.";
        		  boolean resultb = MessageDialog.openConfirm(Display.getDefault().getActiveShell(), 
-       		                   "Confirm Workspace Upgrade Failed", conMssg); 
+       		                   "Confirm A Reset Of Workspace", conMssg); 
        		  if (!resultb) { result = 1; }
            }
        		                     	  
@@ -799,8 +799,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
            }
      	} else{
            String mssgStr = "This wizard will recover your workspace. \n\n" +
-                            "1) Will recover your projects and reset defaults\n" +
-        		            "Cancel";
+                            "Click Recover to reset defaults and preserve your projects.\n";
            MessageDialog dialog = new MessageDialog(Display.getDefault().getActiveShell(),
               "Your Workspace Was Created With An Old Version Of RuleBender", null, mssgStr,
            MessageDialog.INFORMATION, new String[] { "Recover", "Cancel"}, 0);
@@ -869,7 +868,6 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
         
         String ret_string = checkWorkspaceVersionAndReact(workspaceLocation);
         
-        String rtcode = "Trouble after checkWorkspaceVersion.";
         if (ret_string != null) {
           if (ret_string.equals("INVOKE_RECOVERY_OPTION_1") || 
        		  ret_string.equals("INVOKE_RECOVERY_OPTION_2")) {
@@ -879,10 +877,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
         		  return "Recovery failed. Please check the read/write permissions for the workspace.";   
         	  }
           } else {
-        	  if (ret_string.equals("CANCEL")) {
-        	  }         	   
-        	  return ret_string;
-        	  
+        	  return ret_string;        	  
           }
         }
                           
@@ -961,10 +956,8 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
            if (!RemoveSnapFiles(wsRoot)) { return false; }
        }
        if (optionStr.equals("INVOKE_RECOVERY_OPTION_2")) {
-
            if (!RemoveMetaData(wsRoot)) { return false; }
        }
-       // ToDo:  Maybe renameProjects should return a return code.
        renameProjects(wsRoot);
                      
        return rtcode;
@@ -1057,6 +1050,10 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
      }
     	
      if (rtcode == null) {    	
+    	 
+    	 
+    	 
+    	 
          // This should probably return a boolean to indicate whether it was successful or not.
          File dir = new File(workspace_directory);
          // list the files using our FileFilter
@@ -1064,9 +1061,21 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
          for (File f : files)
          {  
 //   	         System.out.println("Renaming file: " + f.toString());
-             File tempDir = new File(f.toString() + markerStr);
-             // System.out.println("temp: " + tempDir.toString());
-             f.renameTo(tempDir);          
+        	 
+ 	    	if (!f.getName().endsWith(markerStr)) {
+              //  This should never happen, but let's check for it anyway.
+ 	          //  It could be that an interupted RuleBender session might
+ 	    	  //  leave some directories renamed, while others still have
+ 	    	  //  their original name.  So for the second go around, let's
+ 	          //  be utra safe and check to see if any of the project
+ 	    	  //  directories have already been renamed, and leave those
+ 	          //  names alone.  (Otherwise, you could end up with a project 
+              //  with a name like f.toString() + markerStr + markerStr)
+        	 
+               File tempDir = new File(f.toString() + markerStr);
+               // System.out.println("temp: " + tempDir.toString());
+               f.renameTo(tempDir);
+ 	    	 }
          }
      } 
       

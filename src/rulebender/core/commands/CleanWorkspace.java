@@ -26,11 +26,9 @@ public class CleanWorkspace extends AbstractHandler
         // behaviour of PickWorkspaceDialog(), but this seemed like
         // the easiest and fastest way to pass data into the okPressed
         // method, which has no parameters.
-		System.out.println("\n\n-------------------------------------------------");
-		System.out.println("Entering CleanWorkspace");
-        PickWorkspaceDialog.willCleanWorkspace(true);
+		PickWorkspaceDialog.willCleanWorkspace(true);
+		
 		PickWorkspaceDialog pwd = new PickWorkspaceDialog(true, null); 
-		System.out.println("Just finished PickWorkspaceDialog");
         int pick = pwd.open(); 
         if (pick == Dialog.CANCEL) 
             return null; 
@@ -46,7 +44,6 @@ public class CleanWorkspace extends AbstractHandler
         
         // restart client 
         PlatformUI.getWorkbench().restart(); 
-		System.out.println("-------------------------------------------------\n\n");
         
 		return null;
 	}
