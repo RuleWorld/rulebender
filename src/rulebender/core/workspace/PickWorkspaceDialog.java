@@ -787,7 +787,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
        		                   "projects that might be missing after doing an initial Upgrade.";
        		  boolean resultb = MessageDialog.openConfirm(Display.getDefault().getActiveShell(), 
        		                   "Confirm A Reset Of Workspace", conMssg); 
-       		  if (!resultb) { result = 1; }
+       		  if (!resultb) { result = 0; }
            }
        		                     	  
            if (result == 0) {
