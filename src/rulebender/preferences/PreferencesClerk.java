@@ -41,6 +41,15 @@ public class PreferencesClerk
 	// The path from the root directory to the main BNG file.
 	private static String BNGPathFromRoot = "BioNetGen-2.2.6";
 
+	// In an effort to keep version-specific data in one place, the RuleBender version number appears
+	// here, along with the BioNetGen version number above.  It's worth pointing out, that the RuleBender
+	// version number also appears in the plugins.xml file, the s_installation_packages.sh file, and 
+	// the rulebender.product file, in two places.  At the moment, there doesn't seem to be a way to 
+	// merge these things, so each of those files will need to be updated when preparing a new release 
+	// of RuleBender.
+	private static String RuleBenderVersionNumber = "2.1.0";	
+	private static String RuleBenderVersion = "RuleBender-" + RuleBenderVersionNumber;	
+	
 	// Private constructor for static access only.
 	private PreferencesClerk() {
 		throw new AssertionError();
@@ -79,6 +88,19 @@ public class PreferencesClerk
 	public static String getBNGRoot() {
       return  System.getProperty("user.dir");
 	}
+
+	/**
+	 * Returns the RuleBender version.
+	 * 
+	 * @return String RuleBender version.
+	 */
+	public static String getRuleBenderVersionNumber() {
+	      return  RuleBenderVersionNumber;
+		}
+	public static String getRuleBenderVersion() {
+      return  RuleBenderVersion;
+	}
+
 
 
 	

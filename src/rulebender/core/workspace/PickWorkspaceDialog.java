@@ -1,13 +1,22 @@
 package rulebender.core.workspace;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 
+// import org.eclipse.ui;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -32,8 +41,10 @@ import org.eclipse.swt.widgets.Label;
 import za.co.quirk.layout.LatticeData;
 import za.co.quirk.layout.LatticeLayout;
 import rulebender.preferences.PreferencesClerk;
+import rulebender.core.workspace.ProjectFilter;
+import rulebender.core.workspace.DirFilter;
 import rulebender.Activator;
-
+import rulebender.logging.Logger;
 
 
 /**
@@ -57,12 +68,13 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
     private static final String _KeyLastUsedBioNetGen  = "bngLastUsedWorkspaces";
 
     private static final String _KeyDidSwitchRestart = "wsSwitchRestart";
+    private static final String _KeyCleanWorkspace   = "wsCleanWorkspace";
 
     // this are our preferences we will be using as the IPreferenceStore is not available yet
     private static Preferences  _preferences           = Preferences.userNodeForPackage(PickWorkspaceDialog.class);
 
     // various dialog messages
-    private static final String _StrMsg                = "Your workspace is where settings and various important files will be stored.  BioNetGen is a simulator that's installed separately.";
+    private static final String _StrMsg               = "Your workspace is where settings and various important files will be stored.  BioNetGen is a simulator that's installed separately.";
     private static final String _StrInfo               = "Please select a directory that will be the workspace root";
     private static final String _StrError              = "You must set a directory";
 
@@ -103,11 +115,31 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
         if (_switchWorkspace) {
-            newShell.setText("Switch Workspace");
+        	if (isCleanWorkspace()) {
+              newShell.setText("Restore Workspace");
+        	} else {
+              newShell.setText("Switch Workspace");
+        	}
         } else {
             newShell.setText("Workspace Selection");
         }
     }
+
+        
+    /**
+     * Returns whether the user selected "clean workspace" 
+     * 
+     * @return
+     */
+    public static boolean isCleanWorkspace() {
+        return _preferences.getBoolean(_KeyCleanWorkspace, false);
+    }
+    
+    public static void willCleanWorkspace(boolean true_or_false)
+    {  
+    	_preferences.putBoolean(_KeyCleanWorkspace, true_or_false);
+    }
+
     
     /**
      * Returns whether the user selected "remember workspace" in the preferences
@@ -159,11 +191,14 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
         return keyString; 
     }
 
+    
     @Override
     protected Control createDialogArea(Composite parent) {
         setTitle("Pick Workspace");
         setMessage(_StrMsg);
 
+
+        
         try {
             Composite inner = new Composite(parent, SWT.NONE);
             GridLayout gridLayout = new GridLayout();
@@ -230,6 +265,12 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
 
             
             
+            Logger.log(Logger.LOG_LEVELS.INFO, this.getClass(),
+              " Creating PickWorkspaceDialog  isCleanWorkspace = " 
+              + isCleanWorkspace());
+            
+            
+            if (!isCleanWorkspace()) {
             
             // BioNetGen Location            
             // label on left
@@ -299,7 +340,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
 			Activator.getDefault().getPreferenceStore().setDefault("SIM_PATH",PickWorkspaceDialog.getLastSetBioNetGenDirectory());
                                                        
             
-            
+            }
             
             return inner;
         } catch (Exception err) {
@@ -307,12 +348,14 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
             return null;
         }
     }
-
+    
     /**
      * Returns whatever path the user selected in the dialog.
      * 
      * @return Path
      */
+    
+    
     public String getSelectedWorkspaceLocation() {
         return _selectedWorkspaceRootLocation;
     }
@@ -411,6 +454,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
         getAllSubdirectoriesOf(source, subdirs);
         return subdirs.contains(target);
     }
+   
 
     // helper for above
     private void getAllSubdirectoriesOf(File target, List<File> buffer) {
@@ -488,26 +532,30 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
     @Override
     protected void okPressed() {
         String str    = _workspacePathCombo.getText();
-        String strBNG = _BioNetGenPathCombo.getText();
-
         if (str.length() == 0) {
             setMessage(_StrError, IMessageProvider.ERROR);
             return;
         }
 
+        String strBNG=null;
+        if (!isCleanWorkspace()) {
+          strBNG = _BioNetGenPathCombo.getText(); }
+
         String ret = checkWorkspaceDirectory(getParentShell(), str, true, true);
         if (ret != null) {
+        	if (ret.equals("CANCEL")) { ret = "Click Cancel Again To Close This Dialog Box"; }
             setMessage(ret, IMessageProvider.ERROR);
+            //  The behaviour here is a bit surprizing.  You click cancel once and you get 
+            //  the message above inserted into the "chose workspace" dialog box.  Click 
+            //  CANCEL again and RuleBender will exit. 
             return;
         }
 
         // save it so we can show it in combo later
         _lastUsedWorkspaces.remove(str);
-        _lastUsedBioNetGen.remove(strBNG);
 
         if (!_lastUsedWorkspaces.contains(str))    {  _lastUsedWorkspaces.add(0, str); }
-        if (!_lastUsedBioNetGen.contains(strBNG))  {  _lastUsedBioNetGen.add(0, strBNG); }
-
+       
         // deal with the max history
         if (_lastUsedWorkspaces.size() > _MaxHistory) {
             List<String> remove = new ArrayList<String>();
@@ -516,17 +564,6 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
             }
 
             _lastUsedWorkspaces.removeAll(remove);
-        }
-
-        
-        // deal with the max history
-        if (_lastUsedBioNetGen.size() > _MaxHistory) {
-            List<String> remove = new ArrayList<String>();
-            for (int i = _MaxHistory; i < _lastUsedBioNetGen.size(); i++) {
-                remove.add(_lastUsedBioNetGen.get(i));
-            }
-
-            _lastUsedBioNetGen.removeAll(remove);
         }
 
         
@@ -541,16 +578,6 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
 
         
         
-        // create a string concatenation of all our last used workspaces
-        StringBuffer bufBNG = new StringBuffer();
-        for (int i = 0; i < _lastUsedBioNetGen.size(); i++) {
-            bufBNG.append(_lastUsedBioNetGen.get(i));
-            if (i != _lastUsedBioNetGen.size() - 1) {
-                bufBNG.append(_SplitChar);
-            }
-        }
-  
-        
         // save them onto our preferences
         _preferences.putBoolean(_KeyRememberWorkspace, _RememberWorkspaceButton.getSelection());
         if (_RememberWorkspaceButton.getSelection()) {
@@ -559,15 +586,42 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
           _preferences.put(_KeyLastUsedWorkspaces, "");        	
         }
 
-        // save them onto our preferences
-        _preferences.putBoolean(_KeyRememberBioNetGen, _RememberBioNetGenButton.getSelection());
-        if (_RememberBioNetGenButton.getSelection()) {
-          _preferences.put(_KeyLastUsedBioNetGen, bufBNG.toString()); 
-        } else {
-          _preferences.put(_KeyLastUsedBioNetGen, ""); 
+        
+        if (!isCleanWorkspace()) {        
+          _lastUsedBioNetGen.remove(strBNG);
+          if (!_lastUsedBioNetGen.contains(strBNG))  {  _lastUsedBioNetGen.add(0, strBNG); }
+        
+          // deal with the max history
+          if (_lastUsedBioNetGen.size() > _MaxHistory) {
+              List<String> remove = new ArrayList<String>();
+              for (int i = _MaxHistory; i < _lastUsedBioNetGen.size(); i++) {
+                  remove.add(_lastUsedBioNetGen.get(i));
+              }
+
+              _lastUsedBioNetGen.removeAll(remove);
+          }
+
+        
+          // create a string concatenation of all our last used workspaces
+          StringBuffer bufBNG = new StringBuffer();
+          for (int i = 0; i < _lastUsedBioNetGen.size(); i++) {
+              bufBNG.append(_lastUsedBioNetGen.get(i));
+              if (i != _lastUsedBioNetGen.size() - 1) {
+                  bufBNG.append(_SplitChar);
+              }
+          }
+  
+
+          // save them onto our preferences
+          _preferences.putBoolean(_KeyRememberBioNetGen, _RememberBioNetGenButton.getSelection());
+          if (_RememberBioNetGenButton.getSelection()) {
+            _preferences.put(_KeyLastUsedBioNetGen, bufBNG.toString()); 
+           } else {
+            _preferences.put(_KeyLastUsedBioNetGen, ""); 
+           }
         }
 
-        // now create it 
+        // now create it (Note that if it already exists, this will be a no-op.)
         boolean ok = checkAndCreateWorkspaceRoot(str);
         if (!ok) {
             setMessage("The workspace could not be created, please check the error log");
@@ -579,13 +633,203 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
 
         // and on our preferences as well
         _preferences.put(_KeyWorkspaceRootDir, str);
-        _preferences.put(_KeyBioNetGenRootDir, strBNG);		
-        Activator.getDefault().getPreferenceStore().setValue("SIM_PATH",PickWorkspaceDialog.getLastSetBioNetGenDirectory());
+        if (!isCleanWorkspace()) {
+          _preferences.put(_KeyBioNetGenRootDir, strBNG);
+          Activator.getDefault().getPreferenceStore().setValue("SIM_PATH",PickWorkspaceDialog.getLastSetBioNetGenDirectory());
+        }
 
 
         super.okPressed();
     }
 
+    
+    
+    /**
+     * This assumes that the WS_IDENTIFIER file exisits, and it writes the RuleBender version
+     * into it.
+     * 
+     * @return null if everything is ok, or an error message if not.
+     */
+    public static String writeWorkspaceVersion(String workspaceLocation,int what_to_write) {
+        String rtstring = null;
+    	Writer   writer = null;
+    	String   string_to_write = null;
+    	String   where_to_write = workspaceLocation + File.separator + WS_IDENTIFIER;
+    	
+   	    if (what_to_write == 1) {
+	       string_to_write = PreferencesClerk.getRuleBenderVersion() + "\n";    		
+    	}
+   	    // The purpose of having the "CleanWorkspace" tag, is to invoke a deletion of the 
+   	    // .metadata directory after an ordinary start of RuleBender.
+    	if (what_to_write == 2) {
+          string_to_write = "CleanWorkspace\n";    		
+     	}
+
+    	try {
+    	    writer = new BufferedWriter(new OutputStreamWriter(
+      	             new FileOutputStream(where_to_write)));
+    	    writer.write(string_to_write);
+    	} catch (IOException ex) {
+        	  rtstring = "There was a problem initializing this workspace.";
+    	} finally {
+    	   try {writer.close();} catch (Exception ex) {
+  	      	  rtstring = "There was a problem initializing this workspace.";
+           }
+    	}
+    	
+    	return rtstring;
+    }
+    
+
+    
+    /**
+     * This assumes that the WS_IDENTIFIER file exisits, and it looks inside to see what version
+     * of RuleBender was used to create the workspace.  The workspace is ok, if the version of
+     * the workspace, is consistent with the current instantiation of RuleBender. 
+     * 
+     * @return null if everything is ok, or error string if not
+     */
+    public static String checkWorkspaceVersion(String workspaceLocation) {
+        String rtstring = null;        
+        String file_contents = null;
+   
+        try { 
+          BufferedReader br = new BufferedReader(new FileReader(workspaceLocation + File.separator + WS_IDENTIFIER));
+          try {
+            StringBuilder sb = new StringBuilder();
+            String line = br.readLine();
+
+            while (line != null) {
+              sb.append(line);
+              sb.append(System.lineSeparator());
+              line = br.readLine();
+            }
+            file_contents = sb.toString().trim();
+          } finally {
+           br.close();
+          } 
+        } catch (IOException ioe) {
+          rtstring = "The selected directory seems like a corrupted workspace.";
+          return rtstring;
+        }
+
+        return file_contents;        
+  }
+
+
+
+    
+    /**
+     * This assumes that the WS_IDENTIFIER file exisits, and it looks inside to see what version
+     * of RuleBender was used to create the workspace.  The workspace is ok, if the version of
+     * the workspace, is consistent with the current instantiation of RuleBender. 
+     * 
+     * @return null if everything is ok, or error string if not
+     */
+    public static String checkWorkspaceVersionAndReact(String workspaceLocation) {
+        String rtstring = null;        
+        String file_contents = null;
+        
+        file_contents = checkWorkspaceVersion(workspaceLocation);
+       
+        boolean need_to_upgrade = false;
+        if (file_contents == null) {
+          need_to_upgrade = true;
+        } else {
+          if (file_contents.length() == 0) {
+              need_to_upgrade = true;
+          } else {
+          	if (file_contents.equals("CleanWorkspace")) {
+          	 // This call to RemoveMetaData is executed after the restart()
+                RemoveMetaData(workspaceLocation);
+                // need_to_upgrade = true;               		  
+        	} else { 
+        	  if (!file_contents.equals(PreferencesClerk.getRuleBenderVersion())) {
+                  need_to_upgrade = true;               		  
+        	  } 
+        	}
+       	  }
+        }
+        
+    if (need_to_upgrade || isCleanWorkspace()) {
+    	rtstring = upgradeWorkspace();
+    }
+    
+    return rtstring;
+  }
+
+
+        	
+ /**
+  * NULL means do an ordinary upgrade.
+  * 
+  * @return null if everything is ok, or an error string if not.
+ */
+ public static String upgradeWorkspace() {
+     String rtstring = null;
+        	       	
+     try {
+       	if (!isCleanWorkspace()) {
+           String mssgStr = "This wizard will upgrade or reset your workspace. \n\n" +
+           "1) Upgrade Workspace (Recommended) \n" +
+           "2) Reset Workspace (Use this if projects are missing after option 1))  \n";
+                
+           MessageDialog dialog = new MessageDialog(Display.getDefault().getActiveShell(),
+           "Your Workspace Was Created With An Old Version Of RuleBender", null, mssgStr,
+       	   MessageDialog.INFORMATION, new String[] { "Upgrade Workspace", 
+        	   "Reset Workspace"}, 0);
+       		                     	      	    
+       	   int result = dialog.open();
+       	   
+       	   if (result == 1 ) { 
+       		  String conMssg = "You have chosen to reset your workspace. This procedure gives\n\n" +
+       		                   "you a way to eliminate unwanted tracebacks and to recover projects\n" +
+       		                   "that are missing after doing the usual Upgrade.";
+       		  boolean resultb = MessageDialog.openConfirm(Display.getDefault().getActiveShell(), 
+       		                   "Confirm Workspace Upgrade Failed", conMssg); 
+       		  if (!resultb) { result = 1; }
+           }
+       		                     	  
+           if (result == 0) {
+              rtstring = null;
+           } else {
+               if (result == 1) {
+                   rtstring = "INVOKE_RECOVERY_OPTION_1";
+               } 
+           }
+     	} else{
+           String mssgStr = "This wizard will recover your workspace. \n\n" +
+                            "1) Will recover your projects and reset defaults\n" +
+        		            "Cancel";
+           MessageDialog dialog = new MessageDialog(Display.getDefault().getActiveShell(),
+              "Your Workspace Was Created With An Old Version Of RuleBender", null, mssgStr,
+           MessageDialog.INFORMATION, new String[] { "Recover", "Cancel"}, 0);
+                        	      	    
+           int result = dialog.open();
+           
+           if (result == 0) { 
+               String conMssg = "Please confirm that you wish to recover your workspace. \n\n" +
+                            "Click OK, and RuleBender will preserve your projects while resetting defaults. \n";
+               boolean resultb = MessageDialog.openConfirm(Display.getDefault().getActiveShell(), 
+                            "Confirm Recover of Workspace", conMssg); 
+               if (!resultb) { result = 1; }
+           }
+                        	  
+           if (result == 0) {
+              rtstring = "INVOKE_RECOVERY_OPTION_2";
+           } else {
+              rtstring = "CANCEL";
+           }
+        }
+
+    } catch (Exception ioe) {
+       rtstring = "RuleBender was not able to upgrade your workspace.";
+    }
+        
+    return rtstring;
+    }
+
+    
     /**
      * Ensures a workspace directory is OK in regards of reading/writing, etc. This method will get called externally as well.
      * 
@@ -605,6 +849,10 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
                         f.mkdirs();
                         File wsDot = new File(workspaceLocation + File.separator + WS_IDENTIFIER);
                         wsDot.createNewFile();
+
+                        String rtcode = writeWorkspaceVersion(workspaceLocation,1);
+                        if (rtcode != null)       { return rtcode; }
+                    
                     } catch (Exception err) {
                         return "Error creating directories, please check folder permissions";
                     }
@@ -613,11 +861,32 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
                 if (!f.exists()) { return "The selected directory does not exist"; }
             }
         }
-
+        
         if (!f.canRead()) { return "The selected directory is not readable"; }
 
         if (!f.isDirectory()) { return "The selected path is not a directory"; }
 
+        
+        String ret_string = checkWorkspaceVersionAndReact(workspaceLocation);
+        
+        String rtcode = "Trouble after checkWorkspaceVersion.";
+        if (ret_string != null) {
+          if (ret_string.equals("INVOKE_RECOVERY_OPTION_1") || 
+       		  ret_string.equals("INVOKE_RECOVERY_OPTION_2")) {
+        	  // Note: This only makes sense if we have a directory to work with. If no valid
+        	  // directory was named, RuleBender should have died above.
+        	  if (!attempt_recovery(workspaceLocation,ret_string)) {
+        		  return "Recovery failed. Please check the read/write permissions for the workspace.";   
+        	  }
+          } else {
+        	  if (ret_string.equals("CANCEL")) {
+        	  }         	   
+        	  return ret_string;
+        	  
+          }
+        }
+                          
+        
         File wsTest = new File(workspaceLocation + File.separator + WS_IDENTIFIER);
         if (fromDialog) {
             if (!wsTest.exists()) {
@@ -627,7 +896,8 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
                                 "New Workspace",
                                 "The directory '"
                                         + wsTest.getAbsolutePath()
-                                        + "' is not set to be a workspace. Do note that files will be created directly under the specified directory and it is suggested you create a directory that has a name that represents your workspace. \n\nWould you like to create a workspace in the selected location?");
+                                        + "' is not set to be a workspace. Do note that files will be created directly under the specified directory and it is suggested you create a directory that has a name that represents your workspace. \n\n" + ""
+                                        		+ "Would you like to create a workspace in the selected location?");
                 if (create) {
                     try {
                         f.mkdirs();
@@ -666,6 +936,9 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
             File dotFile = new File(wsRoot + File.separator + PickWorkspaceDialog.WS_IDENTIFIER);
             if (!dotFile.exists() && !dotFile.createNewFile()) return false;
 
+            String   rtcode = writeWorkspaceVersion(wsRoot,1);
+            if (rtcode != null)       { return false; }
+                    
             return true;
         } catch (Exception err) {
             // as it might need to go to some other error log too
@@ -674,4 +947,129 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
         }
     }
 
+
+    /**
+     * This tries to recover a corrupted workspace. 
+     * 
+     * @param wsRoot Workspace root directory as string
+     * @return true if all checks and creations succeeded, false if there was a problem
+     */
+    public static boolean attempt_recovery(String wsRoot,String optionStr) {
+       boolean rtcode = true;
+        
+       if (optionStr.equals("INVOKE_RECOVERY_OPTION_1")) {
+           if (!RemoveSnapFiles(wsRoot)) { return false; }
+       }
+       if (optionStr.equals("INVOKE_RECOVERY_OPTION_2")) {
+
+           if (!RemoveMetaData(wsRoot)) { return false; }
+       }
+       // ToDo:  Maybe renameProjects should return a return code.
+       renameProjects(wsRoot);
+                     
+       return rtcode;
+    }
+    
+
+    
+    
+    
+    /*
+     * This version of RemoveSnapFiles assumes that only the .snap files will be
+     * deleted.
+     */
+    
+    static public boolean RemoveSnapFiles(String workspace_directory)
+    {
+    	boolean rtcode = true;
+
+    	
+        String ResDir = workspace_directory + System.getProperty("file.separator") +
+		           ".metadata" + System.getProperty("file.separator") +
+		           ".plugins" + System.getProperty("file.separator") +
+		           "org.eclipse.core.resources";
+
+        
+        File ResFile = new File(ResDir);
+        if (ResFile.exists()) {
+            File[] files = ResFile.listFiles(new DirFilter());            
+            for (File f : files) {
+                if(f.delete()){
+        		}else{
+        	    	rtcode = false;
+        		}
+            }
+        }
+        return rtcode;
+    }
+
+    
+/*
+ * This version of RemoveMetaData() assumes that the whole metadata directory will 
+ * be deleted.
+ */
+    static public boolean RemoveMetaData(String workspace_directory)
+    {
+    	boolean rtcode = true;    	
+    	
+    	String ResDir = workspace_directory + System.getProperty("file.separator") + ".metadata";
+        
+        File ResFile = new File(ResDir);
+        if (ResFile.exists()) {
+        	rtcode = deleteDirectory(ResFile);
+        }
+        return rtcode;
+    }
+
+    
+    /*
+     * This is a generic utility function that recursively deletes
+     * a directory, along with all contained files and subdirectories.
+     * It's not tailored to a specific purpose, so it could be used
+     * elsewhere in RuleBender.
+     */
+    public static boolean deleteDirectory(File directory) {
+        if(directory.exists()){
+            File[] files = directory.listFiles();
+            if(null!=files){
+                for(int i=0; i<files.length; i++) {
+                    if(files[i].isDirectory()) {
+                        deleteDirectory(files[i]);
+                    }
+                    else {
+                        files[i].delete();
+                    }
+                }
+            }
+        }
+        return(directory.delete());
+    }
+    
+    
+    
+    static public void renameProjects(String workspace_directory)
+    {   String rtcode = null;
+     String markerStr = "_recovery_" + PreferencesClerk.getRuleBenderVersion();	
+    	
+     if (isCleanWorkspace()) {
+         rtcode = writeWorkspaceVersion(workspace_directory,2);                	  
+         RemoveMetaData(workspace_directory);
+     }
+    	
+     if (rtcode == null) {    	
+         // This should probably return a boolean to indicate whether it was successful or not.
+         File dir = new File(workspace_directory);
+         // list the files using our FileFilter
+         File[] files = dir.listFiles(new ProjectFilter());
+         for (File f : files)
+         {  
+//   	         System.out.println("Renaming file: " + f.toString());
+             File tempDir = new File(f.toString() + markerStr);
+             // System.out.println("temp: " + tempDir.toString());
+             f.renameTo(tempDir);          
+         }
+     } 
+      
+      
+    }
 }
