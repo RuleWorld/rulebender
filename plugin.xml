@@ -360,6 +360,11 @@
                   style="push">
             </command>
             <command
+                  commandId="rulebender.commands.CleanWorkspace"
+                  label="Reset Workspace (restart required)"
+                  style="push">
+            </command>
+            <command
                   commandId="org.eclipse.ui.help.aboutAction"
                   label="About..."
                   style="push">
@@ -409,6 +414,11 @@
             defaultHandler="rulebender.core.commands.SwitchWorkspace"
             id="rulebender.commands.SwitchWorkspace"
             name="Switch Workspace">
+      </command>
+      <command
+            defaultHandler="rulebender.core.commands.CleanWorkspace"
+            id="rulebender.commands.CleanWorkspace"
+            name="Reset Workspace">
       </command>
       <command
             defaultHandler="rulebender.core.commands.CloseTopConsole"
