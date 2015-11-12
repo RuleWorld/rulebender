@@ -75,8 +75,9 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
 
     // various dialog messages
     private static final String _StrMsg               = "Your workspace is where settings and various important files will be stored.  BioNetGen is a simulator that's installed separately.";
-    private static final String _StrInfo               = "Please select a directory that will be the workspace root";
-    private static final String _StrError              = "You must set a directory";
+    private static final String _StrMsgClean          = "Your workspace is where settings and various important files will be stored.";
+    private static final String _StrInfo              = "Please select a directory that will be the workspace root";
+    private static final String _StrError             = "You must set a directory";
 
     // our controls
     private Combo               _workspacePathCombo;
@@ -195,10 +196,9 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
     @Override
     protected Control createDialogArea(Composite parent) {
         setTitle("Pick Workspace");
-        setMessage(_StrMsg);
+        if (!isCleanWorkspace()) { setMessage(_StrMsg); } 
+        else                     { setMessage(_StrMsgClean); }
 
-
-        
         try {
             Composite inner = new Composite(parent, SWT.NONE);
             GridLayout gridLayout = new GridLayout();
@@ -752,7 +752,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
         }
         
     if (need_to_upgrade || isCleanWorkspace()) {
-    	rtstring = upgradeWorkspace();
+    	rtstring = upgradeWorkspace(workspaceLocation);
     }
     
     return rtstring;
@@ -765,43 +765,42 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
   * 
   * @return null if everything is ok, or an error string if not.
  */
- public static String upgradeWorkspace() {
+ public static String upgradeWorkspace(String workspace_location) {
      String rtstring = null;
         	       	
      try {
        	if (!isCleanWorkspace()) {
-           String mssgStr = "This wizard will upgrade or reset your workspace. \n\n" +
-           "1) Upgrade Workspace (Recommended) \n" +
-           "2) Reset Workspace (Use this if projects are missing after option 1))  \n";
+           String mssgStr = "\nThis wizard will upgrade your workspace: \n" +
+           workspace_location + "\n\n" +
+           "The procedure has a small risk of failing and corrupting your\n" +
+           "data, so you may wish to hit Cancel and make a copy of your \n" +
+           "workspace before continuing.";
                 
            MessageDialog dialog = new MessageDialog(Display.getDefault().getActiveShell(),
-           "Your Workspace Was Created With An Old Version Of RuleBender", null, mssgStr,
-       	   MessageDialog.INFORMATION, new String[] { "Upgrade Workspace", 
-        	   "Reset Workspace"}, 0);
+           "Your Workspace Was Created With A Previous Version Of RuleBender", null, mssgStr,
+       	   MessageDialog.INFORMATION, new String[] { "Upgrade Workspace", "Cancel"}, 0);
        		                     	      	    
        	   int result = dialog.open();
        	   
-       	   if (result == 1 ) { 
+       	   if (result == 0 ) { 
        		  String conMssg = "You have chosen to reset your workspace. This procedure gives\n" +
-       		                   "you a way to eliminate unwanted tracebacks while recovering any\n" +
-       		                   "projects that might be missing after doing an initial Upgrade.";
+       		                   "you a way to eliminate unwanted tracebacks while recovering your\n" +
+       		                   "projects.";
        		  boolean resultb = MessageDialog.openConfirm(Display.getDefault().getActiveShell(), 
-       		                   "Confirm A Reset Of Workspace", conMssg); 
-       		  if (!resultb) { result = 0; }
+       		                   "Confirm The Reset Of Workspace", conMssg); 
+       		  if (!resultb) { result = 1; }
            }
        		                     	  
            if (result == 0) {
-              rtstring = null;
+              rtstring = "INVOKE_RECOVERY_OPTION_1";
            } else {
-               if (result == 1) {
-                   rtstring = "INVOKE_RECOVERY_OPTION_1";
-               } 
+              rtstring = "CANCEL";
            }
      	} else{
            String mssgStr = "This wizard will recover your workspace. \n\n" +
                             "Click Recover to reset defaults and preserve your projects.\n";
            MessageDialog dialog = new MessageDialog(Display.getDefault().getActiveShell(),
-              "Your Workspace Was Created With An Old Version Of RuleBender", null, mssgStr,
+              "Your Workspace Was Created With A Previous Version Of RuleBender", null, mssgStr,
            MessageDialog.INFORMATION, new String[] { "Recover", "Cancel"}, 0);
                         	      	    
            int result = dialog.open();
