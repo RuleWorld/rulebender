@@ -117,7 +117,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
         super.configureShell(newShell);
         if (_switchWorkspace) {
         	if (isCleanWorkspace()) {
-              newShell.setText("Restore Workspace");
+              newShell.setText("Recover Workspace");
         	} else {
               newShell.setText("Switch Workspace");
         	}
