@@ -361,7 +361,7 @@
             </command>
             <command
                   commandId="rulebender.commands.CleanWorkspace"
-                  label="Reset Workspace (restart required)"
+                  label="Recover Workspace (restart required)"
                   style="push">
             </command>
             <command
@@ -418,7 +418,7 @@
       <command
             defaultHandler="rulebender.core.commands.CleanWorkspace"
             id="rulebender.commands.CleanWorkspace"
-            name="Reset Workspace">
+            name="Recover Workspace">
       </command>
       <command
             defaultHandler="rulebender.core.commands.CloseTopConsole"
