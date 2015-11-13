@@ -783,11 +783,11 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
        	   int result = dialog.open();
        	   
        	   if (result == 0 ) { 
-       		  String conMssg = "You have chosen to reset your workspace. This procedure gives\n" +
-       		                   "you a way to eliminate unwanted tracebacks while recovering your\n" +
+       		  String conMssg = "You have chosen to upgrade your workspace. This procedure gives\n" +
+       		                   "you a way to eliminate unwanted tracebacks while preserving your\n" +
        		                   "projects.";
        		  boolean resultb = MessageDialog.openConfirm(Display.getDefault().getActiveShell(), 
-       		                   "Confirm The Reset Of Workspace", conMssg); 
+       		                   "Confirm The Upgrade Of Workspace", conMssg); 
        		  if (!resultb) { result = 1; }
            }
        		                     	  
@@ -798,7 +798,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
            }
      	} else{
            String mssgStr = "This wizard will recover your workspace. \n\n" +
-                            "Click Recover to reset defaults and preserve your projects.\n";
+                            "Click Recover to restore defaults and preserve your projects.\n";
            MessageDialog dialog = new MessageDialog(Display.getDefault().getActiveShell(),
               "Your Workspace Was Created With A Previous Version Of RuleBender", null, mssgStr,
            MessageDialog.INFORMATION, new String[] { "Recover", "Cancel"}, 0);
@@ -807,7 +807,8 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
            
            if (result == 0) { 
                String conMssg = "Please confirm that you wish to recover your workspace. \n\n" +
-                            "Click OK, and RuleBender will preserve your projects while resetting defaults. \n";
+                            "Click OK, and RuleBender will upgrade your workspace, while preserving \n" +
+                            "your projects and restoring defaults. \n";
                boolean resultb = MessageDialog.openConfirm(Display.getDefault().getActiveShell(), 
                             "Confirm Recover of Workspace", conMssg); 
                if (!resultb) { result = 1; }
