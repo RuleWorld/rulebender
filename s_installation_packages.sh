@@ -30,9 +30,9 @@ exit
 # version number only used for file names.  All other version branding is done in
 # the .project file.
 version="2.1.0-testing"
-rbReleaseDir="/home/roc60/workspace_rb_12/RuleBender"
+rbReleaseDir="/home/roc60/workspace_rb_15/RuleBender"
 bngdirname="BioNetGen-2.2.6"
-distributionResources="/home/roc60/github44/rulebender/distributionResources"
+distributionResources="/home/roc60/workspace_rb_15_git/rulebender/distributionResources"
 dropboxroot="/home/roc60/Dropbox/BioNetGen-2_2_6/Stable"
 
 
