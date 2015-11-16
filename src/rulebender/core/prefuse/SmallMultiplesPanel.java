@@ -1059,7 +1059,8 @@ public class SmallMultiplesPanel extends JLayeredPane implements ActionListener 
 			} //if-else
 						
 		    chooser.setDialogTitle(choosertitle);
-		    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+// was		    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		    chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
 		    // disable the "All files" option.
 		    chooser.setAcceptAllFileFilterUsed(false);
