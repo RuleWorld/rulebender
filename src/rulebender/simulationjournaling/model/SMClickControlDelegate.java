@@ -171,8 +171,18 @@ public class SMClickControlDelegate extends ControlAdapter implements ISelection
 		m_statesShown = false;
 		m_synthNodesShown = true;
 		
-		delay = (Integer)Toolkit.getDefaultToolkit().getDesktopProperty("awt.multiClickInterval");
-		//delay = 250;
+		// was delay = (Integer)Toolkit.getDefaultToolkit().getDesktopProperty("awt.multiClickInterval");
+		int    delay;
+		try {  // Duct Tape
+			Object delayo = Toolkit.getDefaultToolkit().getDesktopProperty("awt.multiClickInterval");
+		    if (delayo == null) {
+		        delay = 250;
+		    } else {
+		    	delay = (Integer)delayo;
+		    }
+		} catch (Exception e) {
+	            delay = 250;
+		}
 		timer = new Timer(delay, this);
 		
 		// Set the local reference to the visualization that this controller is
