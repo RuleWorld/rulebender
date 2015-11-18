@@ -38,6 +38,7 @@ import prefuse.util.GraphicsLib;
 import prefuse.util.PrefuseLib;
 import prefuse.util.display.DisplayLib;
 import prefuse.visual.VisualItem;
+
 import rulebender.simulationjournaling.Message;
 import rulebender.simulationjournaling.comparison.SimilarityMatrices;
 import rulebender.simulationjournaling.model.BackgroundFileLoader;
@@ -45,6 +46,10 @@ import rulebender.simulationjournaling.model.SMClickControlDelegate;
 import rulebender.simulationjournaling.model.SmallMultiple;
 import rulebender.simulationjournaling.view.SmallMultiplesView;
 import rulebender.simulationjournaling.view.TimelineView;
+
+import rulebender.preferences.OS;
+import rulebender.preferences.PreferencesClerk;
+
 
 /**
  * This class defines the pane that contains an array of prefuse.Display objects,
@@ -1059,8 +1064,14 @@ public class SmallMultiplesPanel extends JLayeredPane implements ActionListener 
 			} //if-else
 						
 		    chooser.setDialogTitle(choosertitle);
-// was		    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		    chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		    
+		    // OSX has got a nice way to ensure that a directory is selected, rather than a file.
+		    // So let's go ahead and use it on that platform.
+                    if (PreferencesClerk.getOS() == OS.OSX) {		    
+		        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                    } else {
+		        chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+                    }
 
 		    // disable the "All files" option.
 		    chooser.setAcceptAllFileFilterUsed(false);
