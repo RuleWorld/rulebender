@@ -687,7 +687,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
      * of RuleBender was used to create the workspace.  The workspace is ok, if the version of
      * the workspace, is consistent with the current instantiation of RuleBender. 
      * 
-     * @return null if everything is ok, or error string if not
+     * @return The return string is inspected to determine the result.
      */
     public static String checkWorkspaceVersion(String workspaceLocation) {
         String rtstring = null;        
@@ -701,16 +701,20 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
 
             while (line != null) {
               sb.append(line);
-              sb.append(System.lineSeparator());
+            //  sb.append(System.lineSeparator());
+            //  The carriage return in the line above doesn't seem to work on 
+            //  certain systems, and thanks to the way that the build stamp is 
+            //  loaded, the carriage return is no longer needed anyway.
               line = br.readLine();
             }
             file_contents = sb.toString().trim();
-          } finally {
-           br.close();
+            } catch (Exception eee) {  // Put a generic catch here just to be safe.
+                file_contents = "The selected directory seems like a corrupted workspace.";
+           } finally {
+             br.close();
           } 
         } catch (IOException ioe) {
-          rtstring = "The selected directory seems like a corrupted workspace.";
-          return rtstring;
+          file_contents = "The selected directory seems like a corrupted workspace.";
         }
 
         return file_contents;        
