@@ -708,7 +708,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
               line = br.readLine();
             }
             file_contents = sb.toString().trim();
-            } catch (Exception eee) {  // Put a generic catch here just to be safe.
+            } catch (IOException eee) {  // Put a generic catch here just to be safe.
                 file_contents = "The selected directory seems like a corrupted workspace.";
            } finally {
              br.close();
