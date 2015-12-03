@@ -427,7 +427,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
 
                     try {
                         copyFiles(workspaceDirectory, targetDirectory);
-                    } catch (Exception err) {
+                    } catch (IOException err) {
                         MessageDialog
                                 .openError(Display.getDefault().getActiveShell(), "Error", "There was an error cloning the workspace: " + err.getMessage());
                         return;
@@ -438,7 +438,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
                     if (setActive) {
                         _workspacePathCombo.setText(directory);
                     }
-                } catch (Exception err) {
+                } catch (IOException err) {
                            MessageDialog.openError(Display.getDefault().getActiveShell(), "Error", "There was an internal error, please check the logs");
                     err.printStackTrace();
                 }
@@ -672,7 +672,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
     	} catch (IOException ex) {
         	  rtstring = "There was a problem initializing this workspace.";
     	} finally {
-    	   try {writer.close();} catch (Exception ex) {
+    	   try {writer.close();} catch (IOException ex) {
   	      	  rtstring = "There was a problem initializing this workspace.";
            }
     	}
@@ -825,7 +825,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
            }
         }
 
-    } catch (Exception ioe) {
+    } catch (IOException ioe) {
        rtstring = "RuleBender was not able to upgrade your workspace.";
     }
         
@@ -856,7 +856,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
                         String rtcode = writeWorkspaceVersion(workspaceLocation,1);
                         if (rtcode != null)       { return rtcode; }
                     
-                    } catch (Exception err) {
+                    } catch (IOException err) {
                         return "Error creating directories, please check folder permissions";
                     }
                 }
@@ -902,7 +902,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
                         f.mkdirs();
                         File wsDot = new File(workspaceLocation + File.separator + WS_IDENTIFIER);
                         wsDot.createNewFile();
-                    } catch (Exception err) {
+                    } catch (IOException err) {
                         return "Error creating directories, please check folder permissions";
                     }
                 } else {
@@ -939,7 +939,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
             if (rtcode != null)       { return false; }
                     
             return true;
-        } catch (Exception err) {
+        } catch (IOException err) {
             // as it might need to go to some other error log too
             err.printStackTrace();
             return false;
