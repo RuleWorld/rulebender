@@ -956,6 +956,9 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
     public static boolean attempt_recovery(String wsRoot,String optionStr) {
        boolean rtcode = true;
         
+       String rtstr = writeWorkspaceVersion(wsRoot,1);
+       if (rtstr null)                   { return false; }
+ 
        if (optionStr.equals("INVOKE_RECOVERY_OPTION_1")) {
            if (!RemoveSnapFiles(wsRoot)) { return false; }
        }
