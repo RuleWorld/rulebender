@@ -770,9 +770,8 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
   * @return null if everything is ok, or an error string if not.
  */
  public static String upgradeWorkspace(String workspace_location) {
-     String rtstring = null;
-        	       	
-     try {
+     String rtstring = "RuleBender was not able to upgrade your workspace.";
+
        	if (!isCleanWorkspace()) {
            String mssgStr = "\nThis wizard will upgrade your workspace: \n" +
            workspace_location + "\n\n" +
@@ -825,10 +824,6 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
            }
         }
 
-    } catch (IOException ioe) {
-       rtstring = "RuleBender was not able to upgrade your workspace.";
-    }
-        
     return rtstring;
     }
 
@@ -957,7 +952,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
        boolean rtcode = true;
         
        String rtstr = writeWorkspaceVersion(wsRoot,1);
-       if (rtstr null)                   { return false; }
+       if (rtstr == null)                   { return false; }
  
        if (optionStr.equals("INVOKE_RECOVERY_OPTION_1")) {
            if (!RemoveSnapFiles(wsRoot)) { return false; }
