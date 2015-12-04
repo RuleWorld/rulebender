@@ -650,36 +650,40 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
      * 
      * @return null if everything is ok, or an error message if not.
      */
-    public static String writeWorkspaceVersion(String workspaceLocation,int what_to_write) {
+     public static String writeWorkspaceVersion(String workspaceLocation,int what_to_write) {
         String rtstring = null;
     	Writer   writer = null;
     	String   string_to_write = null;
     	String   where_to_write = workspaceLocation + File.separator + WS_IDENTIFIER;
     	
    	    if (what_to_write == 1) {
-	       string_to_write = PreferencesClerk.getRuleBenderVersion() + "\n";    		
+	       string_to_write = PreferencesClerk.getRuleBenderVersion();    		
     	}
+   	    
    	    // The purpose of having the "CleanWorkspace" tag, is to invoke a deletion of the 
    	    // .metadata directory after an ordinary start of RuleBender.
     	if (what_to_write == 2) {
-          string_to_write = "CleanWorkspace\n";    		
+          string_to_write = "CleanWorkspace";    		
      	}
 
     	try {
     	    writer = new BufferedWriter(new OutputStreamWriter(
       	             new FileOutputStream(where_to_write)));
     	    writer.write(string_to_write);
+    	    writer.close();
     	} catch (IOException ex) {
-        	  rtstring = "There was a problem initializing this workspace.";
-    	} finally {
-    	   try {writer.close();} catch (IOException ex) {
-  	      	  rtstring = "There was a problem initializing this workspace.";
-           }
-    	}
-    	
+            String msgstr = "There was a problem upgrading the workspace. " +
+    		            "You may want to confirm that you have write " +
+                            "permission for this file: \n\n" +
+	                    where_to_write;
+    		
+            MessageDialog.openError(Display.getDefault().getActiveShell(), "Error", msgstr); 
+       	    rtstring = "There was a problem initializing this workspace.";
+    	} 
+    	    	
     	return rtstring;
     }
-    
+   
 
     
     /**
@@ -952,7 +956,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
        boolean rtcode = true;
         
        String rtstr = writeWorkspaceVersion(wsRoot,1);
-       if (rtstr == null)                   { return false; }
+       if (rtstr != null)                { return false; }
  
        if (optionStr.equals("INVOKE_RECOVERY_OPTION_1")) {
            if (!RemoveSnapFiles(wsRoot)) { return false; }
