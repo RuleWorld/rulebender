@@ -214,9 +214,15 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
             _workspacePathCombo = new Combo(inner, SWT.BORDER);
             _workspacePathCombo.setLayoutData(new GridData(GridData.FILL_VERTICAL | GridData.VERTICAL_ALIGN_END | GridData.FILL_HORIZONTAL));
             String wsRoot = _preferences.get(_KeyWorkspaceRootDir, "");
-            if (wsRoot == null || wsRoot.length() == 0) {
+            
+            if (wsRoot == null) {
                 wsRoot = getWorkspacePathSuggestion();
+            } else {
+              if (wsRoot.length() == 0) {
+                wsRoot = getWorkspacePathSuggestion();
+              } 
             }
+            
             _workspacePathCombo.setText(wsRoot == null ? "" : wsRoot);
 
 
