@@ -765,6 +765,16 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
        	  }
         }
         
+    if (need_to_upgrade) {
+      // Since an upgrade is needed, let's update the various data structures to reflect the
+      // default location of  BioNetGen.  There are other mechanisms that take care of this
+      // later on, but they don't update the preferencestore variables in the various 
+      // dialogue boxes.
+    	
+      String mm = PickWorkspaceDialog.setLastSetBioNetGenDirectory(PreferencesClerk.getDefaultBNGPath());
+      Activator.getDefault().getPreferenceStore().setValue("SIM_PATH",PreferencesClerk.getDefaultBNGPath());
+    }          
+        
     if (need_to_upgrade || isCleanWorkspace()) {
     	rtstring = upgradeWorkspace(workspaceLocation);
     }
