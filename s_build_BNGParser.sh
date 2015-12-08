@@ -10,32 +10,22 @@ echo ' Building the parser before importing the code into Eclipse will'
 echo ' ensure that Eclipse is using the right parser.'
 echo ' '
 
-  /bin/rm -r -f  bionetgen
-  git clone https://github.com/RuleWorld/bionetgen.git
-#  /bin/cp -r bionetgen.safe  bionetgen
-  cd bionetgen/parsers/BNGParser/src/bngparser/grammars
-
+/bin/rm -r -f  BNGParser
+git clone https://github.com/RuleWorld/BNGParser.git
+cd BNGParser/src/bngparser/grammars
 
 echo '-------------------------------------------------------------------'
 echo ' Generate grammars'
 echo '-------------------------------------------------------------------'
 
-java -jar   /home/roc60/build_BNGParser/bionetgen/parsers/BNGParser/src/antlr-3.3-complete.jar BNGLexer.g
-java -jar   /home/roc60/build_BNGParser/bionetgen/parsers/BNGParser/src/antlr-3.3-complete.jar BNGGrammar.g
-
-
-cd ../..
-cp /home/roc60/build_BNGParser/ANTLR/antlr-4.5-complete.jar .
-
-#  javac  -Xlint:deprecation -Xlint:unchecked \
+java -jar  ../../antlr-3.3-complete.jar BNGLexer.g
+java -jar  ../../antlr-3.3-complete.jar BNGGrammar.g
 
 echo '-------------------------------------------------------------------'
 echo ' Compile grammars'
 echo '-------------------------------------------------------------------'
-#javac    -classpath  bngparser/grammars:bngparser/methods:bngparser/models:bngparser/dataType:bngparser/exceptions:antlr-4.5-complete.jar:antlr-3.3-complete.jar:/home/roc60/build_BNGParser/Apache/commons-lang3-3.4/commons-lang3-3.4.jar:. \
-#      -sourcepath . $jfile
 
-
+cd ../..
 for jfile in $(ls bngparser/grammars/*.java)
 do
 echo $jfile
@@ -62,7 +52,6 @@ do
 javac    -classpath  bngparser/grammars:bngparser/methods:bngparser/models:bngparser/dataType:bngparser/exceptions:antlr-3.3-complete.jar:../commons-lang3-3.1.jar:.  -sourcepath . $jfile
 done
 
-
 echo '-------------------------------------------------------------------'
 echo ' Compiling exceptions '
 echo '-------------------------------------------------------------------'
@@ -81,8 +70,11 @@ for jfile in $(ls bngparser/*.java)
 do
   if [ $jfile != 'bngparser/MCellTranslatorTester.java' ];
 then
+  if [ $jfile != 'bngparser/Tester.java' ];
+then
 echo $jfile
 javac    -classpath  bngparser/grammars:bngparser/methods:bngparser/models:bngparser/dataType:bngparser/exceptions:antlr-3.3-complete.jar:../commons-lang3-3.1.jar:.  -sourcepath . $jfile
+fi
 fi
 done
 
@@ -98,6 +90,10 @@ echo ' Running a Test '
 echo '-------------------------------------------------------------------'
 
 cp ../commons-lang3-3.1.jar .
+cat bngparser/Tester.java | sed 's/testModels/\.\.\/testModels/' > bngparser/Tester_new.java 
+mv bngparser/Tester.java      bngparser/Tester.old.java
+mv bngparser/Tester_new.java  bngparser/Tester.java
+
 javac -cp antlr-3.3-complete.jar:BNGParser.jar:commons-lang3-3.1.jar:. \
     bngparser/Tester.java 
 java  -cp antlr-3.3-complete.jar:BNGParser.jar:commons-lang3-3.1.jar:. \
@@ -107,14 +103,14 @@ echo '-------------------------------------------------------------------'
 echo ' Deploy BNGParser.jar '
 echo '-------------------------------------------------------------------'
 
-cd ../../../..
+cd ../..
 echo ' '
 echo ' Moving lib/BNGParser.jar to archive/BNGParser.old.jar '
 rm -f archive/BNGParser.old.jar
 mv    lib/BNGParser.jar  archive/BNGParser.old.jar
 
 echo ' Copying the newly built parser to lib/BNGParser.jar '
-cp   bionetgen/parsers/BNGParser/src/BNGParser.jar  lib/BNGParser.jar
+cp   BNGParser/src/BNGParser.jar  lib/BNGParser.jar
 echo ' '
 
 echo '-------------------------------------------------------------------'
