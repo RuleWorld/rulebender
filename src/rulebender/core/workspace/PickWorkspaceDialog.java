@@ -241,7 +241,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
             browse.setText("Browse...");
 
                                                                                         
-            browse.setSelection(_preferences.getBoolean(_KeyRememberWorkspace, false));
+            browse.setSelection(_preferences.getBoolean(_KeyRememberWorkspace, true));
 
             browse.addListener(SWT.Selection, new Listener() { 
                 public void handleEvent(Event event) {
@@ -313,7 +313,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
             browse2.setText("Browse...");
 
                                                                                         
-            browse2.setSelection(_preferences.getBoolean(_KeyRememberBioNetGen, false));
+            browse2.setSelection(_preferences.getBoolean(_KeyRememberBioNetGen, true));
 
             browse2.addListener(SWT.Selection, new Listener() {
                 public void handleEvent(Event event) {
