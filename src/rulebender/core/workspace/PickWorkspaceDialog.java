@@ -871,6 +871,10 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
                         String rtcode = writeWorkspaceVersion(workspaceLocation,1);
                         if (rtcode != null)       { return rtcode; }
                     
+                        // Let's consider this to be an upgrade path.  So the default BioNetGen will be used.
+                        String mm = PickWorkspaceDialog.setLastSetBioNetGenDirectory(PreferencesClerk.getDefaultBNGPath());
+                        Activator.getDefault().getPreferenceStore().setValue("SIM_PATH",PreferencesClerk.getDefaultBNGPath());
+
                     } catch (IOException err) {
                         return "Error creating directories, please check folder permissions";
                     }
