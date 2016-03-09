@@ -259,14 +259,19 @@
          <menu
                label="File">
             <command
-                  commandId="org.eclipse.ui.newWizard"
-                  label="New..."
+                  commandId="rulebender.commands.SampleProjects"
+                  label="New  BioNetGen  Project"
                   style="push">
             </command>
             <separator
                   name="rulebender.separator1"
                   visible="true">
             </separator>
+            <command
+                  commandId="org.eclipse.ui.newWizard"
+                  label="New..."
+                  style="push">
+            </command>
             <command
                   commandId="org.eclipse.ui.file.save"
                   label="Save"
@@ -419,6 +424,11 @@
             defaultHandler="rulebender.core.commands.CleanWorkspace"
             id="rulebender.commands.CleanWorkspace"
             name="Recover Workspace">
+      </command>
+      <command
+            defaultHandler="rulebender.core.commands.SampleProjects"
+            id="rulebender.commands.SampleProjects"
+            name="Create rhc Sample">
       </command>
       <command
             defaultHandler="rulebender.core.commands.CloseTopConsole"
