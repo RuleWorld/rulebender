@@ -25,6 +25,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import rulebender.preferences.PreferencesClerk;
 import rulebender.simulate.BioNetGenUtility;
+import rulebender.logging.Logger;
 import rulebender.Activator;
 
 /*  This seems like a good time and place to document the datastructures that keep track of
@@ -197,25 +198,49 @@ public class PreferencesClerk
 	
 	/*  This returns either a valid directory name with no file.separator, or No_Valid_Path_. */
 	public static String getBNGPath() {
+
+		
+		
 		boolean prereq = BioNetGenUtility.checkPreReq();
 		if (prereq) {		  
           // Check to see that RuleBender uses the latest BioNetGen for the first run.  The effect of 
           // this check is to make sure that the PreferenceStore does not cause RuleBender to use an 
           // older version. After this, the user can reset the location of BioNetGen. 
           if (getUpgradeCheck() != null) { 
-          if (getUpgradeCheck().equals(BNGPathFromRoot)) { 
-  		    String     bngPath2  = PreferencesClerk.getFullUserBNGPath();		 
-		    boolean bng2 = validateBNGPath(bngPath2);
-		    if (bng2) { 
-  		      bngPath2  = PreferencesClerk.getUserBNGPath();		 
-			  String mm = PickWorkspaceDialog.setLastSetBioNetGenDirectory(PreferencesClerk.getUserBNGPath());
-	          Activator.getDefault().getPreferenceStore().setValue("SIM_PATH",PreferencesClerk.getUserBNGPath());
-              setUpgradeCheck(BNGPathFromRoot);
-	          return bngPath2; 
-	        }
+            if (getUpgradeCheck().equals(BNGPathFromRoot)) { 
+  		      String     bngPath2  = PreferencesClerk.getFullUserBNGPath();		 
+		      boolean bng2 = validateBNGPath(bngPath2);
+		      if (bng2) { 
+  		        bngPath2  = PreferencesClerk.getUserBNGPath();		 
+			    String mm = PickWorkspaceDialog.setLastSetBioNetGenDirectory(PreferencesClerk.getUserBNGPath());
+	            Activator.getDefault().getPreferenceStore().setValue("SIM_PATH",PreferencesClerk.getUserBNGPath());
+                setUpgradeCheck(BNGPathFromRoot);
+                Logger.log(Logger.LOG_LEVELS.INFO, PreferencesClerk.class, "RuleBender will use "
+                  +  bngPath2 + " for any simulations that are run.");
+	            return bngPath2; 
+	          } else {
+	              Logger.log(Logger.LOG_LEVELS.WARNING, PreferencesClerk.class, "An old version of "
+	                      +     "BioNetGen, namely: " + bngPath2 + " seems to have been "
+	                      +     "used with RuleBender on this machine.  RuleBender will switch to "
+	                      +     "the latest version of BioNetGen for now, but the older version "
+	                      +     "may be selected later.");
+	          }
+            } else {
+                Logger.log(Logger.LOG_LEVELS.WARNING, PreferencesClerk.class,
+              		    "There is no record of RuleBender having accessed version\n"
+                      + BNGPathFromRoot + " of BioNetGen on this machine.  So RuleBender\n" 
+                      + "will attempt to access this latest version of BioNetGen.\n" 
+                      + "(BioNetGen was installed along with RuleBender.)");
+            }
+          } else {
+            Logger.log(Logger.LOG_LEVELS.WARNING, PreferencesClerk.class,
+      		    "There is no record of RuleBender having accessed any version of BioNetGen"
+              + "on this machine.  So the latest version of BioNetGen (installed along with"	
+      		  + "the latest RuleBender will be used.");
           }
-          }
+          
 	      
+          
 	  	  String     bngPath   = PreferencesClerk.getFullDefaultBNGPath();
 	      boolean bng  = validateBNGPath(bngPath);
 	      if (bng) { 
@@ -223,7 +248,13 @@ public class PreferencesClerk
 			String mm = PickWorkspaceDialog.setLastSetBioNetGenDirectory(PreferencesClerk.getDefaultBNGPath());
             Activator.getDefault().getPreferenceStore().setValue("SIM_PATH",PreferencesClerk.getDefaultBNGPath());
             setUpgradeCheck(BNGPathFromRoot);
+            Logger.log(Logger.LOG_LEVELS.INFO, PreferencesClerk.class, "The latest version "
+              + "of BioNetGen, namely " +  bngPath + " will be used for an simulations "
+              + "that are run.");
             return bngPath; 
+          } else {
+            Logger.log(Logger.LOG_LEVELS.WARNING, PreferencesClerk.class, "The latest version "
+              + "of BioNetGen, namely " +  bngPath + " seems to have a problem with it. ");
           }
 		}
 

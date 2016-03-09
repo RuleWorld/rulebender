@@ -73,12 +73,20 @@ public class BioNetGenConsole {
 			    .setMessage("Warning: Was not able to locate Perl on your system.");
 			errorMessage.open();
 		} else {
-			Console.displayOutput(currentModel.toString(), "BioNetGen Not Found\n\n"
-			    + "Warning: Was not able to locate BioNetGen in " + bngPath
-			    + ".\nThe Contact Map cannot be displayed if BioNetGen is not "
-			    + "included in the RuleBender path.\n"
-			    + "To add BioNetGen to the path click on "
-			    + "'Simulator' under 'Preferences'.\n\n\n");
+			Console.displayOutput(currentModel.toString(), "\n      BioNetGen Not Found\n\n"
+			    + "Warning: RuleBender was not able to locate\n"
+				+ "BioNetGen in:\n" 
+				+ bngPath + "\n"
+			    + "The Contact Map cannot be displayed and\n"
+				+ "simulations cannot be run if BioNetGen is\n"
+			    + "not included in the RuleBender path. To add\n"
+				+ "BioNetGen to the path, please click on\n"
+			    + "Window->Preferences->Simulator\n\n\n\n"
+			    + "If you believe that BioNetGen is installed\n"
+			    + "on your system, you can get more information\n"
+			    + "about where RuleBender is looking to find\n"
+			    + "it, by restarting RuleBender and selecting\n\n"
+			    + "Window->Preferences->Settings->Maximal Output");
 
 
 		}

@@ -11,8 +11,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 
-import rulebender.preferences.PreferencesClerk;
+import rulebender.logging.Logger;
 import rulebender.prereq.PreReqChecker;
+import rulebender.preferences.PreferencesClerk;
 import rulebender.simulate.bngexecution.BNGExecutionJob;
 import rulebender.simulate.parameterscan.ParameterScanData;
 import rulebender.simulate.parameterscan.ParameterScanJob;
@@ -82,8 +83,18 @@ public class BioNetGenUtility {
 			    + "if you want to run simulations.");
 
 			errorMessage.open();
+			
+			Logger.log(Logger.LOG_LEVELS.WARNING, BioNetGenUtility.class,
+					"Warning: It appears that Perl is not in your "
+				  + "PATH environment variable.\nPlease install Perl "
+				  + "if you want to run simulations.");
+
 			return false;
 		}
+
+		Logger.log(Logger.LOG_LEVELS.INFO, BioNetGenUtility.class,
+				   "A check for Perl on your system was successful.");
+		
 		checked = true;
 		return true;
 	}
