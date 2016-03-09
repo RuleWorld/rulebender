@@ -44,6 +44,10 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.jface.viewers.ISelectionProvider;
+
 
 import rulebender.core.utility.ANTLRFilteredPrintStream;
 import rulebender.core.utility.Console;
@@ -74,11 +78,15 @@ public class BNGLEditor extends TextEditor implements ISelectionListener,
 	private BNGLModel m_model;
 	// The color manager for the syntax highlighting.
 	private final BNGLColorManager m_colorManager;
+	private ITextSelection rhctextSelection;
 
         // This is non-static.  Each instance has its own copy of
         // ListenerRegistrations so there should be one listener
         // per model.	
 	private int ListenerRegistrations;
+	private int KeyListenerAdded = 0;
+	private int comment_limiter  = 0;
+	
 
 	// private String m_path;
 	public BNGLEditor() {
@@ -110,48 +118,6 @@ public class BNGLEditor extends TextEditor implements ISelectionListener,
 		// Register as a resource change listener.
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
 		
-/*		//  This code will likely be part of the code that permits 
-        //  frequent parsing of the BNGL file.
-          
-		System.out.println("Calling the BNGLEditor construtor ");
-		
-		  CaretListener listener = new CaretListener() {
-		      public void caretUpdate(CaretEvent caretEvent) {
-		        System.out.println("dot:"+ caretEvent.getDot());
-		        System.out.println("mark"+caretEvent.getMark());
-		      }
-		    };
-
-		    System.out.println("here 2");		    
-	try {    
-        IWorkbenchPage iwpage = 
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		if (iwpage == null) {  System.out.println("iwpage == null"); }
-
-        
-//		IEditorSite iwpart = iwpage.getActiveEditor().getEditorSite();
-//		IWorkbenchPart iwpart = iwpage.getActiveEditor().getEditorSite();
-//		IWorkbenchPart iwpart = iwpage.getActiveEditor().getEditorSite().getPart();
-		
-//		if (iwpart == null) {  System.out.println("iwpart == null"); }
-	} catch (Exception e2) {
-        System.out.printf("Error getting active page.");		
-        e2.printStackTrace();
-    }
-
-		
-	//	IWorkbenchPartReference iwpr = iwpage.getReference(iwpart);
-		
-//		AbstractTextEditor e = (AbstractTextEditor)((IEditorReference) iwpr)
-//		.getEditor(false);
-		
-	//	// StyledText styledText = (StyledText)getAdapter(Control.class);
-//		// styledText.addCaretListener(listener);
-		
-//		org.eclipse.swt.custom.CaretListener listener2 = (org.eclipse.swt.custom.CaretListener) listener;  
-		
-	//	((StyledText)e.getAdapter(Control.class)).addCaretListener(listener2);
-*/		
 	}
 
 	/*
@@ -186,10 +152,6 @@ public class BNGLEditor extends TextEditor implements ISelectionListener,
 	private BNGParseData produceParseData() {
 		// Get the text in the document.
 		String text = this.getSourceViewer().getDocument().get();
-
-		
-		
-		
 		return BNGParserUtility.produceParserInfoForBNGLText(text);
 	}
 
@@ -260,27 +222,6 @@ public class BNGLEditor extends TextEditor implements ISelectionListener,
 			e.printStackTrace();
 		}
 
-				/*
-                String eSe = BioNetGenConsole.getLineNumbers().trim();
-                while (eSe != "") {
-                  String sEs = "temp variable";
-                  if (eSe.indexOf(" ") > -1) {
-                    sEs = eSe.substring(eSe.indexOf(" "));
-                    eSe = eSe.substring(eSe.indexOf(" ")).trim();
-                  } else {
-                    sEs = eSe; eSe = "";
-                  }
-
-                  int next_num = 0;
-                  try {
-                    next_num = Integer.parseInt(sEs.trim());
-                    //  This is inelligant and error prone.  A more direct
-                    //  link with the parser would make this unnecessary.
-                    System.err.println("line " + next_num + ":8  Error Text");
-                  }
-                  catch (NumberFormatException nfe) { ;}
-                }
-*/
 		setErrors(errorStream.getErrorList());
 
 		System.err.flush();
@@ -364,6 +305,196 @@ public class BNGLEditor extends TextEditor implements ISelectionListener,
 		Logger.log(Logger.LOG_LEVELS.INFO, this.getClass(), "text selection? "
 		    + (selection instanceof ITextSelection));
 
+		// This is a somewhat primitive way to ensure that you do not eliminate too
+		// many # signs all all at once.
+        comment_limiter = 0;
+	
+	  		  	  
+		//  This listener needs to be added only once.
+		if (KeyListenerAdded == 0) {
+			KeyListenerAdded++;
+		        
+  	   IEditorPart rceditor  = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+       ((StyledText)rceditor.getAdapter(org.eclipse.swt.widgets.Control.class)).addKeyListener(	   
+		   new KeyListener() {
+
+
+
+		   @Override
+		   public void keyReleased(KeyEvent e) {
+			   int  c_offset = 0;
+		  	   int  c_length = 0;
+
+  		  	   IEditorPart rceditor  = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+  		  	   if (rceditor instanceof ITextEditor) {
+
+  		  		 	ISelectionProvider rcselectionProvider = ((ITextEditor)rceditor).getSelectionProvider();
+  		  		  	ISelection rcselection = rcselectionProvider.getSelection();
+  		  		  	if (rcselection instanceof ITextSelection) {
+  		  		  	   ITextSelection rctextSelection = (ITextSelection)rcselection;
+  		  		  	   int rcoffset = rctextSelection.getOffset();   	  	  	  		   			   
+ 					       if (rcoffset != 0) {
+  						     c_offset = rcoffset;
+  				  		     c_length = rctextSelection.getLength();
+  			               }
+  		 		    }
+  	            }
+  		  		
+  		  		
+  		  		
+
+  	  		    
+  		       
+  		       
+	  	 if (e.keyCode == 92) {
+	    	   if (comment_limiter != e.keyCode) {
+		           comment_limiter  = e.keyCode;
+                 
+		  	     try {
+		  	  	   ITextEditor    c_editor = (ITextEditor)rceditor;
+		  	  	   IDocumentProvider dp = c_editor.getDocumentProvider();
+		  	  	   IDocument     rhcdoc = dp.getDocument(c_editor.getEditorInput());
+
+                   try {		  	  	   
+ 		  	    	  int c_lines = rhcdoc.getNumberOfLines(c_offset,c_length); 
+		  				
+		  			  if ((c_lines == 1) || (c_lines == 0)) {
+ 		  	    	    int line2 = rhcdoc.getLineOfOffset(c_offset); 
+  					    IRegion irgn = rhcdoc.getLineInformation(line2);
+  					    if (rhcdoc.getChar(irgn.getOffset()) == '#') {
+ 		  	              rhcdoc.replace(irgn.getOffset(), 1, "");
+  					    } else {
+		                  int zzzpoint = traverse_line(irgn.getOffset(),line2,rhcdoc);
+		                  if (zzzpoint > 0) rhcdoc.replace(zzzpoint, 1, ""); 
+  					    }
+		  			 } else {
+	 		  	       int line2 = rhcdoc.getLineOfOffset(c_offset); 
+		  			   int kkk;
+		  			   for (kkk=0; kkk<c_lines; kkk++) {	 
+	 		  	    	  int line5 = line2 + kkk; 
+	  					  IRegion irgn = rhcdoc.getLineInformation(line5);
+	  					  if (rhcdoc.getChar(irgn.getOffset()) == '#') {
+	 		  	            rhcdoc.replace(irgn.getOffset(), 1, "");
+	  					  } else {
+			                int zzzpoint = traverse_line(irgn.getOffset(),line5,rhcdoc);
+			                if (zzzpoint > 0) rhcdoc.replace(zzzpoint, 1, ""); 
+	  					  }
+		  			   }		 
+		  		     }
+                   } catch (BadLocationException yyy) {
+  		  			 System.out.println("BadLocationException");		  	  		  	    	                  	   
+                   }		  	  	   
+			     } catch (Exception ee) {
+				   System.out.println("92 Cast failed " + ee.getMessage());
+			     }		  		   
+		  	   } 
+		     }	
+
+			
+
+			   
+		}
+			   
+			   
+			   
+			   
+		  		  		
+		  		  		
+		@Override
+		public void keyPressed(KeyEvent e) {
+		int tres=0;
+			int c_offset=0;
+	  		int c_length=0;
+
+		
+	  	    IEditorPart rceditor  = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+	  		if (rceditor instanceof ITextEditor) {
+	  			
+	  		  	ISelectionProvider rcselectionProvider = ((ITextEditor)rceditor).getSelectionProvider();
+	  		  	ISelection rcselection = rcselectionProvider.getSelection();
+	  		  	if (rcselection instanceof ITextSelection) {
+	  		  	   ITextSelection rctextSelection = (ITextSelection)rcselection;
+	  		  	   int rcoffset = rctextSelection.getOffset(); // etc.
+	  		  	   if (rcoffset != 0) {
+	  		  		   c_offset = rcoffset;
+	  		  		   c_length = rctextSelection.getLength();
+	  		  	   }
+		  		  			  		  			
+  		  		  if (e.keyCode == 13) {
+  		  		     try {    
+  			  	     ITextEditor    c_editor = (ITextEditor)rceditor;
+		  			 IDocumentProvider dp = c_editor.getDocumentProvider();
+		  			 IDocument     rhcdoc = dp.getDocument(c_editor.getEditorInput());
+                           		  		  		      
+		  	  		 try {
+		  		  	     int line8 = rhcdoc.getLineOfOffset(c_offset) - 1; 
+ 		  				 IRegion irgn = rhcdoc.getLineInformation(line8);
+ 		  					      
+ 		  				 tres = traverse_line(irgn.getOffset(), line8, rhcdoc);
+ 	 		  			 if (tres > -1) {
+ 		  				    irgn = rhcdoc.getLineInformation(line8 + 1); 		  				         
+ 		  			        rhcdoc.replace(irgn.getOffset(), 0, "# ");
+ 		  			        c_editor.selectAndReveal(irgn.getOffset()+2, 0);
+                         } else {
+                           	if (tres == -2) {
+  					  	       // System.out.println("Its a not a comment.");
+                           	} else {
+       		  				   irgn = rhcdoc.getLineInformation(line8+1);
+     		  					      
+     		  				   tres = traverse_line(irgn.getOffset(), line8+1, rhcdoc);
+     		  				   if (tres > -1) {
+   	 		  				      irgn = rhcdoc.getLineInformation(line8); 		  				         
+   	 		  			          rhcdoc.replace(irgn.getOffset(), 0, "# ");
+   	 		  					  irgn = rhcdoc.getLineInformation(line8+1); 		  				         
+   	 		  			          c_editor.selectAndReveal(irgn.getOffset()+2, 0);     		  					           		  					      
+     		  				   } 
+                           	}
+                         }
+		  	  	     } catch (BadLocationException yyy) {
+				  	     System.out.println("BadLocationException Return key");		  	  		  	    	  
+		  	  		 } 
+ 		  		 } catch (Exception ee) {
+	 	 		     System.out.println("13 Cast failed " + ee.getMessage());
+ 		     	 }
+	  		 }
+		 }	 
+	  }	   
+
+		  		  			
+			if (e.keyCode == 47) {
+	  			  try {
+		  			ITextEditor    c_editor = (ITextEditor)rceditor;
+		  	        IDocumentProvider dp = c_editor.getDocumentProvider();
+		  	        IDocument     rhcdoc = dp.getDocument(c_editor.getEditorInput());
+		  	        
+		  	        try {
+		  	    	  int c_lines = rhcdoc.getNumberOfLines(c_offset,c_length); 
+	  				
+	  				  if ((c_lines == 1) || (c_lines == 0)) {
+		  	    	    int line4 = rhcdoc.getLineOfOffset(c_offset); 
+ 					    IRegion irgn = rhcdoc.getLineInformation(line4);
+		  	            rhcdoc.replace(irgn.getOffset(), 0, "#");
+	  				  } else {
+	  		  	        int line1 = rhcdoc.getLineOfOffset(c_offset); 
+	  				    for (int ii=0; ii<c_lines; ii++) {
+	  					   IRegion irgn = rhcdoc.getLineInformation(line1 + ii);
+	  		  	           rhcdoc.replace(irgn.getOffset(), 0, "#");
+	  				    }
+	  				  }
+		  	        } catch (BadLocationException yyy) {
+  		  		      System.out.println("BadLocationException");		  	  		  	    	  
+		  	        }	
+				  } catch (Exception ee) {
+					System.out.println("47 Cast failed " + ee.getMessage());
+				  }
+	  			}
+       		   }		  		    
+			  }
+    	);}
+		 		
+	         
+	
+		
 		// If it is an IStructuredSelection
 		if (selection instanceof IStructuredSelection) {
 			if (!selection.isEmpty()) {
@@ -409,6 +540,58 @@ public class BNGLEditor extends TextEditor implements ISelectionListener,
 		}
 		
 	}
+	
+	
+
+	/**
+	 *   	    
+	 *  Traverse down this particular line to see if the first non-white character
+	 *  is a '#' sign.  If so, send the (non negative) offset number for that 
+	 *  character back to the calling routine.
+	 * 
+	 */
+	
+    private int traverse_line(int tr_offset, int tr_line, IDocument tr_doc ) {
+   	 //  System.out.println(" Traversing line " + tr_line);
+      try { 
+ 	    int line1 = tr_doc.getLineOfOffset(tr_offset); 
+        if (tr_offset > tr_doc.getLength()) { 
+          return -2;
+        } else {
+          if (line1 != tr_line) { 
+            return -3;    	     	  
+          } else { 
+    	    if (isWhitespace(tr_doc.getChar(tr_offset))) { 
+    		  return traverse_line(tr_offset+1,tr_line,tr_doc);
+    	    } else {
+              if (tr_doc.getChar(tr_offset) == '#') {         	
+                return tr_offset;
+    	      } else { 
+   	            return -2;    	     	      		  
+    	      }
+    	    }
+          }
+        }
+   	  }  
+      catch (BadLocationException yyy) {
+  		System.out.println("BadLocationException in traverse_line.");		  	  		  	    	                  	   
+	    return -1;    	     	      		  
+      }		  	  	   
+    }
+
+    /**
+     * 
+     * 
+     * 
+     */
+    
+    public boolean isWhitespace(char c) {
+		return (c == ' ' || c == '\t' || c == '\n' || c == '\r');
+	}
+      
+	
+	
+	
 
 	private void searchableTextObjectCollectionSelected(
 	    IBNGLLinkedElementCollection collection) {
