@@ -389,16 +389,9 @@ public class BNGLEditor extends TextEditor implements ISelectionListener,
 			     }		  		   
 		  	   } 
 		     }	
-
-			
-
-			   
 		}
-			   
-			   
-			   
-			   
-		  		  		
+		
+		   
 		  		  		
 		@Override
 		public void keyPressed(KeyEvent e) {
@@ -428,25 +421,44 @@ public class BNGLEditor extends TextEditor implements ISelectionListener,
                            		  		  		      
 		  	  		 try {
 		  		  	     int line8 = rhcdoc.getLineOfOffset(c_offset) - 1; 
- 		  				 IRegion irgn = rhcdoc.getLineInformation(line8);
- 		  					      
- 		  				 tres = traverse_line(irgn.getOffset(), line8, rhcdoc);
+ 		  				 IRegion irgn8 = rhcdoc.getLineInformation(line8);
+ 		  				 IRegion irgn9 = rhcdoc.getLineInformation(line8+1);
+
+ 		  				 
+ 		  				 tres = traverse_line(irgn8.getOffset(), line8, rhcdoc);
+                   //    System.out.println(" c_offset = " + c_offset + " tres = " + tres);
+                   //    System.out.println("Traversal of line 8 yields: " + tres);
  	 		  			 if (tres > -1) {
- 		  				    irgn = rhcdoc.getLineInformation(line8 + 1); 		  				         
- 		  			        rhcdoc.replace(irgn.getOffset(), 0, "# ");
- 		  			        c_editor.selectAndReveal(irgn.getOffset()+2, 0);
+ 	 		  				 if (c_offset > tres-2) { 	 		  					 
+ 		  			             rhcdoc.replace(irgn9.getOffset()+tres-irgn8.getOffset()
+ 		  			            		 , 0, "# ");
+                             //    System.out.println("Comment create 1");
+  				    	         c_editor.selectAndReveal(irgn9.getOffset() + tres 
+	  				    	    	- irgn8.getOffset() + 2, 0);
+ 	 		  				 }
                          } else {
-                           	if (tres == -2) {
-  					  	       // System.out.println("Its a not a comment.");
-                           	} else {
-       		  				   irgn = rhcdoc.getLineInformation(line8+1);
-     		  					      
-     		  				   tres = traverse_line(irgn.getOffset(), line8+1, rhcdoc);
-     		  				   if (tres > -1) {
-   	 		  				      irgn = rhcdoc.getLineInformation(line8); 		  				         
-   	 		  			          rhcdoc.replace(irgn.getOffset(), 0, "# ");
-   	 		  					  irgn = rhcdoc.getLineInformation(line8+1); 		  				         
-   	 		  			          c_editor.selectAndReveal(irgn.getOffset()+2, 0);     		  					           		  					      
+                           	if (tres == -3) {
+     		  				   int tres2 = traverse_line(irgn9.getOffset(), line8+1, rhcdoc);
+     		  				   if (tres2 > -1) {
+         		  				   // It's a comment
+     					  	      
+                               	  if (c_offset > tres2-1) {  
+   	 		  				        if (irgn8.getLength() == 0) {
+   	   	                              // System.out.println("Comment create 2a");
+   	 		  				    	  // The # sign is in column 1 of line8
+  	                                  rhcdoc.replace(irgn9.getOffset(), 1, "# ");
+  	                                  rhcdoc.replace(irgn8.getOffset(), 0, "# ");
+   		  				    	      c_editor.selectAndReveal(irgn9.getOffset() + 4, 0);     		  					           		  					         	 		  			    	   
+                                    } else {
+         	                          // System.out.println("Comment create 2b");
+	                                  rhcdoc.replace(irgn9.getOffset() + irgn8.getLength(),
+	 	                                     1, "# ");
+	                                  rhcdoc.replace(irgn8.getOffset() + irgn8.getLength(),
+	 	 	                                 0, "# ");
+ 		  				    	      c_editor.selectAndReveal(irgn9.getOffset() + 
+ 		  				    	    	 irgn8.getLength() + 4, 0);
+                                	 }
+                                  }
      		  				   } 
                            	}
                          }
@@ -552,19 +564,22 @@ public class BNGLEditor extends TextEditor implements ISelectionListener,
 	 */
 	
     private int traverse_line(int tr_offset, int tr_line, IDocument tr_doc ) {
-   	 //  System.out.println(" Traversing line " + tr_line);
       try { 
+  	    // System.out.println(" Traverse  char: " + tr_doc.getChar(tr_offset) 
+  	    //		+ " line: " + tr_line);
  	    int line1 = tr_doc.getLineOfOffset(tr_offset); 
         if (tr_offset > tr_doc.getLength()) { 
           return -2;
         } else {
           if (line1 != tr_line) { 
+       		// System.out.println("Fell off edge of line ");		  	  		  	    	                  	           	  
             return -3;    	     	  
           } else { 
     	    if (isWhitespace(tr_doc.getChar(tr_offset))) { 
     		  return traverse_line(tr_offset+1,tr_line,tr_doc);
     	    } else {
               if (tr_doc.getChar(tr_offset) == '#') {         	
+           		// System.out.println("Its a comment, so return " + tr_offset);		  	  		  	    	                  	   
                 return tr_offset;
     	      } else { 
    	            return -2;    	     	      		  
