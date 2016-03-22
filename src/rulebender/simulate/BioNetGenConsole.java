@@ -20,7 +20,7 @@ public class BioNetGenConsole {
 	private static Process bngConsoleProcess = null;
 	private static OutputStreamWriter writer = null;
 	private static ConsoleReader out = null;
-	public static long creationTimeOut = 5000;
+	public static long creationTimeOut = 60000;
 	public static long check = 100;
 	private static File currentModel = null;
 
