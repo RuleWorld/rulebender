@@ -203,10 +203,12 @@ public class Application implements IApplication {
 //        absolutePath = absolutePath.substring(0, absolutePath.lastIndexOf(System.getProperty("plugin")));
         absolutePath = absolutePath.substring(0, absolutePath.lastIndexOf("plugin"));
         
-        if (PerformancesClerk.getOS().equals("OS.WINDOWS")) {
+                
+        if (PreferencesClerk.getOS().equals("OS.WINDOWS")) {
            String newAbsolutePath =    absolutePath.replaceAll("^/","");
-                  newAbsolutePath = newAbsolutePath.replaceAll("/","\\");
+                  newAbsolutePath = newAbsolutePath.replaceAll("/",System.getProperty("file.separator"));
                      absolutePath = newAbsolutePath;		
+     //  	   System.out.println(" absolutePath = " + newAbsolutePath);
         }
         
 //    	System.out.println(" absolutePath = " + absolutePath);
