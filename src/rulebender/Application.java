@@ -204,9 +204,9 @@ public class Application implements IApplication {
         absolutePath = absolutePath.substring(0, absolutePath.lastIndexOf("plugin"));
         
         if (PerformancesClerk.getOS().equals("OS.WINDOWS")) {
-           String newAbsolutePath = absolutePath.replaceAll("^/","");
-                  newAbsolutePath = absolutePath.replaceAll("/","\");
-           absolutePath           = newAbsolutePath;		
+           String newAbsolutePath =    absolutePath.replaceAll("^/","");
+                  newAbsolutePath = newAbsolutePath.replaceAll("/","\\");
+                     absolutePath = newAbsolutePath;		
         }
         
 //    	System.out.println(" absolutePath = " + absolutePath);
