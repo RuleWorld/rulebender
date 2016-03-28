@@ -6,18 +6,10 @@ package rulebender.preferences;
 import java.io.File;
 import java.util.prefs.*;
 
-import rulebender.Activator;
-import rulebender.core.workspace.PickWorkspaceDialog;
-import rulebender.preferences.views.MyFieldEditorPreferencePage;
-
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-
-import rulebender.preferences.PreferencesClerk;
-import rulebender.Activator;
-
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.ui.IWorkbench;
@@ -26,7 +18,11 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import rulebender.preferences.PreferencesClerk;
 import rulebender.simulate.BioNetGenUtility;
 import rulebender.logging.Logger;
+import rulebender.core.workspace.PickWorkspaceDialog;
+import rulebender.preferences.views.MyFieldEditorPreferencePage;
+import rulebender.preferences.PreferencesClerk;
 import rulebender.Activator;
+import rulebender.Application;
 
 /*  This seems like a good time and place to document the datastructures that keep track of
    the location of the workspace and the location of BioNetGen.  
@@ -103,12 +99,8 @@ public class PreferencesClerk
 	 */
 
 	public static String getDefaultBNGPath() 
-	{
-//           return Activator.getDefault().getPreferenceStore().getString("SIM_PATH")
-//	   + System.getProperty("file.separator") + BNGPathFromRoot;
-		return  System.getProperty("user.dir")
-		    + System.getProperty("file.separator")
-                    + BNGPathFromRoot;
+	{		
+		return		Application.GetExecutionPath() + BNGPathFromRoot;
 	}
 	/**
 	 * Returns the name of the main BNG file in 'BNGName'.
@@ -125,9 +117,13 @@ public class PreferencesClerk
 	 * 
 	 * @return String root path to BNG directory.
 	 */
+	/*  This is not called from the RuleBender code.
+	 *  Let's comment it out.
+	 *  
 	public static String getBNGRoot() {
       return  System.getProperty("user.dir");
 	}
+	 */
 
 	/**
 	 * Returns the RuleBender version.

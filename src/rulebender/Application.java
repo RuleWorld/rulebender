@@ -2,6 +2,7 @@ package rulebender;
 
 
 import java.net.URL;
+import java.util.prefs.Preferences;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.equinox.app.IApplication;
@@ -28,6 +29,11 @@ import rulebender.logging.Logger;
  */
 public class Application implements IApplication {
 
+    private static Preferences  _preferences           = Preferences.userNodeForPackage(Application.class);
+
+    private static final String _RawInstallDirectory = "rawInstallDirectory";
+    private static final String _KeyInstallDirectory = "keyInstallDirectory";
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
 	 */
@@ -50,6 +56,10 @@ public class Application implements IApplication {
         Activator.getDefault().getPreferenceStore().setValue("OUTPUT_SETTING","minimal");
         // Set maximum graph density at a reasonable level.
         Activator.getDefault().getPreferenceStore().setValue("MAX_GRAPH_COLUMNS","10000");
+
+        
+
+        PutExecutionPath();
 
         
         // Get the workspace and only continue if it is set correctly.
@@ -177,4 +187,24 @@ public class Application implements IApplication {
 		
 		return true; 
 	}
+	
+	
+    static public String GetExecutionPath() {
+        return _preferences.get(_KeyInstallDirectory, null);
+    }
+
+    
+	   
+    public String PutExecutionPath(){
+    	  
+    	String absolutePath = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
+//      System.out.println(" absolutePath = " + absolutePath);
+        _preferences.put(_RawInstallDirectory, absolutePath);    	
+//        absolutePath = absolutePath.substring(0, absolutePath.lastIndexOf(System.getProperty("plugin")));
+        absolutePath = absolutePath.substring(0, absolutePath.lastIndexOf("plugin"));
+//    	System.out.println(" absolutePath = " + absolutePath);
+        _preferences.put(_KeyInstallDirectory, absolutePath);
+        return absolutePath;
+    }    
+
 }
