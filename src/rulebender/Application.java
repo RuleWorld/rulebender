@@ -202,6 +202,13 @@ public class Application implements IApplication {
         _preferences.put(_RawInstallDirectory, absolutePath);    	
 //        absolutePath = absolutePath.substring(0, absolutePath.lastIndexOf(System.getProperty("plugin")));
         absolutePath = absolutePath.substring(0, absolutePath.lastIndexOf("plugin"));
+        
+        if (PerformancesClerk.getOS().equals("OS.WINDOWS") {
+           String newAbsolutePath = absolutePath.replaceAll("^/","");
+                  newAbsolutePath = absolutePath.replaceAll("/","\");
+           absolutePath           = newAbsolutePath;		
+        }
+        
 //    	System.out.println(" absolutePath = " + absolutePath);
         _preferences.put(_KeyInstallDirectory, absolutePath);
         return absolutePath;
