@@ -57,11 +57,14 @@ cp -r  $rbReleaseDir/win32.win32.x86/eclipse/     \
 echo "Copying BioNetGen " 
 
 cp -r $dropboxroot/Linux/BioNetGen-2.2.6-stable     \
-        $rbReleaseDir/zips/RuleBender-$version-lin64/BioNetGen-2.2.6
+             $rbReleaseDir/zips/RuleBender-$version-lin64/BioNetGen-2.2.6
+chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-lin64/BioNetGen-2.2.6
 cp -r $dropboxroot/MacOSX/BioNetGen-2.2.6-stable    \
-        $rbReleaseDir/zips/RuleBender-$version-osx64/BioNetGen-2.2.6
+             $rbReleaseDir/zips/RuleBender-$version-osx64/BioNetGen-2.2.6
+chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-osx64/BioNetGen-2.2.6
 cp -r $dropboxroot/Windows/BioNetGen-2.2.6-stable   \
-        $rbReleaseDir/zips/RuleBender-$version-win32/BioNetGen-2.2.6
+             $rbReleaseDir/zips/RuleBender-$version-win32/BioNetGen-2.2.6
+chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-win32/BioNetGen-2.2.6
 
 
 
@@ -95,7 +98,7 @@ cd $rbReleaseDir/zips/
 
 tar -czf  RuleBender-$version-lin64.tar.gz  RuleBender-$version-lin64
 tar -czf  RuleBender-$version-osx64.tar.gz  RuleBender-$version-osx64
-zip -r    RuleBender-$version-win32.zip     RuleBender-$version-win32
+zip -r -q RuleBender-$version-win32.zip     RuleBender-$version-win32
 
 
 # remove the any svn files
