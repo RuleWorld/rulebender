@@ -203,7 +203,7 @@ public class Application implements IApplication {
 //        absolutePath = absolutePath.substring(0, absolutePath.lastIndexOf(System.getProperty("plugin")));
         absolutePath = absolutePath.substring(0, absolutePath.lastIndexOf("plugin"));
         
-        if (PerformancesClerk.getOS().equals("OS.WINDOWS") {
+        if (PerformancesClerk.getOS().equals("OS.WINDOWS")) {
            String newAbsolutePath = absolutePath.replaceAll("^/","");
                   newAbsolutePath = absolutePath.replaceAll("/","\");
            absolutePath           = newAbsolutePath;		
