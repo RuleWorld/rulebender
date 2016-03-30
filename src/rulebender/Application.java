@@ -15,6 +15,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
 import rulebender.core.workspace.PickWorkspaceDialog;
+import rulebender.preferences.OS;
 import rulebender.preferences.PreferencesClerk;
 import rulebender.prereq.PreReqChecker;
 import rulebender.logging.Logger;
@@ -190,7 +191,9 @@ public class Application implements IApplication {
 	
 	
     static public String GetExecutionPath() {
-        return _preferences.get(_KeyInstallDirectory, null);
+    	String ystr = _preferences.get(_KeyInstallDirectory, null); 
+//        System.out.println(" GetExecutionPath returning " + ystr);
+        return ystr;
     }
 
     
@@ -202,18 +205,21 @@ public class Application implements IApplication {
         _preferences.put(_RawInstallDirectory, absolutePath);    	
 //        absolutePath = absolutePath.substring(0, absolutePath.lastIndexOf(System.getProperty("plugin")));
         absolutePath = absolutePath.substring(0, absolutePath.lastIndexOf("plugin"));
+        absolutePath = absolutePath.trim();
         
-                
-        if (PreferencesClerk.getOS().equals("OS.WINDOWS")) {
-           String newAbsolutePath =    absolutePath.replaceAll("^/","");
-                  newAbsolutePath = newAbsolutePath.replaceAll("/",System.getProperty("file.separator"));
-                     absolutePath = newAbsolutePath;		
-     //  	   System.out.println(" absolutePath = " + newAbsolutePath);
+        if (PreferencesClerk.getOS() == OS.WINDOWS) {        	
+//          System.out.println(" before   absolutePath = " + absolutePath);
+                    absolutePath = absolutePath.replace("/ C:","C:");
+                    absolutePath = absolutePath.replace("/C:","C:");
+                    absolutePath = absolutePath.replaceAll("/","\\\\");
+//          System.out.println(" after    absolutePath = " + absolutePath);
         }
         
-//    	System.out.println(" absolutePath = " + absolutePath);
+//        String stemp = System.getProperty("os.name");
+//        System.out.println(" os name = " + stemp);
+        
         _preferences.put(_KeyInstallDirectory, absolutePath);
         return absolutePath;
     }    
 
-}
+}        
