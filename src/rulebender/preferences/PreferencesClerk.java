@@ -252,10 +252,12 @@ public class PreferencesClerk
             Logger.log(Logger.LOG_LEVELS.WARNING, PreferencesClerk.class, "The latest version "
               + "of BioNetGen, namely " +  bngPath + " seems to have a problem with it. ");
           }
-		}
 
 		return "No_Valid_Path_";  //  This is not a good way to handle the situation, but it's
 		               //  better than what we had before.
+	  }
+
+          return "Please_Install_Perl_";
 	}
 	public static String getFullBNGPath() {
 		return  getBNGPath() + System.getProperty("file.separator") + BNGName;

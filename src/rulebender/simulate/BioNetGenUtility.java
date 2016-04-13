@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.lang.IllegalArgumentException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.swt.SWT;

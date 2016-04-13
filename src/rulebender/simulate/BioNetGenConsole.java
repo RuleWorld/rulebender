@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.lang.IllegalArgumentException;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -42,7 +43,8 @@ public class BioNetGenConsole {
 		
 		
 //		if ((bng || bng2) && prereq) {
-        if (!myPath.equals("No_Valid_Path_")) {
+        if ( (!myPath.equals("No_Valid_Path_")) && 
+             (!myPath.equals("Please_Install_Perl_")) ) {
 
 			Console.displayOutput(currentModel.toString(), 
 		     "\nBioNetGen has been located on your system. ");
