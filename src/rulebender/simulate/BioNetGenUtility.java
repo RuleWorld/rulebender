@@ -75,6 +75,8 @@ public class BioNetGenUtility {
 
 	public static boolean checkPreReq() {
 		if (!checked && !PreReqChecker.isPerlInPath()) {
+			
+        try {			
 			MessageBox errorMessage = new MessageBox(Display.getDefault()
 			    .getActiveShell(), SWT.ICON_ERROR | SWT.OK);
 			errorMessage.setText("Perl Not Found");
@@ -83,6 +85,11 @@ public class BioNetGenUtility {
 			    + "if you want to run simulations.");
 
 			errorMessage.open();
+        } catch (IllegalArgumentException iae) {
+        	System.out.println("Warning: It appears that Perl is not in your "
+    			    + "PATH environment variable.\nPlease install Perl "
+    			    + "if you want to run simulations.");
+        }
 			
 			Logger.log(Logger.LOG_LEVELS.WARNING, BioNetGenUtility.class,
 					"Warning: It appears that Perl is not in your "
