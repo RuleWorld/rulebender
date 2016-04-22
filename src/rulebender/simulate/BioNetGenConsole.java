@@ -68,18 +68,7 @@ public class BioNetGenConsole {
 		}
 
 		else if (bng) {
-			try {
-  			  MessageBox errorMessage = new MessageBox(Display.getDefault()
-			      .getActiveShell(), SWT.ICON_ERROR | SWT.OK);
-			  errorMessage.setText("Perl Not Found");
-			  errorMessage
-			      .setMessage("Warning: Was not able to locate Perl on your system.");
-			  errorMessage.open();
-            } catch (IllegalArgumentException iae) {
-        	  System.out.println("Warning: It appears that Perl is not in your "
-    			               + "PATH environment variable.\nPlease install Perl "
-    			               + "if you want to run simulations.");
-            }
+		  BioNetGenUtility.checkPreReq();
 		} else {
 			Console.displayOutput(currentModel.toString(), "\n      BioNetGen Not Found\n\n"
 			    + "Warning: RuleBender was not able to locate\n"

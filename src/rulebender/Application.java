@@ -1,8 +1,9 @@
 package rulebender;
 
-
+// import java.io.IOException;
 import java.net.URL;
 import java.util.prefs.Preferences;
+// import java.lang.IllegalArgumentException;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.equinox.app.IApplication;
@@ -10,11 +11,15 @@ import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.service.datalocation.Location;
+// import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
+// import org.eclipse.swt.widgets.Shell;
+// import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
 import rulebender.core.workspace.PickWorkspaceDialog;
+import rulebender.simulate.BioNetGenUtility;
 import rulebender.preferences.OS;
 import rulebender.preferences.PreferencesClerk;
 import rulebender.prereq.PreReqChecker;
@@ -59,11 +64,13 @@ public class Application implements IApplication {
         Activator.getDefault().getPreferenceStore().setValue("MAX_GRAPH_COLUMNS","10000");
 
         
-
-        PutExecutionPath();
-
-        
-        // Get the workspace and only continue if it is set correctly.
+        // Create a full path to the RuleBender executable.  This path can
+        // also be used to locate the bionetgen directory.
+        putExecutionPath();        
+        // Check to confirm that Perl has been installed.
+        checkPerl();
+        // Check Java version.  The required version level is the parameter.
+        checkJava("1.7");
         
 	    if(!selectWorkspace(display))
 	    {
@@ -198,28 +205,84 @@ public class Application implements IApplication {
 
     
 	   
-    public String PutExecutionPath(){
+    public String putExecutionPath(){
     	  
     	String absolutePath = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
-//      System.out.println(" absolutePath = " + absolutePath);
         _preferences.put(_RawInstallDirectory, absolutePath);    	
-//        absolutePath = absolutePath.substring(0, absolutePath.lastIndexOf(System.getProperty("plugin")));
         absolutePath = absolutePath.substring(0, absolutePath.lastIndexOf("plugin"));
         absolutePath = absolutePath.trim();
         
         if (PreferencesClerk.getOS() == OS.WINDOWS) {        	
-//          System.out.println(" before   absolutePath = " + absolutePath);
                     absolutePath = absolutePath.replace("/ C:","C:");
                     absolutePath = absolutePath.replace("/C:","C:");
                     absolutePath = absolutePath.replaceAll("/","\\\\");
-//          System.out.println(" after    absolutePath = " + absolutePath);
         }
-        
-//        String stemp = System.getProperty("os.name");
-//        System.out.println(" os name = " + stemp);
         
         _preferences.put(_KeyInstallDirectory, absolutePath);
         return absolutePath;
     }    
 
+    
+    public int compareVersion(String version1, String version2) {
+        String[] arr1 = version1.split("\\.");
+        String[] arr2 = version2.split("\\.");
+     
+        int i=0;
+        while(i<arr1.length || i<arr2.length){
+            if(i<arr1.length && i<arr2.length){
+                if(Integer.parseInt(arr1[i]) < Integer.parseInt(arr2[i])){
+                    return -1;
+                }else if(Integer.parseInt(arr1[i]) > Integer.parseInt(arr2[i])){
+                    return 1;
+                }
+            } else if(i<arr1.length){
+                if(Integer.parseInt(arr1[i]) != 0){
+                    return 1;
+                }
+            } else if(i<arr2.length){
+               if(Integer.parseInt(arr2[i]) != 0){
+                    return -1;
+                }
+            }
+     
+            i++;
+        }
+     
+        return 0;
+    }
+    
+
+    public void checkJava(String java_required) {
+        
+      String java_local     = System.getProperty("java.version");
+      String java_local_sig = java_local.substring(0,java_required.length());
+    
+      /* System.out.println(" Java Version is = " + System.getProperty("java.version")
+    		+ "  java_local_sig = "  + java_local_sig + " " + 
+      compareVersion(java_required, java_local_sig));  */
+
+      if (compareVersion(java_required, java_local_sig) > 0) {
+          MessageDialog.openError(Display.getDefault().getActiveShell(), "Error",
+            "To run properly," +	  
+            " RuleBender requires Java version " + java_required + 
+            " Currently your system is running " + java_local + 
+            " This may be sufficient for doing simulations, but the " +
+            " visualization tools likely will not function unless Java " +
+            " is upgraded. More information is available at bionetgen.org " +
+            " in the Download section.");
+      }
+    
+      return;
+    }
+
+    
+    public void checkPerl() {
+    	if (BioNetGenUtility.checkPreReq() == false) {
+          MessageDialog.openError(Display.getDefault().getActiveShell(), "Error",
+  			"Perl Not Found \n\n Warning: Perl must be installed on your " +
+  			" system to run RuleBender.  More information about Perl can " +
+  			" be found at bionetgen.org in the Download section.");
+    	}
+	  return;
+    }
 }        

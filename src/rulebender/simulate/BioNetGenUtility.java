@@ -11,6 +11,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.jface.dialogs.MessageDialog;
 
 import rulebender.logging.Logger;
 import rulebender.prereq.PreReqChecker;
@@ -76,26 +77,16 @@ public class BioNetGenUtility {
 
 	public static boolean checkPreReq() {
 		if (!checked && !PreReqChecker.isPerlInPath()) {
-			
-        try {			
-			MessageBox errorMessage = new MessageBox(Display.getDefault()
-			    .getActiveShell(), SWT.ICON_ERROR | SWT.OK);
-			errorMessage.setText("Perl Not Found");
-			errorMessage.setMessage("Warning: It appears that Perl is not in your "
-			    + "PATH environment variable.\nPlease install Perl "
-			    + "if you want to run simulations.");
 
-			errorMessage.open();
-        } catch (IllegalArgumentException iae) {
-        	System.out.println("Warning: It appears that Perl is not in your "
-    			    + "PATH environment variable.\nPlease install Perl "
-    			    + "if you want to run simulations.");
-        }
-			
+			System.out.println(
+					"\nWarning: It appears that Perl is not installed on "
+				  + "your computer.\nPlease install Perl if you would like "
+				  + "to run simulations.\n");
+
 			Logger.log(Logger.LOG_LEVELS.WARNING, BioNetGenUtility.class,
-					"Warning: It appears that Perl is not in your "
-				  + "PATH environment variable.\nPlease install Perl "
-				  + "if you want to run simulations.");
+					"\nWarning: It appears that Perl is not installed on "
+				  + "your computer.\nPlease install Perl if you would like "
+				  + "to run simulations.\n");
 
 			return false;
 		}
@@ -106,6 +97,4 @@ public class BioNetGenUtility {
 		checked = true;
 		return true;
 	}
-
-
 }
