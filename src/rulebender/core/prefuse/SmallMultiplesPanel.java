@@ -11,6 +11,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.awt.GridBagLayout;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -58,6 +61,8 @@ import rulebender.preferences.PreferencesClerk;
 */
 
 public class SmallMultiplesPanel extends JLayeredPane implements ActionListener /*TimelineItemSelectionListener*/ {
+	
+	private boolean auxPanelSelected = false;
 	
 	private static final long serialVersionUID = -5595319590026393256L;
 	private static String COMPONENT_GRAPH = "component_graph";
@@ -109,6 +114,12 @@ public class SmallMultiplesPanel extends JLayeredPane implements ActionListener 
 	
 	// The lower panel that will hold the small multiples panels
 	private JPanel lowerPanel;
+	
+	// If the user wants to expand a model, the auxPanel will contain 
+	// the model, and auxPanel will replace lowerPanel.
+	private JPanel        auxPanel;   
+	private JLayeredPane  auxLPane;   
+	private SmallMultiple auxSM;
 	
 	// The array of panels that holds each of the small multiples
 	private JPanel[] myPanel;
@@ -244,7 +255,7 @@ public class SmallMultiplesPanel extends JLayeredPane implements ActionListener 
 
 		
 		// Initialize the major panels
-		fullPanel = new JPanel();
+		fullPanel  = new JPanel();
 		upperPanel = new JPanel();
 		lowerPanel = new JPanel();
 		
@@ -570,6 +581,101 @@ public class SmallMultiplesPanel extends JLayeredPane implements ActionListener 
 		
 	} //initializeSmallMultiplesDisplay
 	
+	
+/*
+ *    Expand Model
+ * 
+ * 
+ * 
+ * 
+ */
+	public SmallMultiple giveMeSM(int gridIndex) {
+		return sm[gridIndex];
+	}
+	
+	public void restoreModel(int modelIndex) {
+		System.out.println(" Restore Model "); 
+		SmallMultiple.promoted = -1;
+		initializeSmallMultiplesDisplay("-- Use default layouts --");
+      return;
+	}
+	
+	public void expandModel(int modelIndex) {
+		// Get path of model to reload
+		String modelNameToReload = sm[modelIndex].getNetworkViewer().getFilepath();
+		String layoutChoice = (String)ddlLayouts.getSelectedItem();
+		
+		// System.out.println(" expandModel will expand " + modelIndex + " lastPanelSelected = " + m_lastPanelSelected); 
+		// System.out.println(" layout choice is " + layoutChoice); 
+		// Clear the panel
+		// if (auxPanel != null) { auxPanel.dispose(); }
+		
+		GridBagLayout gridbag = new GridBagLayout();
+        GridBagConstraints c  = new GridBagConstraints();
+		auxPanel = new JPanel();
+		auxLPane = new JLayeredPane();
+		auxPanel.setName(""+modelIndex);
+		
+		//myPanel[i].setToolTipText("testing");
+		if (auxPanel.getComponentCount() == 0) {
+			// nothing
+		} else {
+			auxPanel.removeAll();
+			auxPanel.repaint();
+		} //if-else
+	//	auxLPane.setSize(new Dimension(lowerPanel.getHeight(),lowerPanel.getWidth()));
+	//	auxLPane.setSize(new Dimension(100,100));
+        c.gridwidth  = 10;
+        c.gridheight = 10;
+        c.gridx = 10;
+        c.gridy = 10;
+    //    c.ipadx = 5;
+    //    c.ipady = 5;
+        c.fill = GridBagConstraints.BOTH;
+        c.weightx = 1.0;
+        c.weighty = 1.0;                  
+        auxLPane.setLayout(gridbag);
+	//	auxLPane.setLayout(new FlowLayout());
+	/*	auxSM.getDisplay().getVisualization().run("layout");
+		auxSM.getDisplay().getVisualization().run("color");
+		auxSM.getDisplay().getVisualization().run("bubbleLayout");
+		auxSM.getDisplay().getVisualization().run("bubbleColor"); */
+        
+//		auxSM = giveMeSM(modelIndex);
+//		auxLPane.add(auxSM.getDisplay(),c);
+        
+     //   System.out.println(" The name of this model is: " + 
+       //    sm[modelIndex].getCMAPNetworkViewer().getFilepath());
+
+		auxLPane.add(sm[modelIndex].getDisplay(),c);
+		SmallMultiple.promoted = modelIndex;
+//        System.out.println(" The name of this model is: " + 
+  //              sm[modelIndex].getCMAPNetworkViewer().getFilepath());
+		SmallMultiple.promoted_filePath = 
+                  sm[modelIndex].getCMAPNetworkViewer().getFilepath();
+//		System.out.println("\n promoted  Index: " + SmallMultiple.promoted);
+
+		
+
+//		System.out.println(" lowerPanel width " + lowerPanel.getWidth() + 
+	//			"  height " + lowerPanel.getHeight());
+		lowerPanel.removeAll();
+		lowerPanel.setBorder(border);
+	//	lowerPanel.setBackground(Color.WHITE);
+		lowerPanel.setLayout(gridbag);
+	//	lowerPanel.setLayout(new FlowLayout());
+		
+		lowerPanel.add(auxLPane,c);
+		lowerPanel.validate();
+		lowerPanel.repaint();
+
+//		System.out.println(" lowerPanel width " + m_overallSize.width + 
+	//			"  height " + m_overallSize.height);
+
+		
+	} //expandModel
+	
+	
 	public void reloadModel(int modelIndex) {
 		
 		// Get path of model to reload
@@ -681,11 +787,25 @@ public class SmallMultiplesPanel extends JLayeredPane implements ActionListener 
 			removeHighlighting();	
 		} //if
 		
+//		System.out.println("\n promoted  Index: " + SmallMultiple.promoted);
+		/*
+		System.out.println(" highlightPanel  Index: " + panelIndex 
+				           + " boolean: " + resetHighlighting + 
+				             " width " + (myPanel[panelIndex].getWidth() - 2) +
+				             " height" + (myPanel[panelIndex].getHeight() - 2));
+				             */
+		// m_overallSize.width
+		
 		// Now highlight the selected index
 		//myPanel[panelIndex].setBorder(highlightBorder);
 		myPanel[panelIndex].setBackground(highlightBackgroundColor);
 		sm[panelIndex].getDisplay().setBackground(highlightBackgroundColor);
-		sm[panelIndex].getDisplay().setSize(myPanel[panelIndex].getWidth() - 2, myPanel[panelIndex].getHeight() - 2);
+		// Code for model expanding
+		if (SmallMultiple.promoted == panelIndex) {
+			sm[panelIndex].getDisplay().setSize(m_overallSize.width, m_overallSize.height);
+	    } else {
+		    sm[panelIndex].getDisplay().setSize(myPanel[panelIndex].getWidth() - 2, myPanel[panelIndex].getHeight() - 2);
+	    }
 		sm[panelIndex].getDisplay().repaint();
 		sm[panelIndex].getDisplay().getVisualization().repaint();
 		myPanel[panelIndex].repaint();
@@ -850,6 +970,9 @@ public class SmallMultiplesPanel extends JLayeredPane implements ActionListener 
 		return ((m_selectedModels.size() == 2) && (m_selectedModels.get(0) != -1) && (m_selectedModels.get(1) != -1));
 	} //twoPanelsHighlighted
 	
+	
+	
+
 	/**
 	 * Compare the models currently highlighted
 	 */
@@ -857,6 +980,12 @@ public class SmallMultiplesPanel extends JLayeredPane implements ActionListener 
 		//  Check radio buttons to see if we are comparing similarities or differences
 		boolean comparingSimilarities = rbtnCompareSimilarities.isSelected();
 		boolean comparingDifferences = rbtnCompareDifferences.isSelected();
+		
+		
+//		System.out.println("\n Calling compareModels \n");
+	//	System.out.println("Model 1: " + sm[m_selectedModels.get(0)].getCMAPNetworkViewer().getFilepath() + "\n");
+		// System.out.println("Model 2: " + sm[m_selectedModels.get(1)].getCMAPNetworkViewer().getFilepath() + "\n");
+		
 		
 		if (comparingSimilarities) {
 			// if comparing similarities, call similarity comparison function in panel1's SMClickControlDelegate
@@ -1018,7 +1147,7 @@ public class SmallMultiplesPanel extends JLayeredPane implements ActionListener 
 		
 		if (e.getSource() == ddlLayouts) {
 	        String layoutChoice = (String)ddlLayouts.getSelectedItem();
-	        System.out.println(layoutChoice);
+	        // System.out.println(" actionPerformed   layoutChoice = " + layoutChoice);
 	        
 	        if (displayBlank) {
 	        	initializeBlankDisplay();

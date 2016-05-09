@@ -8,6 +8,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
+import java.io.File;
+import java.io.OutputStream;
+import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
+
+import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -58,6 +64,7 @@ import rulebender.core.prefuse.collinsbubbleset.layout.BubbleSetLayout;
 import rulebender.simulationjournaling.Message;
 import rulebender.simulationjournaling.view.SmallMultiplesView;
 import rulebender.simulationjournaling.view.TimelineView;
+import rulebender.core.prefuse.PngSaveFilter;
 
 public class SMClickControlDelegate extends ControlAdapter implements ISelectionProvider, ActionListener {
 
@@ -384,6 +391,15 @@ public class SMClickControlDelegate extends ControlAdapter implements ISelection
 		itemHighlightActivated = false;
 	} //deactivateAggregates
 	
+	
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		
+//		System.out.println("Mouse dragged ");
+		
+	}
+    
+	
 	/**
 	 * Called when no VisualItem is hit on mouse click:
 	 *  - Right click - creates the context menu depending on what is currently highlighted and what is currently selected
@@ -394,6 +410,8 @@ public class SMClickControlDelegate extends ControlAdapter implements ISelection
 	public void mouseClicked(MouseEvent e) {
 		
 		mostRecentClick = e;
+		
+		// System.out.println("Mouse clicked ");
 		
 		Display.getDefault().syncExec(new Runnable(){
 
@@ -423,8 +441,21 @@ public class SMClickControlDelegate extends ControlAdapter implements ISelection
 			
 			SmallMultiplesPanel smPanel = m_view.getSmallMultiplesPanel();
 			JPanel[] panels = smPanel.getSmallMultiplesPanels();
-			int panelIndexClicked = Integer.parseInt(mostRecentClick.getComponent().getParent().getName());
 
+		/*	System.out.println("RHC SMClickControlDelegate " +  
+			    mostRecentClick.getComponent().getParent().getName()
+			);  */ 
+			int panelIndexClicked = -1;
+			
+			if (SmallMultiple.promoted > -1) {
+              panelIndexClicked = SmallMultiple.promoted;
+			} else {
+			  panelIndexClicked = Integer.parseInt(mostRecentClick.getComponent().getParent().getName());
+			}
+
+			JMenuItem saveAsMenuItem = new JMenuItem("Save as...");
+			popupMenu.add(saveAsMenuItem);
+			
 			if (m_modelList.size() == 0) {
 				getModelList(smPanel, panels);
 			} //if
@@ -538,6 +569,18 @@ public class SMClickControlDelegate extends ControlAdapter implements ISelection
 			popupMenu.add(openModelMenuItem);
 			openModelMenuItem.addActionListener(this);
 
+			// Refresh model menu option
+			// TODO: restore this function when you have the time
+			if (SmallMultiple.promoted > -1) {				
+			  refreshModelMenuItem = new JMenuItem("Restore model");
+			} else {
+			  refreshModelMenuItem = new JMenuItem("Expand model");
+			}
+			popupMenu.add(refreshModelMenuItem);
+			refreshModelMenuItem.addActionListener(this);
+			
+
+			
 			// Open simulations menu option
 			if ((smPanel.isCurrentlyHighlighted())) {
 				JMenu m = new JMenu("Open simulations...");
@@ -561,13 +604,34 @@ public class SMClickControlDelegate extends ControlAdapter implements ISelection
 			} //if-else
 			
 			
-			
-			// Refresh model menu option
-			// TODO: restore this function when you have the time
-			//refreshModelMenuItem = new JMenuItem("Refresh model");
-			//popupMenu.add(refreshModelMenuItem);
-			//refreshModelMenuItem.addActionListener(this);
-			
+			// add listener
+			saveAsMenuItem.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					JFileChooser chooser = new JFileChooser();
+					// file filter
+					chooser.addChoosableFileFilter(new PngSaveFilter());
+
+					int option = chooser.showSaveDialog(null);
+					if (option == JFileChooser.APPROVE_OPTION) {
+						if (chooser.getSelectedFile() != null) {
+							File theFileToSave = chooser.getSelectedFile();
+							OutputStream output;
+							try {
+								output = new FileOutputStream(theFileToSave);
+								// save png
+								m_vis.getDisplay(0).saveImage(output, "PNG", 1.0);
+							} catch (FileNotFoundException e1) {
+								e1.printStackTrace();
+							}
+
+						}
+					}
+				}
+
+			});
+
 			
 			popupMenu.show(e.getComponent(), e.getX(), e.getY());
 			
@@ -659,8 +723,26 @@ public class SMClickControlDelegate extends ControlAdapter implements ISelection
 	 * @param e - The mouse click
 	 */
 	private void doubleLeftClick(MouseEvent e) {
-		int panelIndexClicked = Integer.parseInt(mostRecentClick.getComponent().getParent().getName());
-		System.out.println("Double click on panel " + panelIndexClicked);
+	/*	System.out.println("Trying to parse  " + mostRecentClick.getComponent().getParent().getName());
+		System.out.println("Mouse Click      " + mostRecentClick.paramString());
+		System.out.println("Component Valid? " + mostRecentClick.getComponent().isValid());
+		System.out.println("The guy that was promoted was " + SmallMultiple.promoted + 
+				" with filePath " + SmallMultiple.promoted_filePath);  */
+		
+        /*		
+        System.out.println(" The name of this model is: " + 
+                sm[modelIndex].getCMAPNetworkViewer().getFilepath());
+        */
+
+		
+		
+		int panelIndexClicked = -1;
+		if (SmallMultiple.promoted > -1 ) {
+		  panelIndexClicked = SmallMultiple.promoted;
+		} else {
+		  panelIndexClicked = Integer.parseInt(mostRecentClick.getComponent().getParent().getName());
+		}
+	//	System.out.println("Double click on panel " + panelIndexClicked);
 	} //doubleLeftClick
 
 	/**
@@ -711,6 +793,11 @@ public class SMClickControlDelegate extends ControlAdapter implements ISelection
 		JMenu m = new JMenu("Compare differences to...");
 		int count = 0;
 				
+		
+		// System.out.println(" Total number of models: " + m_modelList.size());
+		
+		
+		
 		differencesList = new JMenuItem[m_modelList.size() - 1];
 		
 		// Loop through all models in the panel, add to the menu if it's not the panel currently clicked on 
@@ -768,6 +855,19 @@ public class SMClickControlDelegate extends ControlAdapter implements ISelection
 		smPanel.setCurrentlyHighlighted(false);
 	} //clearPanels
 	
+	public int getPanelIndexClicked() {
+		int panelIndexClicked;
+
+		if (SmallMultiple.promoted > -1 ) {
+		  panelIndexClicked = SmallMultiple.promoted;
+		} else {
+		  panelIndexClicked = Integer.parseInt(mostRecentClick.getComponent().getParent().getName());
+		}
+		
+      return panelIndexClicked;
+
+	}
+	
 	/**
 	 * Calls a variety of functions depending on which item in the context menu was selected
 	 * 
@@ -779,7 +879,8 @@ public class SMClickControlDelegate extends ControlAdapter implements ISelection
 		SmallMultiplesPanel smPanel = m_view.getSmallMultiplesPanel();
 		JPanel[] panels = smPanel.getSmallMultiplesPanels();
 		
-		int panelIndexClicked = Integer.parseInt(mostRecentClick.getComponent().getParent().getName());
+	//  was	int panelIndexClicked = Integer.parseInt(mostRecentClick.getComponent().getParent().getName());
+		int panelIndexClicked = getPanelIndexClicked();
 		System.out.println("Panel index clicked: " + panelIndexClicked);
 		
 		// If we select the open model menu item
@@ -787,7 +888,11 @@ public class SMClickControlDelegate extends ControlAdapter implements ISelection
 			openBNGLFile(smPanel, panelIndexClicked);
 			
 		} else if (e2.getSource() == refreshModelMenuItem) {
-			reloadModel(smPanel, panelIndexClicked);
+			if (SmallMultiple.promoted > -1) {
+			  smPanel.restoreModel(panelIndexClicked);
+			} else {
+			  smPanel.expandModel(panelIndexClicked);
+			}
 		    	
 		} else if (e2.getSource() == removeOverlayMenuItem) {
 			// If we select this menu item, we are deselecting model comparison
@@ -1348,10 +1453,12 @@ public class SMClickControlDelegate extends ControlAdapter implements ISelection
 		clearOverlay(panelIndexClicked, smPanel);
 		highlightSimilarities(similarities, selectedModel, panelIndexClicked, smPanel);
 			
+		
 		// Highlights are currently on
 		smPanel.setCurrentlyHighlighted(true);
 		smPanel.highlightPanels(panelIndexClicked, comparisonIndex);
 		smPanel.repaint();
+		
 		
 	} //handleSimilaritiesOption
 	

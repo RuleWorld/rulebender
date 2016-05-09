@@ -102,6 +102,9 @@ public class SmallMultiple {
 	// Hash table for all the hub nodes of molecule-level rules.
 	// The set contains all the involved nodes in a rule.
 	private final Hashtable<Set<Node>, Node> m_hubNodes;
+	
+	public static int    promoted          = -1;
+	public static String promoted_filePath = "none";
 
 	/**
 	 * Convert the model to a Visualization
