@@ -37,9 +37,11 @@ import rulebender.editors.bngl.BNGLEditor;
 import rulebender.editors.dat.DATMultiPageEditor;
 import rulebender.logging.Logger;
 import rulebender.logging.Logger.LOG_LEVELS;
+import rulebender.simulate.view.SimulateView;
 
 public class Console implements IStartup, ISelectionListener, IPartListener2 {
 	private static Console m_instance;
+	public  static IFile mostRecentIFile;
 
 	private static HashMap<String, MessageConsole> m_messageConsoles = new HashMap<String, MessageConsole>();
 	private static HashMap<String, BNGLEditor> m_editors = new HashMap<String, BNGLEditor>();
@@ -337,10 +339,28 @@ public class Console implements IStartup, ISelectionListener, IPartListener2 {
 	 */
 	private void focusEditor(IWorkbenchPart part, ISelection selection) {
 		// Get the string that represents the current file.
+		
 		String osString = ((FileEditorInput) ((BNGLEditor) part).getEditorInput())
 		    .getPath().toOSString();
-
 		showConsole(osString);
+
+		// System.out.println(" File (full path) is " + osString);
+		// System.out.println(" IFile is " + ((FileEditorInput) ((BNGLEditor) part).getEditorInput())
+		// 	    .getFile().toString());
+		
+		// First check to see if SimulateView has been constructed.  If not, then save the
+		// IFile pointer so that the first construction of SimulateView and use it to populate
+		// the textArea.
+        if (((SimulateView)SimulateView.mostRecentSimulateView) != null) { 
+        	((SimulateView)SimulateView.mostRecentSimulateView)
+        	  .setSelectedResource(((FileEditorInput) ((BNGLEditor) part).getEditorInput())
+			    .getFile());
+		} else {
+			// Save the pointer for when the first Simulator is Constructed. 
+			Console.mostRecentIFile = 
+					((FileEditorInput) ((BNGLEditor) part).getEditorInput()).getFile();
+		}
+		
 	}
 
 	@Override

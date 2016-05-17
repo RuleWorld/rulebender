@@ -30,6 +30,7 @@ import rulebender.simulate.parameterscan.ParameterScanComposite;
 public class SimulateView extends ViewPart {
 	private Composite main, actionSelect, stackedComposite,
 	    parameterScanComposite, runFileComposite;
+	public static Object mostRecentSimulateView = null;
 
 	private StackLayout stackLayout;
 
@@ -42,7 +43,8 @@ public class SimulateView extends ViewPart {
 	private Text fileText;
 
 	public SimulateView() {
-		// Empty Constructor
+		// Save a pointer to the most recently constructed SimulateView
+		SimulateView.mostRecentSimulateView = this;		
 	}
 
 	@Override
@@ -115,6 +117,9 @@ public class SimulateView extends ViewPart {
 
 		// Create the Text Box
 		fileText = new Text(actionSelect, SWT.BORDER);
+		if (Console.mostRecentIFile != null) {
+			fileText.setText(Console.mostRecentIFile.getFullPath().toOSString());	
+		}
 		fileText.setEditable(false);
 
 		FormData fileTextFormData = new FormData();
@@ -245,7 +250,10 @@ public class SimulateView extends ViewPart {
 	}
 
 	public void setSelectedResource(IFile selectedObject) {
-		fileText.setText(selectedObject.getFullPath().toOSString());
 		m_selectedFile = selectedObject;
+		fileText.setText(selectedObject.getFullPath().toOSString());
+		
+		// System.out.println(" We seem to be selecting file: " + selectedObject.getFullPath().toOSString() +
+		// 		           " IFile: " + selectedObject.toString());
 	}
 }
