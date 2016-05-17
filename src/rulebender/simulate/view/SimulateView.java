@@ -118,7 +118,7 @@ public class SimulateView extends ViewPart {
 		// Create the Text Box
 		fileText = new Text(actionSelect, SWT.BORDER);
 		if (Console.mostRecentIFile != null) {
-			fileText.setText(Console.mostRecentIFile.getFullPath().toOSString());	
+			setSelectedResource(Console.mostRecentIFile);
 		}
 		fileText.setEditable(false);
 
