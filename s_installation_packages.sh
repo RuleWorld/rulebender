@@ -33,8 +33,8 @@ version="2.1.0"
          rbReleaseDir="/home/roc60/workspace_rb_15/RuleBender"
 distributionResources="/home/roc60/workspace_rb_15_git/rulebender/distributionResources"
              bngdirname="BioNetGen-2.2.6"
-dropboxroot="/home/roc60/BioNetGen-2.2.6-safe"
-#dropboxroot="/home/roc60/Dropbox/BioNetGen-2_2_6/Stable"
+# dropboxroot="/home/roc60/BioNetGen-2.2.6-safe"
+dropboxroot="/home/roc60/Dropbox/BioNetGen-2_2_6/Stable"
 
 
 echo "Creating zip dir"
@@ -74,6 +74,12 @@ cp $distributionResources/*.txt $rbReleaseDir/zips/RuleBender-$version-lin64
 cp $distributionResources/*.txt $rbReleaseDir/zips/RuleBender-$version-osx64
 cp $distributionResources/*.txt $rbReleaseDir/zips/RuleBender-$version-win32
 
+cp $distributionResources/Samples/*.bngl \
+        $rbReleaseDir/zips/RuleBender-$version-lin64/BioNetGen-2.2.6/Models2
+cp $distributionResources/Samples/*.bngl \
+        $rbReleaseDir/zips/RuleBender-$version-osx64/BioNetGen-2.2.6/Models2
+cp $distributionResources/Samples/*.bngl \
+        $rbReleaseDir/zips/RuleBender-$version-win32/BioNetGen-2.2.6/Models2
 
 echo "Copying SampleModels"
 
