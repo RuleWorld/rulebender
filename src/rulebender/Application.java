@@ -280,7 +280,7 @@ public class Application implements IApplication {
     	if (BioNetGenUtility.checkPreReq() == false) {
           MessageDialog.openError(Display.getDefault().getActiveShell(), "Error",
   			"Perl Not Found \n\n Warning: Perl must be installed on your " +
-  			" system to run RuleBender.  More information about Perl can " +
+  			" system to run simulations on RuleBender.  More information about Perl can " +
   			" be found at bionetgen.org in the Download section.");
     	}
 	  return;
