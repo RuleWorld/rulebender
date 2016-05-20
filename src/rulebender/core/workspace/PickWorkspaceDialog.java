@@ -148,7 +148,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
      * @return
      */
     public static boolean isRememberWorkspace() {
-        return _preferences.getBoolean(_KeyRememberWorkspace, false);
+        return _preferences.getBoolean(_KeyRememberWorkspace, true);
     }
     
     public static void willSwitchRestart()
@@ -267,7 +267,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
             _RememberWorkspaceButton = new Button(inner, SWT.CHECK);
             _RememberWorkspaceButton.setText("Remember All Workspace Directories");
             _RememberWorkspaceButton.setLayoutData(new GridData(GridData.FILL_VERTICAL | GridData.VERTICAL_ALIGN_END | GridData.GRAB_HORIZONTAL));
-            _RememberWorkspaceButton.setSelection(_preferences.getBoolean(_KeyRememberWorkspace, false));
+            _RememberWorkspaceButton.setSelection(_preferences.getBoolean(_KeyRememberWorkspace, true));
 
             
             
@@ -340,7 +340,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
             _RememberBioNetGenButton = new Button(inner, SWT.CHECK);
             _RememberBioNetGenButton.setText("Remember All BioNetGen Directories");
             _RememberBioNetGenButton.setLayoutData(new GridData(GridData.FILL_VERTICAL | GridData.VERTICAL_ALIGN_END | GridData.GRAB_HORIZONTAL));
-            _RememberBioNetGenButton.setSelection(_preferences.getBoolean(_KeyRememberBioNetGen, false));
+            _RememberBioNetGenButton.setSelection(_preferences.getBoolean(_KeyRememberBioNetGen, true));
 
             
 			Activator.getDefault().getPreferenceStore().setDefault("SIM_PATH",PickWorkspaceDialog.getLastSetBioNetGenDirectory());
