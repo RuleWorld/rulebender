@@ -146,6 +146,18 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		    	  //  if you do it this way, you get no files listed in the project, and you 
 		    	  //  need to do yet another restart.  So renaming the directory here, rather 
 		    	  //  than after the project creation, allows us to avoid the second restart.
+		    	  
+		    	  //  Another comment.  Issue #188 discusses how the  
+		    	  //  project.refreshLocal(IResource.DEPTH_INFINITE, null);  command can be 
+		    	  //  used to ensure that all of the files in a (properly constructed) project
+		    	  //  directory can be added to the "invoice" for that project.  I think that 
+		    	  //  the right way to copy the files would be was follows:  1)  Construct the
+		    	  //  project with the final name, not a temporary name,  2)  Copy all the files
+		    	  //  and subdirectories into the new project,  3) call refreshLocal() to update
+		    	  //  the "invoice."  My concern is that if it's not done this way, then some
+		    	  //  change in Eclipse could cause this process to fail in the future.
+		    	  
+		    	  
 		          f.renameTo(tempDir);          			    	  
 		      } else {
 		    	  System.out.println(" Unable to recover " + tempDir.getName() + " If files ");
