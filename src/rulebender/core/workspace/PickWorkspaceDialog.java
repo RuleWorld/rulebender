@@ -861,7 +861,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
         File f = new File(workspaceLocation);
         if (!f.exists()) {
             if (askCreate) {
-                boolean create = MessageDialog.openConfirm(parentShell, "New Directory", "The directory does not exist. Would you like to create it?");
+                boolean create = MessageDialog.openConfirm(parentShell, "New Directory", "The workspace directory does not exist. Would you like to create it?");
                 if (create) {
                     try {
                         f.mkdirs();
