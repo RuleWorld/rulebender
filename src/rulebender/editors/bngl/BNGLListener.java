@@ -11,7 +11,6 @@ import java.lang.NumberFormatException;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
-
 import org.antlr.runtime.RecognitionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -28,7 +27,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISelectionListener;
@@ -42,6 +40,8 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.events.KeyListener;
@@ -65,27 +65,12 @@ import bngparser.BNGParserUtility;
 //import rulebender.simulate.BioNetGenConsole;
 
 /**
- * This class defines the editor for bngl.
+ * This class defines the key listener editor for bngl.
  * 
- * The ISelectionListener implementation listens for selections in the tool.
- * 
- * @author adammatthewsmith
+ * @author 
  * 
  */
 public class BNGLListener implements KeyListener {
-
-	 /*
-	   @Override
-	   public void keyReleased(KeyEvent e) {
-		   System.out.println("keyReleased ");		   
-	   }
-
-	   @Override
-	   public void keyPressed(KeyEvent e) {
-		   System.out.println("keyPressed ");		   		   
-	   }
-	   */
-          	
 	
 		   @Override
 		   public void keyReleased(KeyEvent e) {
@@ -100,21 +85,18 @@ public class BNGLListener implements KeyListener {
   		  		  	if (rcselection instanceof ITextSelection) {
   		  		  	   ITextSelection rctextSelection = (ITextSelection)rcselection;
   		  		  	   int rcoffset = rctextSelection.getOffset();   	  	  	  		   			   
- 					       if (rcoffset != 0) {
+ 					       if (rcoffset > -1) {
   						     c_offset = rcoffset;
   				  		     c_length = rctextSelection.getLength();
   			               }
   		 		    }
   	            }
   		  		
-  		  		
-  		  		
+  		 // 92 = \
+         if ((e.keyCode == 92) && ((e.stateMask & SWT.CTRL)  == SWT.CTRL) && 
+						          ((e.stateMask & SWT.SHIFT) == SWT.SHIFT))	{
 
-  	  		    
-  		       
-  		       
-	  	 if (e.keyCode == 92) {
-                 
+        	 
 		  	     try {
 		  	  	   ITextEditor    c_editor = (ITextEditor)rceditor;
 		  	  	   IDocumentProvider dp = c_editor.getDocumentProvider();
@@ -123,6 +105,13 @@ public class BNGLListener implements KeyListener {
                    try {		  	  	   
  		  	    	  int c_lines = rhcdoc.getNumberOfLines(c_offset,c_length); 
 		  				
+ 		  	    	 /*
+ 		             System.out.println(" keycode  = " + e.keyCode + 
+		                                " c_offset = " + c_offset  +
+		                                " c_length = " + c_length  +
+		                                " c_lines  = " + c_lines);
+		             */
+	  	   
 		  			  if ((c_lines == 1) || (c_lines == 0)) {
  		  	    	    int line2 = rhcdoc.getLineOfOffset(c_offset); 
   					    IRegion irgn = rhcdoc.getLineInformation(line2);
@@ -133,9 +122,14 @@ public class BNGLListener implements KeyListener {
 		                  if (zzzpoint > 0) rhcdoc.replace(zzzpoint, 1, ""); 
   					    }
 		  			 } else {
-	 		  	       int line2 = rhcdoc.getLineOfOffset(c_offset); 
+                       int c_lines_2 = c_lines;
+                       if (c_length > 1) {
+ 		  	    	     c_lines_2 = rhcdoc.getNumberOfLines(c_offset,c_length-1);
+                       }
+		  				 
+	  				   int line2 = rhcdoc.getLineOfOffset(c_offset); 
 		  			   int kkk;
-		  			   for (kkk=0; kkk<c_lines; kkk++) {	 
+		  			   for (kkk=0; kkk<c_lines_2; kkk++) {	 
 	 		  	    	  int line5 = line2 + kkk; 
 	  					  IRegion irgn = rhcdoc.getLineInformation(line5);
 	  					  if (rhcdoc.getChar(irgn.getOffset()) == '#') {
@@ -152,7 +146,7 @@ public class BNGLListener implements KeyListener {
 			     } catch (Exception ee) {
 				   System.out.println("92 Cast failed " + ee.getMessage());
 			     }		  		   
-		  	   } 
+		  	} 
 		}
 		
 		   
@@ -166,17 +160,20 @@ public class BNGLListener implements KeyListener {
 		
 	  	    IEditorPart rceditor  = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 	  		if (rceditor instanceof ITextEditor) {
+
+                // System.out.println(" keycode = " + e.keyCode);
 	  			
 	  		  	ISelectionProvider rcselectionProvider = ((ITextEditor)rceditor).getSelectionProvider();
 	  		  	ISelection rcselection = rcselectionProvider.getSelection();
 	  		  	if (rcselection instanceof ITextSelection) {
 	  		  	   ITextSelection rctextSelection = (ITextSelection)rcselection;
 	  		  	   int rcoffset = rctextSelection.getOffset(); // etc.
-	  		  	   if (rcoffset != 0) {
+	  		  	   if (rcoffset > -1) {
 	  		  		   c_offset = rcoffset;
 	  		  		   c_length = rctextSelection.getLength();
 	  		  	   }
-		  		  			  		  			
+		  		  	
+	  		  	  // 13 = #
   		  		  if (e.keyCode == 13) {
   		  		     try {    
   			  	     ITextEditor    c_editor = (ITextEditor)rceditor;
@@ -236,23 +233,38 @@ public class BNGLListener implements KeyListener {
 		 }	 
 	  }	   
 
-		  		  			
-			if (e.keyCode == 47) {
+		  	// 47 = /	  			
+			if ((e.keyCode == 47) && ((e.stateMask & SWT.CTRL)  == SWT.CTRL) && 
+				 	                 ((e.stateMask & SWT.SHIFT) == SWT.SHIFT))	{
 	  			  try {
 		  			ITextEditor    c_editor = (ITextEditor)rceditor;
 		  	        IDocumentProvider dp = c_editor.getDocumentProvider();
 		  	        IDocument     rhcdoc = dp.getDocument(c_editor.getEditorInput());
+
 		  	        
 		  	        try {
  		    	    	  int c_lines = rhcdoc.getNumberOfLines(c_offset,c_length); 
-	  				
+
+ 		    	    	 /*
+ 			             System.out.println(" keycode  = " + e.keyCode + 
+	                                " c_offset = " + c_offset  +
+	                                " c_length = " + c_length  +
+	                                " c_lines  = " + c_lines);
+	                     */
+	             
+ 		    	    	  
 	  		    		  if ((c_lines == 1) || (c_lines == 0)) {
 		  	          	    int line4 = rhcdoc.getLineOfOffset(c_offset); 
  					        IRegion irgn = rhcdoc.getLineInformation(line4);
 		  	                rhcdoc.replace(irgn.getOffset(), 0, "#");
 	  				      } else {
+ 	                        int c_lines_2 = c_lines;
+	  	                    if (c_length > 1) {
+	  	 		  	    	  c_lines_2 = rhcdoc.getNumberOfLines(c_offset,c_length-1);
+	  	                    }
+	  			  				 
 	  		  	            int line1 = rhcdoc.getLineOfOffset(c_offset); 
-	  				        for (int ii=0; ii<c_lines; ii++) {
+	  				        for (int ii=0; ii<c_lines_2; ii++) {
 	  					       IRegion irgn = rhcdoc.getLineInformation(line1 + ii);
 	  		  	               rhcdoc.replace(irgn.getOffset(), 0, "#");
 	  				        }
