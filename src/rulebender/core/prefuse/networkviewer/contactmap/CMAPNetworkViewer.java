@@ -82,6 +82,8 @@ public class CMAPNetworkViewer
 
 	private HoverTooltip tooltipDelegate;
 
+	private boolean DragControlAdded = false;
+
 	private boolean panControlEnabled = true;
 
 	private boolean zoomControlEnabled = true;
@@ -322,7 +324,12 @@ public class CMAPNetworkViewer
 		// Turn on prettiness and antialiasing
 		mainDisplay.setHighQuality(true);
 
-		// drag individual items around
+		
+		
+		if (DragControlAdded == false) {
+	      // Don't create more than one listener 
+		  DragControlAdded = true;
+        // drag individual items around
 		// Control the aggregates with a drag.
 		if (draggableAggregates == true) {
 			AggregateDragControl aggDrag = new AggregateDragControl(true, "color", vis, COMPONENT_GRAPH);
@@ -354,7 +361,7 @@ public class CMAPNetworkViewer
 			mainDisplay.addControlListener(new ReverseWheelZoomControl());
 			mainDisplay.addControlListener(new CustomizedZoomToFitControl());
 		}
-		
+		}		
 
 		vis.run("color");
 		// start up the animated layout

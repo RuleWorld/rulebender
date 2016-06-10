@@ -63,6 +63,8 @@ public class SpeciesViewer
 	private ControlAdapter clickControlDelegate;
 
 	private HoverTooltip tooltipDelegate;
+	
+	private boolean DragControlAdded = false;
 
 	private boolean panControlEnabled = true;
 
@@ -191,6 +193,11 @@ public class SpeciesViewer
 		// Turn on prettiness and antialiasing
 		mainDisplay.setHighQuality(true);
 
+		
+		if (DragControlAdded == false) {
+		      // Don't create more than one listener 
+			  DragControlAdded = true;
+		
 		// drag individual items around
 		// Control the aggregates with a drag.
 		if (draggableAggregates == true) {
@@ -221,6 +228,7 @@ public class SpeciesViewer
 			mainDisplay.addControlListener(new ReverseWheelZoomControl());
 			mainDisplay.addControlListener(new CustomizedZoomToFitControl());
 		}
+		}		
 		
 		vis.run("color");
 		// start up the animated layout

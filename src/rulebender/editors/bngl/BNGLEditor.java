@@ -84,7 +84,7 @@ public class BNGLEditor extends TextEditor implements ISelectionListener,
         // This is non-static.  Each instance has its own copy of
         // ListenerRegistrations so there should be one listener
         // per model.	
-	private int ListenerRegistrations;
+	private int ListenerRegistrations = 0;
 	private int KeyListenerAdded = 0;
 	
 
@@ -494,6 +494,7 @@ public class BNGLEditor extends TextEditor implements ISelectionListener,
 	public void timeToRegister(CMapClickControlDelegate  cmccd) {
 		try {
 			if (ListenerRegistrations < 1) {
+				ListenerRegistrations++;
 			  cmccd.addSelectionChangedListener(this);
 			}
 		} catch (Exception e) {
