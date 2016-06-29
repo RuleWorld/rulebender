@@ -83,7 +83,7 @@ public class PreferencesClerk
 	// the rulebender.product file, in two places.  At the moment, there doesn't seem to be a way to 
 	// merge these things, so each of those files will need to be updated when preparing a new release 
 	// of RuleBender.
-	private static String RuleBenderVersionNumber = "2.1.0.7";	
+	private static String RuleBenderVersionNumber = "2.1.0.8";	
 	private static String RuleBenderVersion = "RuleBender-" + RuleBenderVersionNumber;	
 	
 	// Private constructor for static access only.

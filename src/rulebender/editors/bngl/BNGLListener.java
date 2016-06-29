@@ -48,6 +48,8 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.jface.viewers.ISelectionProvider;
 
+import bngparser.BNGParseData;
+import bngparser.BNGParserUtility;
 
 import rulebender.core.utility.ANTLRFilteredPrintStream;
 import rulebender.core.utility.Console;
@@ -59,8 +61,8 @@ import rulebender.contactmap.prefuse.CMapClickControlDelegate;
 import rulebender.contactmap.properties.MoleculePropertySource;
 import rulebender.contactmap.view.ContactMapSelectionListener;
 import rulebender.contactmap.view.ContactMapView;
-import bngparser.BNGParseData;
-import bngparser.BNGParserUtility;
+import rulebender.preferences.PreferencesClerk;
+import rulebender.preferences.OS;
 
 //import rulebender.simulate.BioNetGenConsole;
 
@@ -71,6 +73,8 @@ import bngparser.BNGParserUtility;
  * 
  */
 public class BNGLListener implements KeyListener {
+	     private boolean platform_escape = false;
+	
 	
 		   @Override
 		   public void keyReleased(KeyEvent e) {
@@ -92,9 +96,18 @@ public class BNGLListener implements KeyListener {
   		 		    }
   	            }
   		  		
+  		  		platform_escape = false;
+  	            if (PreferencesClerk.getOS() == OS.OSX) {		    
+  	               if ((e.stateMask & SWT.COMMAND) == SWT.COMMAND) { platform_escape = true; }
+  	            } else {
+  	               if (((e.stateMask & SWT.CTRL)  == SWT.CTRL) && 
+  	                   ((e.stateMask & SWT.SHIFT) == SWT.SHIFT)) { platform_escape = true; }
+  	            }
+
+		  // System.out.println(" platform_escape = " + Boolean.toString(platform_escape));
+
   		 // 92 = \
-         if ((e.keyCode == 92) && ((e.stateMask & SWT.CTRL)  == SWT.CTRL) && 
-						          ((e.stateMask & SWT.SHIFT) == SWT.SHIFT))	{
+         if ((e.keyCode == 92) && platform_escape)	{
 
         	 
 		  	     try {
@@ -232,10 +245,20 @@ public class BNGLListener implements KeyListener {
 	  		 }
 		 }	 
 	  }	   
+	  		
+	  		platform_escape = false;
+            if (PreferencesClerk.getOS() == OS.OSX) {		    
+               if ((e.stateMask & SWT.COMMAND) == SWT.COMMAND) { platform_escape = true; }
+            } else {
+               if (((e.stateMask & SWT.CTRL)  == SWT.CTRL) && 
+                   ((e.stateMask & SWT.SHIFT) == SWT.SHIFT)) { platform_escape = true; }
+            }
 
+ 		//   System.out.println(" platform_escape = " + Boolean.toString(platform_escape));
+
+            
 		  	// 47 = /	  			
-			if ((e.keyCode == 47) && ((e.stateMask & SWT.CTRL)  == SWT.CTRL) && 
-				 	                 ((e.stateMask & SWT.SHIFT) == SWT.SHIFT))	{
+			if ((e.keyCode == 47) && platform_escape ) {
 	  			  try {
 		  			ITextEditor    c_editor = (ITextEditor)rceditor;
 		  	        IDocumentProvider dp = c_editor.getDocumentProvider();
