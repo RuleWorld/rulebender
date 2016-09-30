@@ -12,6 +12,8 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.Vector;
 
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.ui.PlatformUI;
 import org.jfree.data.xy.XYDataItem;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
@@ -213,7 +215,7 @@ public class DATFileData extends FileData {
 		    {
 		       max_graph_columns = 10000;				
 		    }
-			System.out.println("MAX_GRAPH_COLUMNS = " + max_graph_columns);
+			// System.out.println("MAX_GRAPH_COLUMNS = " + max_graph_columns);
 			
 			int last_iind=0;
 			if (icount > max_graph_columns) {
@@ -329,6 +331,13 @@ public class DATFileData extends FileData {
 			} else {
 				number = line; // last number, no space
 			}
+			
+			if (!isNumeric(number)) {				
+              MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getDefault().getActiveShell(), "Error", 
+	            "The " + varName.get(count) + " entry in the functions section is" +
+                " undefined at time t=" + time); 
+	        }
+					
 
 			double concentration = Double.valueOf(number); // concentration
 
@@ -952,6 +961,19 @@ public class DATFileData extends FileData {
 			e.printStackTrace();
 		}
 		return object;
+	}
+	
+	public static boolean isNumeric(String str)  
+	{  
+	  try  
+	  {  
+	    double d = Double.parseDouble(str);  
+	  }  
+	  catch(NumberFormatException nfe)  
+	  {  
+	    return false;  
+	  }  
+	  return true;  
 	}
 
 }
