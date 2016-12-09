@@ -715,7 +715,8 @@ public class DATFileData extends FileData {
 			in.close();
 
 			if (componentsList.size() < varName.size()) {
-				for (int i = varName.size() - componentsList.size(); i < varName.size(); i++) {
+				// was for (int i = varName.size() - componentsList.size(); i < varName.size(); i++) {
+				for (int i = componentsList.size(); i < varName.size(); i++) {
 					List<String> comp = new ArrayList<String>();
 					comp.add(varName.get(i));
 					componentsList.add(comp);
