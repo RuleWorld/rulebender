@@ -29,12 +29,11 @@ exit
 
 # version number only used for file names.  All other version branding is done in
 # the .project file.
-version="2.1.0"
-         rbReleaseDir="/home/roc60/workspace_rb_15/RuleBender"
-distributionResources="/home/roc60/workspace_rb_15_git/rulebender/distributionResources"
-             bngdirname="BioNetGen-2.2.6"
-# dropboxroot="/home/roc60/BioNetGen-2.2.6-safe"
-dropboxroot="/home/roc60/Dropbox/BioNetGen-2_2_6/Stable"
+version="2.2"
+         rbReleaseDir="/home/roc60/workspace_rb_65/RuleBender"
+distributionResources="/home/roc60/workspace_rb_65_git/rulebender/distributionResources"
+           bngdirname="BioNetGen-2.3"
+          dropboxroot="/home/roc60/BioNetGen.latest"
 
 
 echo "Creating zip dir"
@@ -56,30 +55,30 @@ cp -r  $rbReleaseDir/win32.win32.x86/eclipse/     \
 
 echo "Copying BioNetGen " 
 
-cp -r $dropboxroot/Linux/BioNetGen-2.2.6-stable     \
-             $rbReleaseDir/zips/RuleBender-$version-lin64/BioNetGen-2.2.6
-chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-lin64/BioNetGen-2.2.6
-cp -r $dropboxroot/MacOSX/BioNetGen-2.2.6-stable    \
-             $rbReleaseDir/zips/RuleBender-$version-osx64/BioNetGen-2.2.6
-chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-osx64/BioNetGen-2.2.6
-cp -r $dropboxroot/Windows/BioNetGen-2.2.6-stable   \
-             $rbReleaseDir/zips/RuleBender-$version-win32/BioNetGen-2.2.6
-chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-win32/BioNetGen-2.2.6
+cp -r $dropboxroot/$bngdirname-Linux     \
+             $rbReleaseDir/zips/RuleBender-$version-lin64/$bngdirname
+chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-lin64/$bngdirname
+cp -r $dropboxroot/$bngdirname-MacOSX    \
+             $rbReleaseDir/zips/RuleBender-$version-osx64/$bngdirname
+chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-osx64/$bngdirname
+cp -r $dropboxroot/$bngdirname-Win64   \
+             $rbReleaseDir/zips/RuleBender-$version-win64/$bngdirname
+chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-win64/$bngdirname
 
 
 
 echo "Copying RB-README.txt, LICENSE.txt, and CREDITS.txt"
 
-cp $distributionResources/*.txt $rbReleaseDir/zips/RuleBender-$version-lin64
-cp $distributionResources/*.txt $rbReleaseDir/zips/RuleBender-$version-osx64
-cp $distributionResources/*.txt $rbReleaseDir/zips/RuleBender-$version-win32
+cp $distributionResources/*.txt  $rbReleaseDir/zips/RuleBender-$version-lin64
+cp $distributionResources/*.txt  $rbReleaseDir/zips/RuleBender-$version-osx64
+cp $distributionResources/*.txt  $rbReleaseDir/zips/RuleBender-$version-win64
 
 cp $distributionResources/Samples/*.bngl \
-        $rbReleaseDir/zips/RuleBender-$version-lin64/BioNetGen-2.2.6/Models2
+        $rbReleaseDir/zips/RuleBender-$version-lin64/$bngdirname/Models2
 cp $distributionResources/Samples/*.bngl \
-        $rbReleaseDir/zips/RuleBender-$version-osx64/BioNetGen-2.2.6/Models2
+        $rbReleaseDir/zips/RuleBender-$version-osx64/$bngdirname/Models2
 cp $distributionResources/Samples/*.bngl \
-        $rbReleaseDir/zips/RuleBender-$version-win32/BioNetGen-2.2.6/Models2
+        $rbReleaseDir/zips/RuleBender-$version-win64/$bngdirname/Models2
 
 echo "Copying SampleModels"
 
@@ -88,7 +87,7 @@ cp -r $distributionResources/Simulation/SampleModels \
 cp -r $distributionResources/Simulation/SampleModels \
       $rbReleaseDir/zips/RuleBender-$version-osx64
 cp -r $distributionResources/Simulation/SampleModels \
-      $rbReleaseDir/zips/RuleBender-$version-win32
+      $rbReleaseDir/zips/RuleBender-$version-win64
 
 
 cd $rbReleaseDir/zips/RuleBender-$version-osx64/RuleBender.app/Contents/MacOS
@@ -104,9 +103,6 @@ cd $rbReleaseDir/zips/
 
 tar -czf  RuleBender-$version-lin64.tar.gz  RuleBender-$version-lin64
 tar -czf  RuleBender-$version-osx64.tar.gz  RuleBender-$version-osx64
-zip -r -q RuleBender-$version-win32.zip     RuleBender-$version-win32
+zip -r -q RuleBender-$version-win64.zip     RuleBender-$version-win64
 
-
-# remove the any svn files
-# find . -type d -name .svn -exec rm -rf '{}' \;
 
