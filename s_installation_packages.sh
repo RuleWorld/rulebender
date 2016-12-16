@@ -29,7 +29,7 @@ exit
 
 # version number only used for file names.  All other version branding is done in
 # the .project file.
-version="2.2"
+              version="2.2"
          rbReleaseDir="/home/roc60/workspace_rb_65/RuleBender"
 distributionResources="/home/roc60/workspace_rb_65_git/rulebender/distributionResources"
            bngdirname="BioNetGen-2.3"
@@ -50,8 +50,10 @@ cp -r  $rbReleaseDir/linux.gtk.x86_64/eclipse/    \
          $rbReleaseDir/zips/RuleBender-$version-lin64/
 cp -r  $rbReleaseDir/macosx.cocoa.x86_64/eclipse/ \
          $rbReleaseDir/zips/RuleBender-$version-osx64/
-cp -r  $rbReleaseDir/win32.win32.x86/eclipse/     \
-         $rbReleaseDir/zips/RuleBender-$version-win32/
+cp -r  $rbReleaseDir/win32.win32.x86_64/eclipse/     \
+         $rbReleaseDir/zips/RuleBender-$version-win64/
+# cp -r  $rbReleaseDir/win32.win32.x86/eclipse/     \
+#          $rbReleaseDir/zips/RuleBender-$version-win32/
 
 echo "Copying BioNetGen " 
 
