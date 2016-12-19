@@ -453,7 +453,7 @@ public class DATFileData extends FileData {
 		in.close();
 
 		if (patterns.size() < varName.size()) {
-			for (int i = varName.size() - patterns.size(); i < varName.size(); i++) {
+			for (int i = patterns.size(); i < varName.size(); i++) {
 				List<String> pattern = new ArrayList<String>();
 				pattern.add(varName.get(i));
 				patterns.add(pattern);
