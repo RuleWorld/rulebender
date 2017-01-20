@@ -67,8 +67,8 @@ cp -r $dropboxroot/$bngdirname-Win64   \
              $rbReleaseDir/zips/RuleBender-$version-win64/$bngdirname
 chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-win64/$bngdirname
 cp -r $dropboxroot/$bngdirname-Win32   \
-             $rbReleaseDir/zips/RuleBender-$version-win64/$bngdirname
-chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-win64/$bngdirname
+             $rbReleaseDir/zips/RuleBender-$version-win32/$bngdirname
+chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-win32/$bngdirname
 
 
 
