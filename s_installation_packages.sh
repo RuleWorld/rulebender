@@ -30,8 +30,8 @@ exit
 # version number only used for file names.  All other version branding is done in
 # the .project file.
               version="2.2"
-         rbReleaseDir="/home/roc60/workspace_rb_65/RuleBender"
-distributionResources="/home/roc60/workspace_rb_65_git/rulebender/distributionResources"
+         rbReleaseDir="/home/roc60/workspace_rb_68/RuleBender"
+distributionResources="/home/roc60/workspace_rb_68_git/rulebender/distributionResources"
            bngdirname="BioNetGen-2.3"
           dropboxroot="/home/roc60/BioNetGen.latest"
 
@@ -52,8 +52,8 @@ cp -r  $rbReleaseDir/macosx.cocoa.x86_64/eclipse/ \
          $rbReleaseDir/zips/RuleBender-$version-osx64/
 cp -r  $rbReleaseDir/win32.win32.x86_64/eclipse/     \
          $rbReleaseDir/zips/RuleBender-$version-win64/
-# cp -r  $rbReleaseDir/win32.win32.x86/eclipse/     \
-#          $rbReleaseDir/zips/RuleBender-$version-win32/
+cp -r  $rbReleaseDir/win32.win32.x86/eclipse/     \
+         $rbReleaseDir/zips/RuleBender-$version-win32/
 
 echo "Copying BioNetGen " 
 
@@ -66,6 +66,9 @@ chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-osx64/$bngdirname
 cp -r $dropboxroot/$bngdirname-Win64   \
              $rbReleaseDir/zips/RuleBender-$version-win64/$bngdirname
 chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-win64/$bngdirname
+cp -r $dropboxroot/$bngdirname-Win32   \
+             $rbReleaseDir/zips/RuleBender-$version-win64/$bngdirname
+chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-win64/$bngdirname
 
 
 
@@ -74,6 +77,7 @@ echo "Copying RB-README.txt, LICENSE.txt, and CREDITS.txt"
 cp $distributionResources/*.txt  $rbReleaseDir/zips/RuleBender-$version-lin64
 cp $distributionResources/*.txt  $rbReleaseDir/zips/RuleBender-$version-osx64
 cp $distributionResources/*.txt  $rbReleaseDir/zips/RuleBender-$version-win64
+cp $distributionResources/*.txt  $rbReleaseDir/zips/RuleBender-$version-win32
 
 cp $distributionResources/Samples/*.bngl \
         $rbReleaseDir/zips/RuleBender-$version-lin64/$bngdirname/Models2
@@ -81,6 +85,9 @@ cp $distributionResources/Samples/*.bngl \
         $rbReleaseDir/zips/RuleBender-$version-osx64/$bngdirname/Models2
 cp $distributionResources/Samples/*.bngl \
         $rbReleaseDir/zips/RuleBender-$version-win64/$bngdirname/Models2
+cp $distributionResources/Samples/*.bngl \
+        $rbReleaseDir/zips/RuleBender-$version-win32/$bngdirname/Models2
+
 
 echo "Copying SampleModels"
 
@@ -90,6 +97,8 @@ cp -r $distributionResources/Simulation/SampleModels \
       $rbReleaseDir/zips/RuleBender-$version-osx64
 cp -r $distributionResources/Simulation/SampleModels \
       $rbReleaseDir/zips/RuleBender-$version-win64
+cp -r $distributionResources/Simulation/SampleModels \
+      $rbReleaseDir/zips/RuleBender-$version-win32
 
 
 cd $rbReleaseDir/zips/RuleBender-$version-osx64/RuleBender.app/Contents/MacOS
@@ -106,5 +115,6 @@ cd $rbReleaseDir/zips/
 tar -czf  RuleBender-$version-lin64.tar.gz  RuleBender-$version-lin64
 tar -czf  RuleBender-$version-osx64.tar.gz  RuleBender-$version-osx64
 zip -r -q RuleBender-$version-win64.zip     RuleBender-$version-win64
+zip -r -q RuleBender-$version-win32.zip     RuleBender-$version-win32
 
 
