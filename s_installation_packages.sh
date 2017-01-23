@@ -71,6 +71,22 @@ cp -r $dropboxroot/$bngdirname-Win32   \
 chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-win32/$bngdirname
 
 
+echo "Copying NFsim Source"
+
+cp -r $dropboxroot/NFsim_source
+             $rbReleaseDir/zips/RuleBender-$version-lin64/NFsim_source
+chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-lin64/NFsim_source
+cp -r $dropboxroot/NFsim_source
+             $rbReleaseDir/zips/RuleBender-$version-osx64/NFsim_source
+chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-osx64/NFsim_source
+cp -r $dropboxroot/NFsim_source
+             $rbReleaseDir/zips/RuleBender-$version-win64/NFsim_source
+chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-win64/NFsim_source
+cp -r $dropboxroot/NFsim_source
+             $rbReleaseDir/zips/RuleBender-$version-win32/NFsim_source
+chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-win32/NFsim_source
+
+
 
 echo "Copying RB-README.txt, LICENSE.txt, and CREDITS.txt"
 
