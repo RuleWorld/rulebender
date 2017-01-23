@@ -133,3 +133,7 @@ zip -r -q RuleBender-$version-win64.zip     RuleBender-$version-win64
 zip -r -q RuleBender-$version-win32.zip     RuleBender-$version-win32
 
 
+cd  RuleBender-$version-lin64 ; tar -czf  $bngdirname-lin64.tar.gz $bngdirname ; mv $bngdirname-lin64.tar.gz ../. ; cd ..
+cd  RuleBender-$version-osx64 ; tar -czf  $bngdirname-osx64.tar.gz $bngdirname ; mv $bngdirname-osx64.tar.gz ../. ; cd ..
+cd  RuleBender-$version-win64 ; zip -r -q $bngdirname-win64.zip    $bngdirname ; mv $bngdirname-win64.zip    ../. ; cd ..
+cd  RuleBender-$version-win32 ; zip -r -q $bngdirname-win32.zip    $bngdirname ; mv $bngdirname-win32.zip    ../. ; cd ..
