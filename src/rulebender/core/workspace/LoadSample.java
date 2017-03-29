@@ -236,6 +236,36 @@ public class LoadSample extends TitleAreaDialog {
         }
     }
 
+    
+    /*
+     * 
+     * 
+     * 
+     * 
+     */
+    
+     public static String spaceRemover(String tstring) {
+    	
+        // Eliminate any blanks that might be in the name
+    	String lstring = tstring;
+        int len = lstring.length();
+        if (len > 0) {
+          int iptr = 1;
+          while (iptr < (len-1)) {
+              while (lstring.charAt(iptr) == ' ') {
+              	 lstring = lstring.substring(0,iptr) + 
+            	           lstring.substring(iptr+1,len); 
+                 len = lstring.length();
+              }
+              iptr++;
+          } 
+          return lstring;
+        } else {
+          return "empty_string";
+        }
+     }
+    
+    
     /*
      * 
      * 
@@ -246,11 +276,18 @@ public class LoadSample extends TitleAreaDialog {
     @Override
     protected void okPressed() {
         String project_name    = _projectName.getText().trim();
+        
+        
         if (project_name.length() == 0) {
             setMessage("Please put a project name in the text box.", 
             		   IMessageProvider.ERROR);
             return;
         }
+
+        project_name = spaceRemover(project_name);
+        
+        System.out.println("The project name is: " + project_name);
+        
         // System.out.println("The project name is: " + project_name);
 
         
