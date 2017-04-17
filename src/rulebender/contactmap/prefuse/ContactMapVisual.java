@@ -908,6 +908,9 @@ public class ContactMapVisual {
 											Node rstateNode = m_nodes.get(rmp.getMoleIndex() + "."
 											    + rcp.getCompIndex() + "." + rcp.getStateindex());
 
+											if ((pstateNode != null) && (rstateNode != null)) {
+											
+											
 											// rule direction includes forward
 											if (r_state.getExpression().indexOf(">") != -1) {
 												if (pstateNode.get("rules") == null) {
@@ -944,6 +947,7 @@ public class ContactMapVisual {
 											Node compNode = m_nodes.get(pmp.getMoleIndex() + "."
 											    + pcp.getCompIndex());
 											compNode.set("statechange", true);
+											}
 										}
 									}
 								}
