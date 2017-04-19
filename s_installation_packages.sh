@@ -34,6 +34,7 @@ exit
 distributionResources="/home/roc60/workspace_rb_68_git/rulebender/distributionResources"
            bngdirname="BioNetGen-2.3"
           dropboxroot="/home/roc60/BioNetGen.latest"
+            java_root="/home/roc60/d_java"
 
 
 echo "Creating zip dir"
@@ -115,9 +116,18 @@ cp -r $distributionResources/Simulation/SampleModels \
 cp -r $distributionResources/Simulation/SampleModels \
       $rbReleaseDir/zips/RuleBender-$version-win32
 
-
+# ###################################################################
+#   Apple specific instructions
+# ###################################################################
 cd $rbReleaseDir/zips/RuleBender-$version-osx64/RuleBender.app/Contents/MacOS
-ln -s ../../../$bngdirname   $bngdirname   
+ln -s ../../../$bngdirname   $bngdirname 
+cp -r $java_root/java_jre_osx64 .
+mv RuleBender.ini  RuleBender.ini.safe
+head -7            RuleBender.ini.safe > RuleBender.ini
+echo "-vm"    >>                         RuleBender.ini
+echo "./java_jre_osx64/jdk1.8.0_72.jdk/Contents/Home/jre/bin/java" >> RuleBender.ini
+tail -7           RuleBender.ini.safe >> RuleBender.ini
+
 
 #cd to zips dir to avoid more dirs in zip
 cd $rbReleaseDir/zips/
