@@ -39,8 +39,9 @@ distributionResources="/home/roc60/workspace_rb_68_git/rulebender/distributionRe
 
 echo "Creating zip dir"
 # make an output folder so you don't eff up the dirs
-rm -r $rbReleaseDir/zips
-mkdir $rbReleaseDir/zips
+chmod -R +w $rbReleaseDir/zips
+rm -r       $rbReleaseDir/zips
+mkdir       $rbReleaseDir/zips
 
 
 
