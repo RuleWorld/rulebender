@@ -124,8 +124,9 @@ ln -s ../../../$bngdirname   $bngdirname
 cp -r $java_root/java_jre_osx64 .
 mv RuleBender.ini  RuleBender.ini.safe
 head -7            RuleBender.ini.safe > RuleBender.ini
+echo "-clearPersistedState"    >>        RuleBender.ini
 echo "-vm"    >>                         RuleBender.ini
-echo "./java_jre_osx64/jdk1.8.0_72.jdk/Contents/Home/jre/bin/java" >> RuleBender.ini
+echo "./java_jre_osx64/jdk1.8.0_72.jdk/Contents/Home/jre/lib/jli/libjli.dylib" >> RuleBender.ini
 tail -7           RuleBender.ini.safe >> RuleBender.ini
 
 
