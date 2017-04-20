@@ -131,7 +131,6 @@ echo "./java_jre_osx64/jdk1.8.0_72.jdk/Contents/Home/jre/lib/jli/libjli.dylib" >
 tail -7           RuleBender.ini.safe >> RuleBender.ini
 
 
-
 # ###################################################################
 #   Linux specific instructions
 # ###################################################################
@@ -144,6 +143,31 @@ echo "-vm"                     >>        RuleBender.ini
 echo "./java_jre_lin64/jdk1.8.0_131/jre/bin/java" >> RuleBender.ini
 tail -3           RuleBender.ini.safe >> RuleBender.ini
 
+
+# ###################################################################
+#   Win32 specific instructions
+# ###################################################################
+cd $rbReleaseDir/zips/RuleBender-$version-win32
+cp -r $java_root/java_jre_win32 .
+mv RuleBender.ini  RuleBender.ini.safe
+head -8            RuleBender.ini.safe > RuleBender.ini
+echo "-clearPersistedState"    >>        RuleBender.ini
+echo "-vm"                     >>        RuleBender.ini
+echo ".\jre1.8.0_40\bin\java"  >> RuleBender.ini
+tail -3           RuleBender.ini.safe >> RuleBender.ini
+
+
+# ###################################################################
+#   Win64 specific instructions
+# ###################################################################
+cd $rbReleaseDir/zips/RuleBender-$version-win64
+cp -r $java_root/java_jre_win64 .
+mv RuleBender.ini  RuleBender.ini.safe
+head -8            RuleBender.ini.safe > RuleBender.ini
+echo "-clearPersistedState"    >>        RuleBender.ini
+echo "-vm"                     >>        RuleBender.ini
+echo ".\jdk1.8.0_121\bin\java" >> RuleBender.ini
+tail -3           RuleBender.ini.safe >> RuleBender.ini
 
 
 #cd to zips dir to avoid more dirs in zip
