@@ -32,6 +32,9 @@ public class MySettingsPreferencePage extends FieldEditorPreferencePage implemen
 		addField(new StringFieldEditor("MAX_GRAPH_COLUMNS", 
 				"Maximum Graph Columns", getFieldEditorParent())); 
 
+		addField(new StringFieldEditor("CONTACT_MAP_TIMEOUT", 
+				"Contact Map TimeOut", getFieldEditorParent())); 
+
 		
 		/*
 		addField(new BooleanFieldEditor("BOOLEAN_VALUE", "&An example of a boolean preference", getFieldEditorParent()));

@@ -173,7 +173,16 @@ public class PreferencesClerk
     }
 		
 		
-	
+	public static String getContactMapTimeOut() {
+	  return Activator.getDefault().getPreferenceStore().getString("CONTACT_MAP_TIMEOUT");
+	}
+			
+    public static String setMaxContactMapTimeOut(String ssss) {
+	  Activator.getDefault().getPreferenceStore().setValue("CONTACT_MAP_TIMEOUT",ssss);
+	  return "Ret_String";
+    }
+			
+				
 	/**
 	 * Returns the entire path from the root to the 'BNGName' file.
 	 * 

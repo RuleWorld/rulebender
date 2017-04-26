@@ -62,6 +62,8 @@ public class Application implements IApplication {
         Activator.getDefault().getPreferenceStore().setValue("OUTPUT_SETTING","minimal");
         // Set maximum graph density at a reasonable level.
         Activator.getDefault().getPreferenceStore().setValue("MAX_GRAPH_COLUMNS","10000");
+        // Set timeout value for generating the Contact Map.
+        Activator.getDefault().getPreferenceStore().setValue("CONTACT_MAP_TIMEOUT","5000");
 
         
         // Create a full path to the RuleBender executable.  This path can

@@ -21,7 +21,7 @@ public class BioNetGenConsole {
 	private static Process bngConsoleProcess = null;
 	private static OutputStreamWriter writer = null;
 	private static ConsoleReader out = null;
-	public static long creationTimeOut = 60000;
+	public static long creationTimeOut = 5000;
 	public static long check = 100;
 	private static File currentModel = null;
 
@@ -105,6 +105,17 @@ public class BioNetGenConsole {
 		if (out != null) { out.clearLineNumbers(); }
 		
 		
+		try
+	    {
+	       creationTimeOut = Integer.parseInt(				
+	         PreferencesClerk.getContactMapTimeOut().trim());
+	    }
+	    catch (NumberFormatException nfe)
+	    {
+	       creationTimeOut = 5000;				
+	    }
+		
+		
 		// If a previous error was thrown, but not reported yet.
 		out.reportError();
 		String fileName = bngModel.getParentFile().toString() + "/"
@@ -139,15 +150,21 @@ public class BioNetGenConsole {
 					break;
 				} else if (waitTime > creationTimeOut) {
 					Logger.log(LOG_LEVELS.ERROR, BioNetGenConsole.class,
-					    "Wasn't able to create the xml-file for the model located at: \n"
-					        + bngModel.toString() + "\n"
-					        + "You should use BioNetGen 2.2.5 or later."
-					        + " Also check for errors in your model.");
+					    "RuleBender wasn't able to create the xml-file for the model located at: \n"
+					        + bngModel.toString() + "\n\n"
+					        + "If your model is large, you may want to "
+					        + "increase the timeout setting at: \n"
+					        + "Window->Preferences->Settings->Contact Map TimeOut \n\n"
+					        + "You should use BioNetGen 2.2.5 or later. \n"
+					        + "Also check for errors in your model. \n\n");
 					Console.getMessageConsoleStream(bngModel.toString()).print(
-					    "Wasn't able to create the xml-file for the model located at: \n"
-					        + bngModel.toString() + "\n"
-					        + "You should use BioNetGen 2.2.5 or later."
-					        + " Also check for errors in your model.");
+					    "RuleBender wasn't able to create the xml-file for the model located at: \n"
+					        + bngModel.toString() + "\n\n"
+					        + "If your model is large, you may want to "
+					        + "increase the timeout setting at: \n"
+					        + "Window->Preferences->Settings->Contact Map TimeOut \n\n"
+					        + "You should use BioNetGen 2.2.5 or later. \n"
+					        + "Also check for errors in your model. \n\n");
 					// throw new Error(
 					// "Wasn't able to create the xml-file for the model located at: "
 					// + bngModel.toString());
