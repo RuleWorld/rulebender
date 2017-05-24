@@ -153,10 +153,11 @@ tail -3           RuleBender.ini.safe >> RuleBender.ini
 cd $rbReleaseDir/zips/RuleBender-$version-win32
 cp -r $java_root/java_jre_win32 .
 mv RuleBender.ini  RuleBender.ini.safe
-head -8            RuleBender.ini.safe > RuleBender.ini
+head -7            RuleBender.ini.safe > RuleBender.ini
 echo "-clearPersistedState"    >>        RuleBender.ini
 echo "-vm"                     >>        RuleBender.ini
-echo ".\jre1.8.0_40\bin\java"  >> RuleBender.ini
+# Is the 0_40 build 32bit or 64bit?
+echo ".\java_jre_win32\jre1.8.0_40\bin\java"  >> RuleBender.ini
 tail -3           RuleBender.ini.safe >> RuleBender.ini
 
 
@@ -166,10 +167,10 @@ tail -3           RuleBender.ini.safe >> RuleBender.ini
 cd $rbReleaseDir/zips/RuleBender-$version-win64
 cp -r $java_root/java_jre_win64 .
 mv RuleBender.ini  RuleBender.ini.safe
-head -8            RuleBender.ini.safe > RuleBender.ini
+head -7            RuleBender.ini.safe > RuleBender.ini
 echo "-clearPersistedState"    >>        RuleBender.ini
 echo "-vm"                     >>        RuleBender.ini
-echo ".\jdk1.8.0_121\bin\java" >> RuleBender.ini
+echo ".\java_jre_win64\jdk1.8.0_121\bin\java" >> RuleBender.ini
 tail -3           RuleBender.ini.safe >> RuleBender.ini
 
 
