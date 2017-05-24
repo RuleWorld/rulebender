@@ -25,6 +25,9 @@
 echo "Stop !! The header lines of this script need to be changed."
 exit
 
+echo "Warning !! Create separate packaging processes for Windows 7,8,9 and for Windows 10."
+exit
+
 
 
 # version number only used for file names.  All other version branding is done in
