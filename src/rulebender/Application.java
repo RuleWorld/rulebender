@@ -72,7 +72,7 @@ public class Application implements IApplication {
         // Check to confirm that Perl has been installed.
         checkPerl();
         // Check Java version.  The required version level is the parameter.
-        checkJava("1.7");
+        checkJava("1.8");
         
 	    if(!selectWorkspace(display))
 	    {
