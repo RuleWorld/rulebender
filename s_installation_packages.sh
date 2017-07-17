@@ -83,13 +83,13 @@ cp $distributionResources/*.txt  $rbReleaseDir/zips/RuleBender-$version-win64
 cp $distributionResources/*.txt  $rbReleaseDir/zips/RuleBender-$version-win32
 
 cp $distributionResources/Samples/*.bngl \
-        $rbReleaseDir/zips/RuleBender-$version-lin64/$bngdirname/Models2
+        $rbReleaseDir/zips/RuleBender-$version-lin64/$bngdirname_internal/Models2
 cp $distributionResources/Samples/*.bngl \
-        $rbReleaseDir/zips/RuleBender-$version-osx64/$bngdirname/Models2
+        $rbReleaseDir/zips/RuleBender-$version-osx64/$bngdirname_internal/Models2
 cp $distributionResources/Samples/*.bngl \
-        $rbReleaseDir/zips/RuleBender-$version-win64/$bngdirname/Models2
+        $rbReleaseDir/zips/RuleBender-$version-win64/$bngdirname_internal/Models2
 cp $distributionResources/Samples/*.bngl \
-        $rbReleaseDir/zips/RuleBender-$version-win32/$bngdirname/Models2
+        $rbReleaseDir/zips/RuleBender-$version-win32/$bngdirname_internal/Models2
 
 
 echo "Copying SampleModels"
