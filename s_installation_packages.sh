@@ -25,9 +25,6 @@
 echo "Stop !! The header lines of this script need to be changed."
 exit
 
-echo "Warning !! Create separate packaging processes for Windows 7,8,9 and for Windows 10."
-exit
-
 
 
 # version number only used for file names.  All other version branding is done in
@@ -35,7 +32,8 @@ exit
               version="2.2"
          rbReleaseDir="/home/roc60/workspace_rb_68/RuleBender"
 distributionResources="/home/roc60/workspace_rb_68_git/rulebender/distributionResources"
-           bngdirname="BioNetGen-2.3"
+  bngdirname_internal="BioNetGen-2.3"
+  bngdirname_external="BioNetGen-2.3.0"
           dropboxroot="/home/roc60/BioNetGen.latest"
             java_root="/home/roc60/d_java"
 
@@ -62,34 +60,19 @@ cp -r  $rbReleaseDir/win32.win32.x86/eclipse/     \
 
 echo "Copying BioNetGen " 
 
-cp -r $dropboxroot/$bngdirname-Linux     \
-             $rbReleaseDir/zips/RuleBender-$version-lin64/$bngdirname
-chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-lin64/$bngdirname
-cp -r $dropboxroot/$bngdirname-MacOSX    \
-             $rbReleaseDir/zips/RuleBender-$version-osx64/$bngdirname
-chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-osx64/$bngdirname
-cp -r $dropboxroot/$bngdirname-Win64   \
-             $rbReleaseDir/zips/RuleBender-$version-win64/$bngdirname
-chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-win64/$bngdirname
-cp -r $dropboxroot/$bngdirname-Win32   \
-             $rbReleaseDir/zips/RuleBender-$version-win32/$bngdirname
-chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-win32/$bngdirname
+cp -r $dropboxroot/$bngdirname_external-Linux     \
+             $rbReleaseDir/zips/RuleBender-$version-lin64/$bngdirname_internal
+chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-lin64/$bngdirname_internal
+cp -r $dropboxroot/$bngdirname_external-MacOSX    \
+             $rbReleaseDir/zips/RuleBender-$version-osx64/$bngdirname_internal
+chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-osx64/$bngdirname_internal
+cp -r $dropboxroot/$bngdirname_external-Win64   \
+             $rbReleaseDir/zips/RuleBender-$version-win64/$bngdirname_internal
+chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-win64/$bngdirname_internal
+cp -r $dropboxroot/$bngdirname_external-Win32   \
+             $rbReleaseDir/zips/RuleBender-$version-win32/$bngdirname_internal
+chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-win32/$bngdirname_internal
 
-
-echo "Copying NFsim Source"
-
-cp -r $dropboxroot/NFsim_source        \
-             $rbReleaseDir/zips/RuleBender-$version-lin64/$bngdirname
-chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-lin64/$bngdirname/NFsim_source
-cp -r $dropboxroot/NFsim_source        \
-             $rbReleaseDir/zips/RuleBender-$version-osx64/$bngdirname
-chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-osx64/$bngdirname/NFsim_source
-cp -r $dropboxroot/NFsim_source        \
-             $rbReleaseDir/zips/RuleBender-$version-win64/$bngdirname
-chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-win64/$bngdirname/NFsim_source
-cp -r $dropboxroot/NFsim_source        \
-             $rbReleaseDir/zips/RuleBender-$version-win32/$bngdirname
-chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-win32/$bngdirname/NFsim_source
 
 
 echo "Copying RB-README.txt, LICENSE.txt, and CREDITS.txt"
@@ -124,7 +107,7 @@ cp -r $distributionResources/Simulation/SampleModels \
 #   Apple specific instructions
 # ###################################################################
 cd $rbReleaseDir/zips/RuleBender-$version-osx64/RuleBender.app/Contents/MacOS
-ln -s ../../../$bngdirname   $bngdirname 
+ln -s ../../../$bngdirname_internal   $bngdirname_internal
 cp -r $java_root/java_jre_osx64 .
 mv RuleBender.ini  RuleBender.ini.safe
 head -7            RuleBender.ini.safe > RuleBender.ini
@@ -187,8 +170,3 @@ tar -czf  RuleBender-$version-osx64.tar.gz  RuleBender-$version-osx64
 zip -r -q RuleBender-$version-win64.zip     RuleBender-$version-win64
 zip -r -q RuleBender-$version-win32.zip     RuleBender-$version-win32
 
-
-cd  RuleBender-$version-lin64 ; tar -czf  $bngdirname-lin64.tar.gz $bngdirname ; mv $bngdirname-lin64.tar.gz ../. ; cd ..
-cd  RuleBender-$version-osx64 ; tar -czf  $bngdirname-osx64.tar.gz $bngdirname ; mv $bngdirname-osx64.tar.gz ../. ; cd ..
-cd  RuleBender-$version-win64 ; zip -r -q $bngdirname-win64.zip    $bngdirname ; mv $bngdirname-win64.zip    ../. ; cd ..
-cd  RuleBender-$version-win32 ; zip -r -q $bngdirname-win32.zip    $bngdirname ; mv $bngdirname-win32.zip    ../. ; cd ..
