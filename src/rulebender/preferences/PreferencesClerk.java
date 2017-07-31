@@ -83,6 +83,10 @@ public class PreferencesClerk
 	// the rulebender.product file, in two places.  At the moment, there doesn't seem to be a way to 
 	// merge these things, so each of those files will need to be updated when preparing a new release 
 	// of RuleBender.
+	//
+	// Another important note about this version number, is that increasing it, will cause the 
+	// installation process to upgrade the users BioNetGen to the latest version.  If this version
+	// number is not increased, then an installin RuleBender will leave the users settings alone.
 	private static String RuleBenderVersionNumber = "2.2.1";	
 	private static String RuleBenderVersion = "RuleBender-" + RuleBenderVersionNumber;	
 	
