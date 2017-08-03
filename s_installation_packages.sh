@@ -103,6 +103,13 @@ cp -r $distributionResources/Simulation/SampleModels \
 cp -r $distributionResources/Simulation/SampleModels \
       $rbReleaseDir/zips/RuleBender-$version-win32
 
+
+echo " To insert Java runtime environments into the RuleBender installation packages change the next line."
+if [ "YES" = "NO" ]; then
+echo "The following lines are debugged, but there is an underlying assumption that any Win64 installation"
+echo "will be done on Windows 10 or higher.  To create a 64 bit version of RuleBender for Windows 7,8 or 9,"
+echo "one more Jave runtime environment is needed. The code that copies it into the installation package,"
+echo "could be a modified version of the existing code for Win64."
 # ###################################################################
 #   Apple specific instructions
 # ###################################################################
@@ -155,6 +162,8 @@ echo "-clearPersistedState"    >>        RuleBender.ini
 echo "-vm"                     >>        RuleBender.ini
 echo ".\java_jre_win64\jdk1.8.0_121\bin\java" >> RuleBender.ini
 tail -3           RuleBender.ini.safe >> RuleBender.ini
+fi
+
 
 
 #cd to zips dir to avoid more dirs in zip
