@@ -6,6 +6,7 @@ RuleBender provides an easy-to-use interface for the popular rule-based modeling
 ## Downloading Eclipse ##
 
 1-) Go to https://www.eclipse.org/downloads/packages/release/neon/3.
+
 2-) Download Eclipse Neon RCP and RAP Developers for your system. 
 
 ## Downloading Rulebender, creating directories and building the parser ##
