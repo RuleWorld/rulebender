@@ -27,8 +27,8 @@ set -o verbose
 # Quit if there's an error
 set -e
 
-echo "Stop !! The header lines of this script need to be changed."
-exit
+#echo "Stop !! The header lines of this script need to be changed."
+#exit
 
 # version number only used for file names. All other version branding is done
 # in the .project file.
@@ -59,8 +59,8 @@ cp -r  $rbReleaseDir/macosx.cocoa.x86_64/eclipse/ \
          $rbReleaseDir/zips/RuleBender-$version-osx64/
 cp -r  $rbReleaseDir/win32.win32.x86_64/eclipse/     \
          $rbReleaseDir/zips/RuleBender-$version-win64/
-cp -r  $rbReleaseDir/win32.win32.x86/eclipse/     \
-         $rbReleaseDir/zips/RuleBender-$version-win32/
+#cp -r  $rbReleaseDir/win32.win32.x86/eclipse/     \
+#         $rbReleaseDir/zips/RuleBender-$version-win32/
 
 echo "Copying BioNetGen " 
 
@@ -73,9 +73,9 @@ chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-osx64/$bngdirname_internal
 cp -r $bng_top_level_dir/Win64/$bngdirname_external   \
              $rbReleaseDir/zips/RuleBender-$version-win64/$bngdirname_internal
 chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-win64/$bngdirname_internal
-cp -r $bng_top_level_dir/Win32/$bngdirname_external   \
-             $rbReleaseDir/zips/RuleBender-$version-win32/$bngdirname_internal
-chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-win32/$bngdirname_internal
+#cp -r $bng_top_level_dir/Win32/$bngdirname_external   \
+#             $rbReleaseDir/zips/RuleBender-$version-win32/$bngdirname_internal
+#chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-win32/$bngdirname_internal
 
 
 
@@ -84,7 +84,7 @@ echo "Copying RB-README.txt, LICENSE.txt, and CREDITS.txt"
 cp $distributionResources/*.txt  $rbReleaseDir/zips/RuleBender-$version-lin64
 cp $distributionResources/*.txt  $rbReleaseDir/zips/RuleBender-$version-osx64
 cp $distributionResources/*.txt  $rbReleaseDir/zips/RuleBender-$version-win64
-cp $distributionResources/*.txt  $rbReleaseDir/zips/RuleBender-$version-win32
+#cp $distributionResources/*.txt  $rbReleaseDir/zips/RuleBender-$version-win32
 
 cp $distributionResources/Samples/*.bngl \
         $rbReleaseDir/zips/RuleBender-$version-lin64/$bngdirname_internal/Models2
@@ -92,8 +92,8 @@ cp $distributionResources/Samples/*.bngl \
         $rbReleaseDir/zips/RuleBender-$version-osx64/$bngdirname_internal/Models2
 cp $distributionResources/Samples/*.bngl \
         $rbReleaseDir/zips/RuleBender-$version-win64/$bngdirname_internal/Models2
-cp $distributionResources/Samples/*.bngl \
-        $rbReleaseDir/zips/RuleBender-$version-win32/$bngdirname_internal/Models2
+#cp $distributionResources/Samples/*.bngl \
+#        $rbReleaseDir/zips/RuleBender-$version-win32/$bngdirname_internal/Models2
 
 
 echo "Copying SampleModels"
@@ -104,8 +104,8 @@ cp -r $distributionResources/Simulation/SampleModels \
       $rbReleaseDir/zips/RuleBender-$version-osx64
 cp -r $distributionResources/Simulation/SampleModels \
       $rbReleaseDir/zips/RuleBender-$version-win64
-cp -r $distributionResources/Simulation/SampleModels \
-      $rbReleaseDir/zips/RuleBender-$version-win32
+#cp -r $distributionResources/Simulation/SampleModels \
+#      $rbReleaseDir/zips/RuleBender-$version-win32
 
 
 echo " To insert Java runtime environments into the RuleBender installation packages change the next line."
@@ -142,18 +142,18 @@ if [ "YES" = "YES" ]; then
   tail -3           RuleBender.ini.safe >> RuleBender.ini
 
 
-  # ###################################################################
-  #   Win32 specific instructions
-  # ###################################################################
-  cd $rbReleaseDir/zips/RuleBender-$version-win32
-  cp -r $java_root/java_jre_win32 .
-  mv RuleBender.ini  RuleBender.ini.safe
-  head -7            RuleBender.ini.safe > RuleBender.ini
-  echo "-clearPersistedState"    >>        RuleBender.ini
-  echo "-vm"                     >>        RuleBender.ini
-  # Is the 0_40 build 32bit or 64bit?
-  echo ".\java_jre_win32\jre1.8.0_40\bin\java"  >> RuleBender.ini
-  tail -3           RuleBender.ini.safe >> RuleBender.ini
+  ## ###################################################################
+  ##   Win32 specific instructions
+  ## ###################################################################
+  #cd $rbReleaseDir/zips/RuleBender-$version-win32
+  #cp -r $java_root/java_jre_win32 .
+  #mv RuleBender.ini  RuleBender.ini.safe
+  #head -7            RuleBender.ini.safe > RuleBender.ini
+  #echo "-clearPersistedState"    >>        RuleBender.ini
+  #echo "-vm"                     >>        RuleBender.ini
+  ## Is the 0_40 build 32bit or 64bit?
+  #echo ".\java_jre_win32\jre1.8.0_40\bin\java"  >> RuleBender.ini
+  #tail -3           RuleBender.ini.safe >> RuleBender.ini
 
 
   # ###################################################################

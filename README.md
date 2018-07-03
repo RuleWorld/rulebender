@@ -130,19 +130,18 @@ Run the following to install the JRE and JDK:
 26. Choose destination directory which is `workspace_rb_1/RuleBender` and check
     `Export for multiple platforms`. Click `Next`. 
 
-27. Select macosx, linux(gtk/x86_64) and both win32 versions. Click `Finish.`
-    If it asks you to save changes, click `Yes`.  
+27. Select macosx, linux(gtk/x86_64) and win64. Click `Finish.` If it asks you
+    to save changes, click `Yes`.  
 
 ## Packaging ##
 
 28. Download the [Java SE Development Kit 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
-    for Linux, OSX, and Windows (32-bit and 64-bit).
+    for Linux, OSX, and 64-bit Windows.
 
 29. Create a directory called `~/d_java` and do the following:
 
     - Extract the linux archive to `~/d_java/java_jre_lin64/`
     - Extract the osx archive to `~/d_java/java_jre_osx64/`
-    - Extract the win32 archive to `~/d_java/java_jre_win32/`
     - Extract the win64 archive to `~/d_java/java_jre_win64/`
 
 30. Download the latest versions of
@@ -153,7 +152,6 @@ Run the following to install the JRE and JDK:
 
     - Extract the linux archive to `~/BioNetGen.latest/Linux/`
     - Extract the osx archive to `~/BioNetGen.latest/OSX/`
-    - Extract the win32 archive to `~/BioNetGen.latest/Win32/`
     - Extract the win64 archive to `~/BioNetGen.latest/Win64/`
 
 31. Run the `s_installation_packages.sh` script. This will create RuleBender
