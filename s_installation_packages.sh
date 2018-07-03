@@ -22,6 +22,9 @@
 #    and delete the irrelevant binaries for each platform.
 # 4. COPY the CREDITS.txt, RB-README.txt, and LICENSE.txt files. 
 
+# Echo every command
+set -o verbose
+# Quit if there's an error
 set -e
 
 echo "Stop !! The header lines of this script need to be changed."
