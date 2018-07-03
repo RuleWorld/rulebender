@@ -34,7 +34,7 @@ rbReleaseDir="$HOME/workspace_rb_1/RuleBender"
 rulebender_git_path="$HOME/workspace_rb_1_git/rulebender"
 distributionResources="$rulebender_git_path/distributionResources"
 bngdirname_internal="BioNetGen-2.3"
-bngdirname_external="BioNetGen-2.3.0"
+bngdirname_external="BioNetGen-2.3.2"
 bng_top_level_dir="$HOME/BioNetGen.latest"
 java_root="$HOME/d_java"
 
@@ -61,16 +61,16 @@ cp -r  $rbReleaseDir/win32.win32.x86/eclipse/     \
 
 echo "Copying BioNetGen " 
 
-cp -r $bng_top_level_dir/$bngdirname_external-Linux     \
+cp -r $bng_top_level_dir/Linux/$bngdirname_external    \
              $rbReleaseDir/zips/RuleBender-$version-lin64/$bngdirname_internal
 chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-lin64/$bngdirname_internal
-cp -r $bng_top_level_dir/$bngdirname_external-MacOSX    \
+cp -r $bng_top_level_dir/OSX/$bngdirname_external    \
              $rbReleaseDir/zips/RuleBender-$version-osx64/$bngdirname_internal
 chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-osx64/$bngdirname_internal
-cp -r $bng_top_level_dir/$bngdirname_external-Win64   \
+cp -r $bng_top_level_dir/Win64/$bngdirname_external   \
              $rbReleaseDir/zips/RuleBender-$version-win64/$bngdirname_internal
 chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-win64/$bngdirname_internal
-cp -r $bng_top_level_dir/$bngdirname_external-Win32   \
+cp -r $bng_top_level_dir/Win32/$bngdirname_external   \
              $rbReleaseDir/zips/RuleBender-$version-win32/$bngdirname_internal
 chmod +w -R  $rbReleaseDir/zips/RuleBender-$version-win32/$bngdirname_internal
 
@@ -106,7 +106,7 @@ cp -r $distributionResources/Simulation/SampleModels \
 
 
 echo " To insert Java runtime environments into the RuleBender installation packages change the next line."
-if [ "YES" = "NO" ]; then
+if [ "YES" = "YES" ]; then
 
   echo "The following lines are debugged, but there is an underlying assumption that any Win64 installation"
   echo "will be done on Windows 10 or higher.  To create a 64 bit version of RuleBender for Windows 7,8 or 9,"
@@ -135,7 +135,7 @@ if [ "YES" = "NO" ]; then
   head -7            RuleBender.ini.safe > RuleBender.ini
   echo "-clearPersistedState"    >>        RuleBender.ini
   echo "-vm"                     >>        RuleBender.ini
-  echo "./java_jre_lin64/jdk1.8.0_131/jre/bin/java" >> RuleBender.ini
+  echo "./java_jre_lin64/jdk1.8.0_171/jre/bin/java" >> RuleBender.ini
   tail -3           RuleBender.ini.safe >> RuleBender.ini
 
 
@@ -164,6 +164,7 @@ if [ "YES" = "NO" ]; then
   echo "-vm"                     >>        RuleBender.ini
   echo ".\java_jre_win64\jdk1.8.0_121\bin\java" >> RuleBender.ini
   tail -3           RuleBender.ini.safe >> RuleBender.ini
+
 fi
 
 #cd to zips dir to avoid more dirs in zip
