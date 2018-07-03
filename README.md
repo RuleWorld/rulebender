@@ -63,7 +63,7 @@ Run the following to install the JRE and JDK:
 11. Select `General -> Project` and click `Next`. Give project name
     `RuleBender`. Click `Finish`.
 
-### For Linux, ###
+### For Linux ###
 
 12. In the `Project Explorer Window`, right click on RuleBender and click
     `Import`. 
@@ -73,26 +73,30 @@ Run the following to install the JRE and JDK:
     From the left panel, click the checkbox next to `rulebender` to import all
     files. Click `Finish` . 
 
-### For macos, ###
+### For MacOS ###
 
 12. On a finder window, go to `workspace_rb_1_git/rulebender`. Select all and
     copy. 
 
 13. Right click `RuleBender` in `Project Explorer`
 
-14. Double click `RuleBender` in Project Explorer. Then, double click
-    `rulebender.product`. At the bottom of middle window, go to `Launching`. 
+## Setting the Icons
 
-15. On Program Launcher menu, 
-Select linux and click “Browse”, pick “Rulebender/icons/system/linux/RB-128.xpm”
-Select macosx and click “Browse”, pick “Rulebender/icons/system/osx/RB-128.icns”
-Select windows and do the same for
-16x16, 8 bit
-16x16
-32x32, 8 bit
-32x32
-48x48, 8 bit
-48x48
+14. Double click `RuleBender` in Project Explorer. Then, double click
+    `rulebender.product`. Near the bottom of the middle window, go to the
+    `Launching` tab. 
+
+15. At the `Program Launcher` menu, do the following:
+
+  - Select linux and click `Browse`, pick `Rulebender/icons/system/linux/RB-128.xpm`
+  - Select macosx and click `Browse`, pick `Rulebender/icons/system/osx/RB-128.icns`
+  - Select windows and do the same for the following:
+    - 16x16  (8 bit)
+    - 16x16  (32 bit)
+    - 32x32  (8 bit)
+    - 32x32  (32 bit)
+    - 48x48  (8 bit)
+    - 48x48  (32 bit)
 
 ## Multiplatform building ##
 
