@@ -56,32 +56,32 @@ Run the following to install the JRE and JDK:
 
 8. Set your workspace to your recently created `workspace_rb_1`.
 
-9. Close welcome screen. 
+9. Close the welcome screen. 
 
-10. Click “File -> New -> Project” 
+10. Click `File -> New -> Project` 
 
-11. Select “General -> Project” and click “Next”. Give project name
-    “RuleBender”. Click “Finish”
+11. Select `General -> Project` and click `Next`. Give project name
+    `RuleBender`. Click `Finish`.
 
 ### For Linux, ###
 
-12. In Project Explorer Window, right click on the RuleBender and click
-    “Import”. 
+12. In the `Project Explorer Window`, right click on RuleBender and click
+    `Import`. 
 
-13. Select “General -> File System” and click “Next”. On the next screen locate
-    the git repository you cloned (i.e. ``~/workspace_rb_1_git/rulebender`).
+13. Select `General -> File System` and click `Next`. On the next screen locate
+    the git repository you cloned (i.e. `~/workspace_rb_1_git/rulebender`).
     From the left panel, click the checkbox next to `rulebender` to import all
-    files. Click “Finish” . 
+    files. Click `Finish` . 
 
 ### For macos, ###
 
-12. On a finder window, go to “workspace_rb_1_git/rulebender”. Select all and
+12. On a finder window, go to `workspace_rb_1_git/rulebender`. Select all and
     copy. 
 
-13. Right click “RuleBender” in “Project Explorer”
+13. Right click `RuleBender` in `Project Explorer`
 
-14. Double click “RuleBender” in Project Explorer. Then, double click
-    “rulebender.product”. At the bottom of middle window, go to “Launching”. 
+14. Double click `RuleBender` in Project Explorer. Then, double click
+    `rulebender.product`. At the bottom of middle window, go to `Launching`. 
 
 15. On Program Launcher menu, 
 Select linux and click “Browse”, pick “Rulebender/icons/system/linux/RB-128.xpm”
