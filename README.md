@@ -12,6 +12,16 @@ are detailed instructions for building RuleBender using Eclipse.
 
 # Build Process #
 
+## Dependencies
+
+### Ubuntu
+
+Run the following to install the JRE and JDK:
+
+    sudo apt-get update
+    sudo apt-get install default-jre
+    sudo apt-get install default-jdk
+
 ## Downloading Eclipse ##
 
 1. Go to https://www.eclipse.org/downloads/packages/release/neon/3.
@@ -21,21 +31,27 @@ are detailed instructions for building RuleBender using Eclipse.
 ## Downloading Rulebender, creating directories and building the parser ##
 
 3. Go to your terminal create a directory `workspace_rb_1_git` and
-   `workspace_rb_1`. 
+   `workspace_rb_1` like this:
 
-4. Go to `workspace_rb_1_git` directory. 
+    mkdir ~/workspace_rb_1
+    mkdir ~/workspace_rb_1_git
 
-5. Clone the repository with the following:
+4. Go to `workspace_rb_1_git` directory like this:
+
+    cd ~/workspace_rb_1_git
+
+5. Clone the RuleBender repository with the following command:
 
     git clone https://github.com/RuleWorld/rulebender.git 
 
-6. Go to `rulebender` directory and run the following: 
+6. Go to the `rulebender` directory and build the parser: 
 
+    cd ./rulebender
     ./s_build_BNGParser.sh 
 
 ## Creating and importing an Eclipse project ##
 
-7. Go to eclipse directory and run eclipse from terminal. (For mac you can add
+7. Go to eclipse directory and run eclipse from terminal (For mac you can add
    eclipse as an application)
 
 8. Set your workspace to your recently created `workspace_rb_1`.
@@ -53,8 +69,9 @@ are detailed instructions for building RuleBender using Eclipse.
     “Import”. 
 
 13. Select “General -> File System” and click “Next”. On the next screen locate
-    the git repository you downloaded. From left panel, check the rulebender to
-    import all files. Click “Finish” . 
+    the git repository you cloned (i.e. ``~/workspace_rb_1_git/rulebender`).
+    From the left panel, click the checkbox next to `rulebender` to import all
+    files. Click “Finish” . 
 
 ### For macos, ###
 
@@ -79,17 +96,19 @@ Select windows and do the same for
 
 ## Multiplatform building ##
 
-16. For linux open Window/Preferences, for mac go Eclipse/Preferences. 
+16. For linux open `Window -> Preferences`, for mac go `Eclipse ->
+    Preferences`. 
 
-17. Go plug-in development -> Target Platform. Select Running Platform (Active)
-    and click on “Edit”. 
+17. Go to `Plug-in Development -> Target Platform`. Select `Running Platform
+    (Active)` and click on `Edit`. 
 
-18. Click “add” and choose “Software Site”. Click “Next”. 
+18. Click `Add...` and choose `Software Site`. Click `Next`. 
 
 19. In “Work with” type: `http://download.eclipse.org/eclipse/updates/4.6`
     (replace 4.6 with current version of eclipse) and press Enter. 
 
-20. Check “Eclipse RCP Target Components”, “Equinox Target Components”!!!!!!!!
+20. **Important:** Check `Eclipse RCP Target Components` and `Equinox Target
+    Components`
 
 21. Uncheck “Include required software”
 
@@ -97,18 +116,18 @@ Select windows and do the same for
 
 ## Exporting ##
 
-23. From the bottom of middle menu, go to “Contents” and click “Add Required
-    Plug-ins”. 
+23. From the bottom of middle menu, go to `Contents` and click `Add Required
+    Plug-ins`. 
 
-24. In Project explorer, right click “rulebender.product” and choose “export” 
+24. In Project explorer, right click `rulebender.product` and choose `Export` 
 
-25. Select “Plug-in Development -> Eclipse product”. Click “Next”. 
+25. Select `Plug-in Development -> Eclipse product`. Click `Next`. 
 
-26. Choose destination directory which is “workspace_rb_1/RuleBender” and check
-    “Export for multiple platforms”. Click “Next”. 
+26. Choose destination directory which is `workspace_rb_1/RuleBender` and check
+    `Export for multiple platforms`. Click `Next`. 
 
 27. Select macosx, linux(gtk/x86_64) and both win32 versions. Click “Finish.”
-    It may ask for save changes, click “Yes”.  
+    If it asks you to save changes, click “Yes”.  
 
 ## Packaging ##
 
