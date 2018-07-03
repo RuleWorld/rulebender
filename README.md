@@ -33,21 +33,21 @@ Run the following to install the JRE and JDK:
 3. Go to your terminal create a directory `workspace_rb_1_git` and
    `workspace_rb_1` like this:
 
-    mkdir ~/workspace_rb_1
-    mkdir ~/workspace_rb_1_git
+        mkdir ~/workspace_rb_1
+        mkdir ~/workspace_rb_1_git
 
 4. Go to `workspace_rb_1_git` directory like this:
 
-    cd ~/workspace_rb_1_git
+        cd ~/workspace_rb_1_git
 
 5. Clone the RuleBender repository with the following command:
 
-    git clone https://github.com/RuleWorld/rulebender.git 
+        git clone https://github.com/RuleWorld/rulebender.git 
 
 6. Go to the `rulebender` directory and build the parser: 
 
-    cd ./rulebender
-    ./s_build_BNGParser.sh 
+        cd ./rulebender
+        ./s_build_BNGParser.sh 
 
 ## Creating and importing an Eclipse project ##
 
