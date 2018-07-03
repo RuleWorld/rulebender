@@ -108,31 +108,53 @@ Run the following to install the JRE and JDK:
 
 18. Click `Add...` and choose `Software Site`. Click `Next`. 
 
-19. In “Work with” type: `http://download.eclipse.org/eclipse/updates/4.6`
+19. In `Work with` type: `http://download.eclipse.org/eclipse/updates/4.6`
     (replace 4.6 with current version of eclipse) and press Enter. 
 
 20. **Important:** Check `Eclipse RCP Target Components` and `Equinox Target
     Components`
 
-21. Uncheck “Include required software”
+21. Uncheck `Include required software`
 
-22. Check “Include all environments”. Click “Finish”, “Finish” and “OK”. 
+22. Check `Include all environments`. Click `Finish`, `Finish`, and `OK`. 
 
 ## Exporting ##
 
-23. From the bottom of middle menu, go to `Contents` and click `Add Required
-    Plug-ins`. 
+23. Near the bottom of the middle menu, go to `Contents` and click `Add
+    Required Plug-ins`. 
 
-24. In Project explorer, right click `rulebender.product` and choose `Export` 
+24. In `Project Explorer`, right click `rulebender.product` and choose `Export` 
 
 25. Select `Plug-in Development -> Eclipse product`. Click `Next`. 
 
 26. Choose destination directory which is `workspace_rb_1/RuleBender` and check
     `Export for multiple platforms`. Click `Next`. 
 
-27. Select macosx, linux(gtk/x86_64) and both win32 versions. Click “Finish.”
-    If it asks you to save changes, click “Yes”.  
+27. Select macosx, linux(gtk/x86_64) and both win32 versions. Click `Finish.`
+    If it asks you to save changes, click `Yes`.  
 
 ## Packaging ##
 
-28. ...
+28. Download the [Java SE Development Kit 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+    for Linux, OSX, and Windows (32-bit and 64-bit).
+
+29. Create a directory called `~/d_java` and do the following:
+
+    - Extract the linux archive to `~/d_java/java_jre_lin64/`
+    - Extract the osx archive to `~/d_java/java_jre_osx64/`
+    - Extract the win32 archive to `~/d_java/java_jre_win32/`
+    - Extract the win64 archive to `~/d_java/java_jre_win64/`
+
+30. Download the latest versions of
+    [BioNetGen](https://bintray.com/jczech/bionetgen/bionetgen#files) for
+    Linux, OSX, and Windows.
+
+31. Create a directory called `~/BioNetGen.latest` and do the following:
+
+    - Extract the linux archive to `~/BioNetGen.latest/Linux/`
+    - Extract the osx archive to `~/BioNetGen.latest/OSX/`
+    - Extract the win32 archive to `~/BioNetGen.latest/Win32/`
+    - Extract the win64 archive to `~/BioNetGen.latest/Win64/`
+
+31. Run the `s_installation_packages.sh` script. This will create RuleBender
+    distributions in `~/workspace_rb_1/RuleBender/zips`.
