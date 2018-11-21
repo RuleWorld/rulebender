@@ -445,7 +445,7 @@ public class DATFileData extends FileData {
           }
           // check to see if we have a continuation
           // char in the line itself and continue loop
-          if (line.contains("\\")) {
+          if (line.matches("*.\\\\[ \n\r\t]*")) {
             cont = true;
             continue;
           }
@@ -456,7 +456,7 @@ public class DATFileData extends FileData {
 					}
           // reset cont variable if we don't have continuation
           // char in the line
-          if (!line.contains("\\")) {
+          if (!line.contains("*.\\\\[ \n\r\t]*")) {
             cont = false;
           }
           /*
