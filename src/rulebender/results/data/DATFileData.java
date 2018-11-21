@@ -456,7 +456,7 @@ public class DATFileData extends FileData {
 					}
           // reset cont variable if we don't have continuation
           // char in the line
-          if (!line.contains("*.\\\\[ \n\r\t]*")) {
+          if (!line.matches("*.\\\\[ \n\r\t]*")) {
             cont = false;
           }
           /*
