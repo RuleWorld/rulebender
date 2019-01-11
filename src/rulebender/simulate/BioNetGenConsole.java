@@ -210,7 +210,16 @@ public class BioNetGenConsole {
 			if (bngConsoleProcess == null) {
 				return false;
 			}
-		}
+		} else if (!bngConsoleProcess.isAlive()) {
+      // If the console is no longer running, completely 
+      // kill and start a new one 
+      bngConsoleProcess.destroyForcibly();
+      bngConsoleProcess = null;
+      invokeBNGConsole();
+			if (bngConsoleProcess == null) {
+				return false;
+      }
+    }
 		return true;
 	}
 

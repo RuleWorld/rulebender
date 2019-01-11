@@ -9,6 +9,7 @@ import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.jface.text.ITextHover;
 
 public class BNGLConfiguration extends SourceViewerConfiguration 
 {
@@ -23,6 +24,8 @@ public class BNGLConfiguration extends SourceViewerConfiguration
 	// The Scanner is where the syntax highlighting rules are defined (I think)
 	private BNGLScanner m_bnglScanner;
 	private BNGLPartitionScanner m_bnglPartitionScanner;
+  // The BNGL editor text hover 
+  private BNGLTextHover textHover;
 	
 	/**
 	 * Create the new Configuration object with a reference to the color manager. 
@@ -135,4 +138,14 @@ public class BNGLConfiguration extends SourceViewerConfiguration
 	{
 		m_colorManager = colorManager;
 	}
+  
+  /**
+   * Text hovering for BNGL editor
+   */
+  public BNGLTextHover getTextHover(ISourceViewer sourceViewer, String contentType) 
+  {
+    textHover = new BNGLTextHover();
+    return textHover;
+  }
+
 }

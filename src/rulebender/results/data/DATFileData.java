@@ -421,6 +421,7 @@ public class DATFileData extends FileData {
 
 		String line;
 		boolean observe = false;
+    boolean cont = false;
 		Iterator<String> it = varName.iterator();
 		String observableName = it.next();
 		try {
@@ -437,9 +438,31 @@ public class DATFileData extends FileData {
 					if (line.trim().isEmpty()) {
 						continue;
 					}
-					if (!line.contains(observableName)) {
+          // if we are continuing from previous line, 
+          // append the line
+          if (cont) {
+            line += line;
+          }
+          // check to see if we have a continuation
+          // char in the line itself and continue loop
+          if (line.matches(".*\\\\[ \n\r\t]*")) {
+            cont = true;
+            continue;
+          }
+          // we don't want to parse the line if 
+          // we are continuing from previous line
+					if (!line.contains(observableName) && !cont) {
 						observableName = extractObservableName(line);
 					}
+          // reset cont variable if we don't have continuation
+          // char in the line
+          if (!line.matches(".*\\\\[ \n\r\t]*")) {
+            cont = false;
+          }
+          /*
+          System.out.println("adding observable " + observableName);
+          System.out.println("in line " + line);
+          */
 					patterns.add(parsePatterns(observableName, line));
 					if (it.hasNext()) {
 						observableName = it.next();

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="RuleBender" id="rulebender.product" application="rulebender.application"       version="2.2.0" useFeatures="false" includeLaunchers="true">
+<product name="RuleBender" id="rulebender.product" application="rulebender.application"       version="2.3.0" useFeatures="false" includeLaunchers="true">
 <aboutInfo><text>
-            RuleBender 2.2.0
+            RuleBender 2.3.0
 
 RuleBender was developed in collaboration between the groups of Dr. James R. Faeder and Dr. Elisabeta G. Marai at the University of Pittsburgh. It is currently maintained by the Faeder Lab in the Department of Computational and Systems Biology, School of Medicine, University of Pittsburgh.
 
