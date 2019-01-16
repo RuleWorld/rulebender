@@ -86,28 +86,28 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	            configurer, 
 	            ideBundle,
 	            org.eclipse.ui.ide.IDE.SharedImages.IMG_OBJ_PROJECT, 
-	            ICONS_PATH + "obj16/prj_obj.gif",
+	            ICONS_PATH + "obj16/prj_obj.png",
 	            true);
 
 	    declareWorkbenchImage(
 	            configurer, 
 	            ideBundle,
 	            org.eclipse.ui.ide.IDE.SharedImages.IMG_OBJ_PROJECT_CLOSED, 
-	            ICONS_PATH + "obj16/cprj_obj.gif", 
+	            ICONS_PATH + "obj16/cprj_obj.png", 
 	            true);
 
 	    declareWorkbenchImage(
 	            configurer, 
 	            ideBundle, 
 	            org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages.IMG_ETOOL_PROBLEMS_VIEW, 
-	            ICONS_PATH + "eview16/problems_view.gif", 
+	            ICONS_PATH + "eview16/problems_view.png", 
 	            true);
 
 	    declareWorkbenchImage(
 	            configurer, 
 	            ideBundle, 
 	            org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages.IMG_ETOOL_PROBLEMS_VIEW_ERROR, 
-	            ICONS_PATH + "eview16/problems_view_error.gif", 
+	            ICONS_PATH + "eview16/problems_view_error.png", 
 	            true);
 
 
@@ -115,21 +115,21 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 	            configurer, 
 	            ideBundle, 
 	            org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages.IMG_ETOOL_PROBLEMS_VIEW_WARNING, 
-	            ICONS_PATH + "eview16/problems_view_warning.gif", 
+	            ICONS_PATH + "eview16/problems_view_warning.png", 
 	            true);
 
 	    declareWorkbenchImage(
 	            configurer, 
 	            ideBundle, 
 	            org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages.IMG_OBJS_ERROR_PATH, 
-	            ICONS_PATH + "obj16/error_tsk.gif", 
+	            ICONS_PATH + "obj16/error_tsk.png", 
 	            true);
 
 	    declareWorkbenchImage(
 	            configurer, 
 	            ideBundle, 
 	            org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages.IMG_OBJS_WARNING_PATH, 
-	            ICONS_PATH + "obj16/warn_tsk.gif", 
+	            ICONS_PATH + "obj16/warn_tsk.png", 
 	            true);
 
 	    /*

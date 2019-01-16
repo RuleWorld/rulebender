@@ -18,8 +18,8 @@ public class FolderNode extends TreeNode
 {	
 	private File fFolder; // actual data object
 
-	private static final Image folderImage = AbstractUIPlugin.imageDescriptorFromPlugin ("rulebender","/icons/views/fldr_obj.gif").createImage();
-	private static final Image projectImage = AbstractUIPlugin.imageDescriptorFromPlugin ("rulebender","/icons/views/prj_obj.gif").createImage();
+	private static final Image folderImage = AbstractUIPlugin.imageDescriptorFromPlugin ("rulebender","/icons/views/fldr_obj.png").createImage();
+	private static final Image projectImage = AbstractUIPlugin.imageDescriptorFromPlugin ("rulebender","/icons/views/prj_obj.png").createImage();
 	/**
 	 * 
 	 * @param folder
