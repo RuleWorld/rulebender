@@ -143,63 +143,68 @@ public class EdgePropertySource implements IPropertySource, IBNGLLinkedElementCo
 		{
 			m_bnglPropRules = new ArrayList<IBNGLLinkedElement>();
 
-			for(final VisualRule rule : m_rules)
-			{
-				m_bnglPropRules.add(new IBNGLLinkedElement(){
+			// we don't necessarily have a list of rules here if 
+			// the is just a single rule related to the edge. 
+			// TODO: Check if there should always be something here!
+			if (m_rules != null) {
+				for(final VisualRule rule : m_rules)
+				{
+					m_bnglPropRules.add(new IBNGLLinkedElement(){
 
-					@Override
-					public String getLinkedBNGLPath() 
-					{	
-						return m_sourcePath;
-					}
-
-					@Override
-					public String getRegex() 
-					{
-						return produceRegexFromRuleText(rule.getExpression());
-					}
-
-					private String produceRegexFromRuleText(String expression) 
-					{
-						String delimiter = System.getProperty("line.separator");
-						
-						String regex = "";
-						
-						if(expression.contains(")"));
-						{
-							regex = expression.substring(0, expression.lastIndexOf(")")+1);
+						@Override
+						public String getLinkedBNGLPath() 
+						{	
+							return m_sourcePath;
 						}
-					
-						if(regex.contains("\n"));
+
+						@Override
+						public String getRegex() 
 						{
-							regex = regex.replace("\n", "");
+							return produceRegexFromRuleText(rule.getExpression());
 						}
+
+						private String produceRegexFromRuleText(String expression) 
+						{
+							String delimiter = System.getProperty("line.separator");
+							
+							String regex = "";
+							
+							if(expression.contains(")"));
+							{
+								regex = expression.substring(0, expression.lastIndexOf(")")+1);
+							}
 						
-						// put an optional pair of backslashes between every character.
-						// This has to happen before the other special characters are escaped.
-						regex = regex.replace("", "\\s*\\\\?\\s*"+delimiter+"?");
-						
-						// This makes the rule match for either forward or bidirectional.
-						//regex = regex.replace("<", "<?");
-						
-						// Escape the parentheses
-						regex = regex.replace("(", "\\(");
-						regex = regex.replace(")", "\\)");
-						
-						// Escape the +
-						regex = regex.replace("+", "\\+");
-						
-						// Escape the !
-						regex = regex.replace("!", "\\!");
-						
-						// Escape the ~
-						//regex = regex.replace("~", "\\~");
-						
-						// Escape the .
-						regex = regex.replace(".", "\\.");
-						
-						return regex;
-					}});
+							if(regex.contains("\n"));
+							{
+								regex = regex.replace("\n", "");
+							}
+							
+							// put an optional pair of backslashes between every character.
+							// This has to happen before the other special characters are escaped.
+							regex = regex.replace("", "\\s*\\\\?\\s*"+delimiter+"?");
+							
+							// This makes the rule match for either forward or bidirectional.
+							//regex = regex.replace("<", "<?");
+							
+							// Escape the parentheses
+							regex = regex.replace("(", "\\(");
+							regex = regex.replace(")", "\\)");
+							
+							// Escape the +
+							regex = regex.replace("+", "\\+");
+							
+							// Escape the !
+							regex = regex.replace("!", "\\!");
+							
+							// Escape the ~
+							//regex = regex.replace("~", "\\~");
+							
+							// Escape the .
+							regex = regex.replace(".", "\\.");
+							
+							return regex;
+						}});
+				}
 			}
 		}
 		
