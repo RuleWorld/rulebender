@@ -9,7 +9,7 @@ import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
-import org.eclipse.jface.text.ITextHover;
+// import org.eclipse.jface.text.ITextHover;
 
 public class BNGLConfiguration extends SourceViewerConfiguration 
 {
@@ -25,7 +25,7 @@ public class BNGLConfiguration extends SourceViewerConfiguration
 	private BNGLScanner m_bnglScanner;
 	private BNGLPartitionScanner m_bnglPartitionScanner;
   // The BNGL editor text hover 
-  private BNGLTextHover textHover;
+  // private BNGLTextHover textHover;
 	
 	/**
 	 * Create the new Configuration object with a reference to the color manager. 
@@ -142,10 +142,11 @@ public class BNGLConfiguration extends SourceViewerConfiguration
   /**
    * Text hovering for BNGL editor
    */
+  /* 
   public BNGLTextHover getTextHover(ISourceViewer sourceViewer, String contentType) 
   {
     textHover = new BNGLTextHover();
     return textHover;
   }
-
+  */
 }
