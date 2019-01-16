@@ -5,8 +5,11 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.text.TextSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -17,10 +20,16 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.IEditorPart;
 
+import prefuse.data.tuple.TupleSet;
+import prefuse.visual.VisualItem;
+import prefuse.data.expression.Predicate;
+import prefuse.data.expression.parser.ExpressionParser;
 
 import rulebender.contactmap.models.CMapModelBuilder;
 import rulebender.contactmap.models.ContactMapModel;
 import rulebender.contactmap.prefuse.ContactMapVisual;
+import rulebender.contactmap.properties.StatePropertySource;
+import rulebender.contactmap.properties.MoleculePropertySource;
 import rulebender.editors.bngl.BNGLEditor;
 import rulebender.editors.bngl.model.BNGASTReader;
 import rulebender.editors.bngl.model.BNGLModel;
@@ -87,6 +96,7 @@ public class ContactMapSelectionListener implements ISelectionListener,
 		}
 	}
 
+
 	/**
 	 * Given a new model, set it to the current model. Also looks for an existing
 	 * prefuse.Display object and sets it as visible.
@@ -122,9 +132,64 @@ public class ContactMapSelectionListener implements ISelectionListener,
 			// TODO it could be a text selection. This is where the selected
 			// text would be parsed and a visual element would be selected
 			// if there was a match with an element.
-
+			
+			prefuse.Display curDisp = lookupDisplay(m_currentModel);
+			prefuse.Visualization curVis = curDisp.getVisualization();
+			
+			// TODO First MAKE SURE it's a text selection before casting it into one 
+			// I don't actually know if it can be something else but just in case
+			TextSelection textSel = (TextSelection) selection;
+			// System.out.println("get text: " + textSel.getText());
+			// Get the string to compare to
+			String selStr = textSel.getText();  
+			// Make sure we have an actual string or let's not do anything
+			if (selStr.length()>0) {
+				// Parse a tiny bit, remove comments
+				int offset = selStr.indexOf("#");
+	      	    if (offset!=-1) {
+	      		  selStr = selStr.substring(0, offset);
+	      	    } 
+	      	    // remove whitespace
+				selStr = selStr.replaceAll("\\s+", "");
+				System.out.println("Parsed text: " + selStr);
+								
+				// Let's take the aggregate visual items using a predicate (not sure if this is needed)
+				Predicate itemPredicate = (Predicate) ExpressionParser.parse( "ingroup('aggregates')", false);
+				// now we get all the items in that group
+				Iterator items = curVis.items(itemPredicate);
+				
+				// loop over all and see if any of it matches
+				while (items.hasNext()) {
+					VisualItem item = (VisualItem) items.next();
+					
+					// pull molecule_expression out of the item
+					String molExp = item.get("molecule_expression").toString();
+					String molName = item.get("molecule").toString();
+					
+					// compare to text in selection, 
+					if (molExp.equals(selStr) || molName.equals(selStr)) {
+						//System.out.println("item: " + item);
+						// Using selection pathway from CMapClickControlDelegate.java
+						m_view.getSite().getSelectionProvider().setSelection(
+							new StructuredSelection(new MoleculePropertySource(
+									item, m_currentModel.getPathID())));
+						TupleSet focused = curVis.getFocusGroup("selected");
+						if (focused != null) {
+							focused.clear();
+							focused.addTuple(item);
+						}
+						curVis.run("color");
+					} 
+			    }
+			} else {
+				m_view.getSite().getSelectionProvider().setSelection(new StructuredSelection());
+				TupleSet focused = curVis.getFocusGroup("selected");
+				if (focused != null) {
+					focused.clear();
+					curVis.run("color");	
+				}
+			}
 		}
-
 		// If it's a different file, then call the local private method that
 		// handles it.
 		else {
