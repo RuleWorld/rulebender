@@ -16,7 +16,7 @@
          point="org.eclipse.ui.perspectives">
       <perspective
             class="rulebender.Perspective"
-            icon="icons/views/CMap.gif"
+            icon="icons/views/CMap.png"
             id="rulebender.perspective"
             name="Default">
       </perspective>
@@ -157,7 +157,7 @@
       <view
             allowMultiple="false"
             class="org.eclipse.ui.internal.console.ConsoleView"
-            icon="icons/views/console_view.gif"
+            icon="icons/views/console_view.png"
             id="rulebender.views.Console"
             name="Console"
             restorable="true">
@@ -165,21 +165,21 @@
       <view
             allowMultiple="false"
             class="rulebender.simulationjournaling.view.TimelineView"
-            icon="icons/views/timeline.gif"
+            icon="icons/views/timeline.png"
             id="rulebender.simulationjournaling.views.timelineview"
             name="Timeline"
             restorable="true">
       </view>
       <view
             class="rulebender.contactmap.view.ContactMapView"
-            icon="icons/views/CMap.gif"
+            icon="icons/views/CMap.png"
             id="rulebender.contactmap.view.ContactMapView"
             name="Contact Map"
             restorable="true">
       </view>
       <view
             class="rulebender.speciesgraph.view.SpeciesGraphView"
-            icon="icons/views/speciesGraph.gif"
+            icon="icons/views/speciesGraph.png"
             id="rulebender.speciesgraph.SpeciesGraphView"
             name="Species Graph"
             restorable="true">
@@ -192,28 +192,28 @@
       </view>
       <view
             class="rulebender.influencegraph.view.InfluenceGraphView"
-            icon="icons/views/IGraph.gif"
+            icon="icons/views/IGraph.png"
             id="rulebender.influencegraph.view.InfluenceGraphView"
             name="InfluenceGraph"
             restorable="true">
       </view>
       <view
             class="org.eclipse.ui.views.properties.PropertySheet"
-            icon="icons/views/properties.gif"
+            icon="icons/views/properties.png"
             id="rulebender.properties.view.PropertiesSheetView"
             name="Properties"
             restorable="true">
       </view>
       <view
             class="rulebender.simulate.view.SimulateView"
-            icon="icons/views/run.gif"
+            icon="icons/views/run.png"
             id="rulebender.simulate.view.SimulateView"
             name="Simulation"
             restorable="true">
       </view>
       <view
             class="org.eclipse.ui.navigator.CommonNavigator"
-            icon="icons/views/tree_explorer.gif"
+            icon="icons/views/tree_explorer.png"
             id="rulebender.cnf.CommonNavigator"
             name="Navigator"
             restorable="true">
@@ -221,13 +221,13 @@
       <view
             category="org.eclipse.ui"
             class="org.eclipse.ui.ExtensionFactory:progressView"
-            icon="icons/views/pview.gif"
+            icon="icons/views/pview.png"
             id="org.eclipse.ui.views.ProgressView"
             name="Progress View">
       </view>
       <view
             class="org.eclipse.ui.internal.views.markers.ProblemsView"
-            icon="icons/views/problems_view.gif"
+            icon="icons/views/problems_view.png"
             id="rulebender.views.problemview"
             name="Problems"
             restorable="true">
@@ -246,7 +246,7 @@
       </view>      
       <view
             class="rulebender.example.ExampleView"
-            icon="icons/views/example.gif"
+            icon="icons/views/example.png"
             id="rulebender.example.exampleview"
             name="Example View Extension"
             restorable="true">
@@ -464,7 +464,7 @@
             contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
             default="false"
             extensions="pos"
-            icon="icons/views/pos.gif"
+            icon="icons/views/pos.png"
             id="rulebender.editors.position"
             name="Position Editor">
       </editor>
@@ -473,7 +473,7 @@
             contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
             default="false"
             extensions="bngl"
-            icon="/icons/views/CMap.gif"
+            icon="/icons/views/CMap.png"
             id="rulebender.editors.bngl"
             name="BNGL Editor">
       </editor>
@@ -489,7 +489,7 @@
             class="rulebender.editors.bnga.BNGAMultiPageEditor"
             contributorClass="rulebender.editors.bnga.BNGAMultiPageEditorContributor"
             extensions="bnga"
-            icon="icons/sample.gif"
+            icon="icons/sample.png"
             id="rulebender.editors.bnga.BNGAMultiPageEditor"
             name="BioNetGen Actions Editor">
       </editor>
@@ -497,7 +497,7 @@
             class="rulebender.editors.dat.DATMultiPageEditor"
             default="false"
             extensions="gdat, cdat, scan"
-            icon="icons/views/Results.gif"
+            icon="icons/views/Results.png"
             id="rulebender.editors.dat"
             name="Results File">
       </editor>

@@ -18,9 +18,9 @@ public class FileNode extends TreeNode {
 	private String fileName;
 	private String filePath;
 
-	private static final Image m_bngImage = AbstractUIPlugin.imageDescriptorFromPlugin ("rulebender","/icons/views/CMap.gif").createImage();
-	private static final Image m_resultsImage = AbstractUIPlugin.imageDescriptorFromPlugin ("rulebender","/icons/views/Results.gif").createImage();
-	private static final Image m_defaultImage = AbstractUIPlugin.imageDescriptorFromPlugin ("rulebender","/icons/views/file_obj.gif").createImage();
+	private static final Image m_bngImage = AbstractUIPlugin.imageDescriptorFromPlugin ("rulebender","/icons/views/CMap.png").createImage();
+	private static final Image m_resultsImage = AbstractUIPlugin.imageDescriptorFromPlugin ("rulebender","/icons/views/Results.png").createImage();
+	private static final Image m_defaultImage = AbstractUIPlugin.imageDescriptorFromPlugin ("rulebender","/icons/views/file_obj.png").createImage();
 	
 	public FileNode(ITreeNode parent, File file) {
 		super("FileNode", parent);
