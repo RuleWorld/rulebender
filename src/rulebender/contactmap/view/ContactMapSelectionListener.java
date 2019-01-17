@@ -22,8 +22,6 @@ import org.eclipse.ui.IEditorPart;
 
 import prefuse.data.tuple.TupleSet;
 import prefuse.visual.VisualItem;
-import prefuse.data.expression.Predicate;
-import prefuse.data.expression.parser.ExpressionParser;
 
 import rulebender.contactmap.models.CMapModelBuilder;
 import rulebender.contactmap.models.ContactMapModel;
@@ -151,12 +149,10 @@ public class ContactMapSelectionListener implements ISelectionListener,
 	      	    } 
 	      	    // remove whitespace
 				selStr = selStr.replaceAll("\\s+", "");
-				System.out.println("Parsed text: " + selStr);
+				//System.out.println("Parsed text: " + selStr);
 								
-				// Let's take the aggregate visual items using a predicate (not sure if this is needed)
-				Predicate itemPredicate = (Predicate) ExpressionParser.parse( "ingroup('aggregates')", false);
-				// now we get all the items in that group
-				Iterator items = curVis.items(itemPredicate);
+				// Let's take the aggregate visual items
+				Iterator items = curVis.getVisualGroup("aggregates").tuples();
 				
 				// loop over all and see if any of it matches
 				while (items.hasNext()) {
