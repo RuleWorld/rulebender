@@ -130,59 +130,60 @@ public class ContactMapSelectionListener implements ISelectionListener,
 			// TODO it could be a text selection. This is where the selected
 			// text would be parsed and a visual element would be selected
 			// if there was a match with an element.
-			
-			prefuse.Display curDisp = lookupDisplay(m_currentModel);
-			prefuse.Visualization curVis = curDisp.getVisualization();
-			
-			// TODO First MAKE SURE it's a text selection before casting it into one 
-			// I don't actually know if it can be something else but just in case
-			TextSelection textSel = (TextSelection) selection;
-			// System.out.println("get text: " + textSel.getText());
-			// Get the string to compare to
-			String selStr = textSel.getText();  
-			// Make sure we have an actual string or let's not do anything
-			if (selStr.length()>0) {
-				// Parse a tiny bit, remove comments
-				int offset = selStr.indexOf("#");
-	      	    if (offset!=-1) {
-	      		  selStr = selStr.substring(0, offset);
-	      	    } 
-	      	    // remove whitespace
-				selStr = selStr.replaceAll("\\s+", "");
-				//System.out.println("Parsed text: " + selStr);
-								
-				// Let's take the aggregate visual items
-				Iterator items = curVis.getVisualGroup("aggregates").tuples();
-				
-				// loop over all and see if any of it matches
-				while (items.hasNext()) {
-					VisualItem item = (VisualItem) items.next();
+	        prefuse.Display curDisp = lookupDisplay(m_currentModel);
+	        prefuse.Visualization curVis = curDisp.getVisualization();
+			// gotta make sure we have a visualization to begin with
+			if (curVis != null) {
+				// TODO First MAKE SURE it's a text selection before casting it into one 
+				// I don't actually know if it can be something else but just in case
+				TextSelection textSel = (TextSelection) selection;
+				// System.out.println("get text: " + textSel.getText());
+				// Get the string to compare to
+				String selStr = textSel.getText();  
+				// Make sure we have an actual string or let's not do anything
+				if (selStr.length()>0) {
+					// Parse a tiny bit, remove comments
+					int offset = selStr.indexOf("#");
+		      	    if (offset!=-1) {
+		      		  selStr = selStr.substring(0, offset);
+		      	    } 
+		      	    // remove whitespace
+					selStr = selStr.replaceAll("\\s+", "");
+					//System.out.println("Parsed text: " + selStr);
+									
+					// Let's take the aggregate visual items
+					Iterator items = curVis.getVisualGroup("aggregates").tuples();
 					
-					// pull molecule_expression out of the item
-					String molExp = item.get("molecule_expression").toString();
-					String molName = item.get("molecule").toString();
-					
-					// compare to text in selection, 
-					if (molExp.equals(selStr) || molName.equals(selStr)) {
-						//System.out.println("item: " + item);
-						// Using selection pathway from CMapClickControlDelegate.java
-						m_view.getSite().getSelectionProvider().setSelection(
-							new StructuredSelection(new MoleculePropertySource(
-									item, m_currentModel.getPathID())));
-						TupleSet focused = curVis.getFocusGroup("selected");
-						if (focused != null) {
-							focused.clear();
-							focused.addTuple(item);
-						}
-						curVis.run("color");
-					} 
-			    }
-			} else {
-				m_view.getSite().getSelectionProvider().setSelection(new StructuredSelection());
-				TupleSet focused = curVis.getFocusGroup("selected");
-				if (focused != null) {
-					focused.clear();
-					curVis.run("color");	
+					// loop over all and see if any of it matches
+					while (items.hasNext()) {
+						VisualItem item = (VisualItem) items.next();
+						
+						// pull molecule_expression out of the item
+						String molExp = item.get("molecule_expression").toString();
+						String molName = item.get("molecule").toString();
+						
+						// compare to text in selection, 
+						if (molExp.equals(selStr) || molName.equals(selStr)) {
+							//System.out.println("item: " + item);
+							// Using selection pathway from CMapClickControlDelegate.java
+							m_view.getSite().getSelectionProvider().setSelection(
+								new StructuredSelection(new MoleculePropertySource(
+										item, m_currentModel.getPathID())));
+							TupleSet focused = curVis.getFocusGroup("selected");
+							if (focused != null) {
+								focused.clear();
+								focused.addTuple(item);
+							}
+							curVis.run("color");
+						} 
+				    }
+				} else {
+					m_view.getSite().getSelectionProvider().setSelection(new StructuredSelection());
+					TupleSet focused = curVis.getFocusGroup("selected");
+					if (focused != null) {
+						focused.clear();
+						curVis.run("color");	
+					}
 				}
 			}
 		}
