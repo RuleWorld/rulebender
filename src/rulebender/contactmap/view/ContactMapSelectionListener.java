@@ -131,6 +131,8 @@ public class ContactMapSelectionListener implements ISelectionListener,
 			// text would be parsed and a visual element would be selected
 			// if there was a match with an element.
 	        prefuse.Display curDisp = lookupDisplay(m_currentModel);
+	        // TODO: Actually curDisp can ALSO be null but trying to put a check 
+	        // here caused me more issues. Fix that somehow
 	        prefuse.Visualization curVis = curDisp.getVisualization();
 			// gotta make sure we have a visualization to begin with
 			if (curVis != null) {

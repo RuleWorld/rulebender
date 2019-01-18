@@ -920,8 +920,8 @@ public class CMapClickControlDelegate extends ControlAdapter implements
 		if (item.getString("type").equals("molecule")) {
 			setSelection(new StructuredSelection(new MoleculePropertySource(item,
 			    m_sourcePath)));
-			System.out.println("Molecule selection: \n\tListeners: "
-			    + m_listeners.size());
+			//System.out.println("Molecule selection: \n\tListeners: "
+			//    + m_listeners.size());
 			
 			
 			
