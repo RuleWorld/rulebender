@@ -536,6 +536,16 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
     }
 
     @Override
+    protected void cancelPressed() { 
+      // If we don't reset CleanWorkspace variable then we get the recover workspace 
+      // even when switch workspace is selected. If cancel is pressed, let's reset the variable
+      willCleanWorkspace(false);
+      // call the parent method or the box doesn't actually
+      // close
+      super.cancelPressed();
+    }
+
+    @Override
     protected void okPressed() {
         String str    = _workspacePathCombo.getText();
         if (str.length() == 0) {
