@@ -444,7 +444,7 @@ public class PickWorkspaceDialog extends TitleAreaDialog {
                     if (setActive) {
                         _workspacePathCombo.setText(directory);
                     }
-                } catch (IOException err) {
+                } catch (Exception err) {
                            MessageDialog.openError(Display.getDefault().getActiveShell(), "Error", "There was an internal error, please check the logs");
                     err.printStackTrace();
                 }
