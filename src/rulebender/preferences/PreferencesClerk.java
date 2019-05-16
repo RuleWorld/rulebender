@@ -104,7 +104,18 @@ public class PreferencesClerk
 
 	public static String getDefaultBNGPath() 
 	{		
-		return		Application.GetExecutionPath() + BNGPathFromRoot;
+    // ASS2019 - Not sure when that started happening but Eclipse 
+    // returns an extra \ in front of the path in Windows. This 
+    // checks and removes it if it's there. I'm not 100% sure if
+    // this fixes the issue entirely but it's hard to replicate 
+    // the bug. It doesn't seem to break anything either.
+    String path = Application.GetExecutionPath() + BNGPathFromRoot;
+    if(getOS()==OS.WINDOWS) {
+        if(path.charAt(0) == '\\') {
+            path = path.substring(1);
+        }
+    }
+		return path;
 	}
 	/**
 	 * Returns the name of the main BNG file in 'BNGName'.
