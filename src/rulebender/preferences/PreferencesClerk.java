@@ -75,7 +75,7 @@ public class PreferencesClerk
 	private static String BNGName = "BNG2.pl";
 
 	// The path from the root directory to the main BNG file.
-	private static String BNGPathFromRoot = "BioNetGen-2.4";
+	private static String BNGPathFromRoot = "BioNetGen";
 
 	// In an effort to keep version-specific data in one place, the RuleBender version number appears
 	// here, along with the BioNetGen version number above.  It's worth pointing out, that the RuleBender
