@@ -4,6 +4,8 @@
 package rulebender.preferences;
 
 import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.prefs.*;
 
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -17,6 +19,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import rulebender.preferences.PreferencesClerk;
 import rulebender.simulate.BioNetGenUtility;
+import rulebender.simulationjournaling.model.SmallMultiple;
 import rulebender.logging.Logger;
 import rulebender.core.workspace.PickWorkspaceDialog;
 import rulebender.preferences.views.MyFieldEditorPreferencePage;
@@ -76,6 +79,9 @@ public class PreferencesClerk
 
 	// The path from the root directory to the main BNG file.
 	private static String BNGPathFromRoot = "BioNetGen";
+	// ASS2019 - We want to now keep track of the version number here
+	// but we'll pull it from the version file under the folder
+	private static String BNGVersionNumber;
 
 	// In an effort to keep version-specific data in one place, the RuleBender version number appears
 	// here, along with the BioNetGen version number above.  It's worth pointing out, that the RuleBender
@@ -113,6 +119,10 @@ public class PreferencesClerk
 	 */
 	public static String getBNGName() {
 		return BNGName;
+	}
+	
+	public static String getBNGVersionNumber() {
+		return BNGVersionNumber;
 	}
 
 	/**
@@ -260,6 +270,8 @@ public class PreferencesClerk
             Logger.log(Logger.LOG_LEVELS.INFO, PreferencesClerk.class, "The latest version "
               + "of BioNetGen, namely " +  bngPath + " will be used for an simulations "
               + "that are run.");
+            // ASS2019 - Now that we have validated the path, let's pull the BNG version
+            getAndSetBNGVersion(BNGPathFromRoot);
             return bngPath; 
           } else {
             Logger.log(Logger.LOG_LEVELS.WARNING, PreferencesClerk.class, "The latest version "
@@ -274,6 +286,34 @@ public class PreferencesClerk
 	}
 	public static String getFullBNGPath() {
 		return  getBNGPath() + System.getProperty("file.separator") + BNGName;
+	}
+	
+	// ASS2019 - The next two functions are to pull the BNG version number
+	// so we keep track of it for future updates (e.g. using it to check for 
+	// BNG updates for example)
+	private static boolean getAndSetBNGVersion(String path) {
+		if(pullBNGVersion(path + System.getProperty("file.separator") + "VERSION")){
+			return true;
+		} else {
+			return false;
+		}
+	} 
+	
+	private static boolean pullBNGVersion(String path) {
+		// We'll read the file and pull the line in and return that 
+		// as version string
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(path));
+			String ver = reader.readLine();
+			reader.close();
+			// File read, now set the version number
+			BNGVersionNumber = ver;
+			return true;
+		} catch( Exception e){
+			Logger.log(Logger.LOG_LEVELS.WARNING, PreferencesClerk.class, 
+					"Failed to find VERSION file under BNG root");
+			return false;
+		}
 	}
 
 	
