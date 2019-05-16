@@ -87,7 +87,7 @@ public class PreferencesClerk
 	// Another important note about this version number, is that increasing it, will cause the 
 	// installation process to upgrade the users BioNetGen to the latest version.  If this version
 	// number is not increased, then an installin RuleBender will leave the users settings alone.
-	private static String RuleBenderVersionNumber = "2.3.0";	
+	private static String RuleBenderVersionNumber = "2.3.1";	
 	private static String RuleBenderVersion = "RuleBender-" + RuleBenderVersionNumber;	
 	
 	// Private constructor for static access only.
