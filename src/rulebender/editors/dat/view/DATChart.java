@@ -14,6 +14,10 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import rulebender.results.data.DATFileData;
 
+//Adam Kenawell 7/16/19
+import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.axis.NumberTickUnit;
+
 public class DATChart {
 
 	/**
