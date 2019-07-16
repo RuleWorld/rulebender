@@ -101,6 +101,16 @@ public class DATChart {
 			NumberAxis yAxis = new NumberAxis("Concentration");
 			yAxis.setNumberFormatOverride(myformat);
 			xyPlot.setRangeAxis(yAxis);
+			
+			//Prateek Adurty 7/16/2019
+			double absRange = yAxis.getRange().getUpperBound();
+			double numberOfTicksY = absRange/yAxis.getTickUnit().getSize();
+			
+			if(numberOfTicksY >= 25) // if there are more than 15 ticks then overwrite
+			{
+				
+			}
+			
 		} else if (yAxisType.equals("log")) {
 			// log
 			LogAxis yAxis = new LogAxis("Concentration");
