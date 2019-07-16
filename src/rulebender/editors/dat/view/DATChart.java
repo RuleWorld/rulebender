@@ -109,6 +109,9 @@ public class DATChart {
 			if(numberOfTicksY >= 25) // if there are more than 15 ticks then overwrite
 			{
 				
+				//Adam Kenawell 7/16/2019
+				double newTickValue = absRange/10;
+              			yAxis.setTickUnit(new NumberTickUnit(newTickValue));
 			}
 			
 		} else if (yAxisType.equals("log")) {
