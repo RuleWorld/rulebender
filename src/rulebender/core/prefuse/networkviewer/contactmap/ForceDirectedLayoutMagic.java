@@ -23,6 +23,10 @@ import prefuse.visual.VisualItem;
 import rulebender.contactmap.models.NodePosition;
 import rulebender.simulationjournaling.model.MoleculeCounter;
 
+//PA Added rerun FDLM import statements dont know if needed
+import prefuse.Visualization;
+import rulebender.contactmap.prefuse.ContactMapVisual;
+
 /**
  * A modification of the ForceDirectedLayout, which allows to set all edges
  * and/or nodes magic. The forces of magic nodes/edges are still computed even
