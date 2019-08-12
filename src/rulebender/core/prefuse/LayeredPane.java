@@ -21,6 +21,12 @@ import javax.swing.border.LineBorder;
 import prefuse.Display;
 import rulebender.core.prefuse.overview.Overview;
 
+//Prateek Adurty
+import javax.swing.JButton;
+import rulebender.core.prefuse.networkviewer.contactmap.CMAPNetworkViewer;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
 /**
  * This class defines the pane that contains a prefuse.Display object
  * and an overview for that Display.  It is a subclass of the AWT 
@@ -158,4 +164,26 @@ public class LayeredPane extends JLayeredPane
 		}
 		
 	}
+	
+	//Prateek Adurty
+	/*
+	 * sets up Force Directed Layout Button by adding ActionListener and hooking up to visualizationRun method which 
+	 * reruns the contact map layout
+	 */
+	public void setupButton(CMAPNetworkViewer networkViewerInput)
+	{
+			
+				newNetworkViewer = networkViewerInput;
+				b.addActionListener(new ActionListener() { 
+					  public void actionPerformed(ActionEvent e) { 
+						  System.out.println("I was clicked!");
+		                   newNetworkViewer.visualizationRun();					  } 
+					} );
+			
+	}
+					
+	//layeredPane = new LayeredPane(new Dimension(400,600));
+			
+	//frame.getlayeredPane().setNetorkviewer(network)
+
 }
