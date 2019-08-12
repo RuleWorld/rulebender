@@ -15,6 +15,13 @@ import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
+//Prateek durty
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import java.awt.Container;
+import java.awt.Frame;
+
+
 /**
  * This class defines the ViewPart subclass that holds the Contact Map.
  * 
@@ -168,4 +175,24 @@ public class ContactMapView extends ViewPart
 	{
 		return new Dimension(parentComposite.getSize().x, parentComposite.getSize().y); 
 	}
+	
+	//Prateek Adurty
+	public void setCMAPNetworkViewer(CMAPNetworkViewer networkViewerInput)
+	{
+		
+		passInView = networkViewerInput;
+		
+		//System.out.println("setCMAPNetworkviewer was executed");
+		
+		//set up layered pane with button here 
+		//layeredPane = new LayeredPane(new Dimension(400,600));
+		
+		//System.out.print() 
+		
+		
+		//frame.getComponent(0).setNetworkViewer();
+		
+		//frame.getComponent(0).etNetorkviewer(network)
+	}
+
 }
