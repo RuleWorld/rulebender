@@ -276,10 +276,8 @@ public class ForceDirectedLayoutMagic extends Layout {
 	public void run(double frac) {
 		// perform different actions if this is a run-once or
 		// run-continuously layout
-		
 		//reset();
 		if (m_runonce) {
-
 			// Un-fix all node positions
 			unfixNodePositions();
 			
@@ -294,6 +292,7 @@ public class ForceDirectedLayoutMagic extends Layout {
 			ArrayList<NodePosition> positionMap;
 			try {
 				 positionMap = ContactMapPosition.loadMoleculePositions(m_filePath);
+				 System.out.println("positions loaded from: " + m_filePath);
 			} catch (Exception e) {
 				positionMap = null;
 			} //try-catch
@@ -492,6 +491,7 @@ public class ForceDirectedLayoutMagic extends Layout {
 		
 		
 		} else {
+			// unfixNodePositions();
 			// get timestep
 			if (m_lasttime == -1)
 				m_lasttime = System.currentTimeMillis() - 20;
@@ -501,9 +501,9 @@ public class ForceDirectedLayoutMagic extends Layout {
 
 			// run force simulator
 			m_fsim.clear();
-			timestep = 500L;
+			//timestep = 500L;
+			//System.out.println("time: " + time + " timestep: " + timestep);
 			initSimulator(m_fsim);
-
 			m_fsim.runSimulator(timestep);
 			updateNodePositions();
 			moveToCenter();

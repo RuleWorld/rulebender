@@ -15,6 +15,14 @@ import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
+//Prateek durty
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import java.awt.Container;
+import java.awt.Frame;
+
+import rulebender.core.prefuse.networkviewer.contactmap.CMAPNetworkViewer;
+
 /**
  * This class defines the ViewPart subclass that holds the Contact Map.
  * 
@@ -49,6 +57,9 @@ public class ContactMapView extends ViewPart
 	// This is the parent that we will add our composite to.
 	private Composite parentComposite;
 	
+	//
+	private CMAPNetworkViewer networkViewer; 
+	
 	/**
 	 * Do nothing in the constructor.
 	 */
@@ -76,6 +87,7 @@ public class ContactMapView extends ViewPart
 		// large jpanel for the cmap, and an overlayed jpanel for the overview
 		// in the bottom left corner.
 		layeredPane = new LayeredPane(new Dimension(400,600));
+		layeredPane.setMapView(this);
 		
 		// Add the layered pane to the frame.
 		frame.add(layeredPane);
@@ -168,4 +180,13 @@ public class ContactMapView extends ViewPart
 	{
 		return new Dimension(parentComposite.getSize().x, parentComposite.getSize().y); 
 	}
+	
+	//Prateek Adurty
+	public void setCMAPNetworkViewer(CMAPNetworkViewer networkViewerInput)
+	{	
+		System.out.println("View setCMAP is called");
+		networkViewer = networkViewerInput;
+		layeredPane.setCMAPNetworkViewer(networkViewer);
+	}
+
 }

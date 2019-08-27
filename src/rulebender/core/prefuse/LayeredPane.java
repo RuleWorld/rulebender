@@ -21,6 +21,26 @@ import javax.swing.border.LineBorder;
 import prefuse.Display;
 import rulebender.core.prefuse.overview.Overview;
 
+//Prateek Adurty
+import javax.swing.JButton;
+import prefuse.Visualization;
+import rulebender.core.prefuse.networkviewer.contactmap.CMAPNetworkViewer;
+import rulebender.core.prefuse.networkviewer.contactmap.ContactMapPosition;
+import rulebender.core.prefuse.networkviewer.contactmap.NodeItem;
+import rulebender.core.prefuse.networkviewer.contactmap.VisualItem;
+import rulebender.contactmap.models.NodePosition;
+import rulebender.contactmap.view.ContactMapView;
+import java.awt.event.ActionListener;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.awt.event.ActionEvent;
+import static org.eclipse.core.runtime.Status.OK_STATUS;
+import static org.eclipse.core.runtime.Status.CANCEL_STATUS;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.jobs.Job;
+
 /**
  * This class defines the pane that contains a prefuse.Display object
  * and an overview for that Display.  It is a subclass of the AWT 
@@ -44,8 +64,18 @@ public class LayeredPane extends JLayeredPane
 	private JPanel mainJPanel;
 	private JPanel overviewJPanel;
 	
+	//Prateek Adurty Button that reruns FDLM
+	private JPanel buttonJPanel;
+	private JButton button;
+	
 	// The border object that the two JPanels share.
 	private Border border;
+	
+	private CMAPNetworkViewer networkViewer;
+	private ContactMapView mapView;
+	private ContactMapPosition cmapPosition;
+	private Job fdlmJob;
+	boolean fdlmRunning = false;
 	
 	/**
 	 * Constructor
@@ -72,9 +102,18 @@ public class LayeredPane extends JLayeredPane
 		mainJPanel.setBorder(border);
 		mainJPanel.setBackground(Color.WHITE);
 		
+		//Instantiate Button for the JPanel and set its border
+		buttonJPanel = new JPanel();
+		buttonJPanel.setBorder(border);
+		buttonJPanel.setBackground(Color.WHITE);
+		
+		
 		// Add the JPanels to the JLayeredPane (this object)
 		this.add(mainJPanel, new Integer(0));		
 		this.add(overviewJPanel, new Integer(1));
+		
+		//Prateek Adurty
+		this.add(buttonJPanel, new Integer(1));
 		
 		// Update the sizes of the JPanels and Displays
 		myResize(size);
@@ -99,6 +138,12 @@ public class LayeredPane extends JLayeredPane
 			overviewJPanel.removeAll();
 		}	
 		
+		//Prateek Adurty
+		if(buttonJPanel.getComponentCount() > 0)
+		{
+			buttonJPanel.removeAll();
+		}
+		
 		// If the passed in display is not null.
 		if(display != null)
 		{
@@ -108,6 +153,13 @@ public class LayeredPane extends JLayeredPane
 	     	// add overview display to panel
 			overviewJPanel.add(new Overview(display));
 		}
+		
+		//Prateek Adurty
+		button = new JButton("Run FDLM");
+		button.setPreferredSize(new Dimension(150,20));
+		buttonJPanel.setLayout(null);
+		buttonJPanel.add(button);
+		setButtonForFDLM();
 		
 		myResize();
 	}
@@ -147,6 +199,9 @@ public class LayeredPane extends JLayeredPane
 			
 			overviewJPanel.setBounds(0, size.height-overviewHeight, overviewWidth-BORDER_WIDTH, overviewHeight-BORDER_WIDTH);
 			
+			//Prateek Adurty
+			buttonJPanel.setBounds(10, 10, 150, 20);
+
 			if(mainJPanel.getComponentCount() == 1 && overviewJPanel.getComponentCount() == 1)
 			{
 				((Display) mainJPanel.getComponent(0)).setSize(new Dimension(m_currentSize.width-BORDER_WIDTH*2, m_currentSize.height-BORDER_WIDTH*2));				
@@ -154,8 +209,82 @@ public class LayeredPane extends JLayeredPane
 				((Display) overviewJPanel.getComponent(0)).setBounds(BORDER_WIDTH, BORDER_WIDTH, overviewWidth-BORDER_WIDTH*3, overviewHeight-BORDER_WIDTH*2);
 				((Display) overviewJPanel.getComponent(0)).setSize(new Dimension(overviewWidth-BORDER_WIDTH*3, overviewHeight-BORDER_WIDTH*2));
 				
+				//Prateek Adurty
+				button.setBounds(0, 0, 150, 20);
+				
 			}
 		}
 		
 	}
+	
+    public void setMapView(ContactMapView mapIn)
+    {
+    	mapView = mapIn;
+    }
+	
+	public void setCMAPNetworkViewer(CMAPNetworkViewer networkViewerInput)
+	{
+		// we need the networkViewer here
+		networkViewer = networkViewerInput;
+	}
+	
+	private void setButtonForFDLM()
+	{
+		fdlmJob = new Job("Running FDLM") {
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				try {
+					while (fdlmRunning) {
+						networkViewer.visualizationRun();	
+						try {
+							Thread.sleep(50);
+						} catch (Exception e) { 
+							System.out.println(e);
+						}
+						if (monitor.isCanceled()) return CANCEL_STATUS;
+					}
+				} catch (Exception e) {
+					System.out.println(e);
+				}
+				return OK_STATUS;
+			}
+		};
+		button.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  System.out.println("FD button is clicked!");
+				  // Switch running boolean on and off and then submit the layout 
+				  // job to the eclipse concurrency framework
+				  fdlmRunning = !fdlmRunning;
+				  if (fdlmRunning) {
+					  button.setText("Stop FDLM");
+					  // Submit to concurrency framework
+					  fdlmJob.setUser(true);
+					  fdlmJob.setPriority(Job.LONG);
+					  fdlmJob.schedule();  
+				  } else {
+					  button.setText("Run FDLM");
+					  // TODO: This is not guaranteed upon sudden exit or 
+					  // in case of a crash, gotta catch this and guarantee the cancel
+					  fdlmJob.cancel();
+					  
+					  // TODO: This is not guaranteed to happen post-cancellation
+					  // .join doesn't work either. We need to wait until this is done 
+					  // and _then_ save the positions.  
+					  
+					  // Let's dump back into the original file now that we are done 
+					  // re-running the force directed layouting
+					  StringBuilder positionFilePath = new StringBuilder();
+					  String fname = networkViewer.getFilepath();
+					  positionFilePath.append(fname.substring(0, fname.length()-5));
+					  positionFilePath.append(".pos");
+					  String nPosPath = positionFilePath.toString();
+					  ContactMapPosition.writeNodeLocations(nPosPath, networkViewer.getVisualization());
+				  }
+
+			  }});
+	}
+	//layeredPane = new LayeredPane(new Dimension(400,600));
+			
+	//frame.getlayeredPane().setNetorkviewer(network)
+
 }

@@ -39,9 +39,15 @@ import prefuse.visual.AggregateTable;
 import prefuse.visual.VisualItem;
 import prefuse.visual.VisualTupleSet;
 import prefuse.visual.expression.InGroupPredicate;
+import rulebender.core.prefuse.networkViewer;
 import rulebender.core.prefuse.networkviewer.CustomizedZoomToFitControl;
 import rulebender.simulate.ResultsFileUtility;
 import rulebender.simulationjournaling.model.SMClickControlDelegate;
+import rulebender.core.prefuse.networkviewer.contactmap.ContactMapPosition;
+import rulebender.contactmap.view.ContactMapView;
+
+//PA
+import rulebender.core.prefuse.networkviewer.contactmap.ForceDirectedLayoutMagic;
 
 public class CMAPNetworkViewer 
 {
@@ -566,7 +572,8 @@ public class CMAPNetworkViewer
 		f = new ForceDirectedLayoutMagic(
 				COMPONENT_GRAPH, true, true);
 		f.setMagicEdges(true);
-		f.getForceSimulator().setSpeedLimit(3);
+		f.getForceSimulator().setSpeedLimit(1);
+		f.setIterations(1000);
 		
 		// Pass in filepath to force simulator
 		// Check to see if a position file is given.  If so, pass in the position file.  Otherwise, pass in the BNGL source path.
@@ -635,6 +642,37 @@ public class CMAPNetworkViewer
 	public Display getDisplay()
 	{
 		return mainDisplay;
+	}
+	
+	public Rectangle2D getBounds()
+	{
+		return vis.getBounds(COMPONENT_GRAPH);
+	}
+	
+	//Prateek Adurty
+	/*)
+	 * this method  updates CMAP according to force directed
+	 */
+	
+	public void visualizationRun()
+	{
+		// setting up the force simulator and options
+		ForceDirectedLayoutMagic f2;
+		f2 = new ForceDirectedLayoutMagic(
+				COMPONENT_GRAPH, true, false);
+		f2.setMagicEdges(true);
+		//Prateek Adurty
+		f2.getForceSimulator().setSpeedLimit(0.5f);
+		// setup the layout action list
+		ActionList layout = new ActionList();
+		layout.add(f2);	
+		ComponentLayout cl = new ComponentLayout(COMPONENT_GRAPH);
+		layout.add(cl);
+		layout.add(new AggregateLayout(AGG));
+		layout.add(new LabelLayout(AGG_DEC));
+		layout.add(new RepaintAction());
+		vis.putAction("layout2", layout);
+        vis.run("layout2");
 	}
 } // Close NetworkViewer
 
