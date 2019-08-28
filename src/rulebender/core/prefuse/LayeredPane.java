@@ -28,12 +28,7 @@ import rulebender.core.prefuse.networkviewer.contactmap.CMAPNetworkViewer;
 import rulebender.core.prefuse.networkviewer.contactmap.ContactMapPosition;
 import rulebender.core.prefuse.networkviewer.contactmap.NodeItem;
 import rulebender.core.prefuse.networkviewer.contactmap.VisualItem;
-import rulebender.contactmap.models.NodePosition;
-import rulebender.contactmap.view.ContactMapView;
 import java.awt.event.ActionListener;
-import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.awt.event.ActionEvent;
 import static org.eclipse.core.runtime.Status.OK_STATUS;
 import static org.eclipse.core.runtime.Status.CANCEL_STATUS;
@@ -71,9 +66,8 @@ public class LayeredPane extends JLayeredPane
 	// The border object that the two JPanels share.
 	private Border border;
 	
+	// FD layout button variables
 	private CMAPNetworkViewer networkViewer;
-	private ContactMapView mapView;
-	private ContactMapPosition cmapPosition;
 	private Job fdlmJob;
 	boolean fdlmRunning = false;
 	
@@ -217,11 +211,6 @@ public class LayeredPane extends JLayeredPane
 		
 	}
 	
-    public void setMapView(ContactMapView mapIn)
-    {
-    	mapView = mapIn;
-    }
-	
 	public void setCMAPNetworkViewer(CMAPNetworkViewer networkViewerInput)
 	{
 		// we need the networkViewer here
@@ -230,38 +219,62 @@ public class LayeredPane extends JLayeredPane
 	
 	private void setButtonForFDLM()
 	{
+		// TODO: This setup needs to be re-ran once files are changed
+		// if you have two files open it will only run on the one that was
+		// opened last!!
+		// TODO: If a label is moved during run-time, the engine stops running
+		// entirely
+		
+		// setting up a job for the concurrency framework of eclipse
 		fdlmJob = new Job("Running FDLM") {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
+					// fdlmRunning is going to be true when this job get submitted
+					// I _think_ this is better practice than while(true)? 
 					while (fdlmRunning) {
-						networkViewer.visualizationRun();	
+						// call the run command, it runs layouting for a small step
+						// and then updates the visual
+						networkViewer.visualizationRun();
+						// really fast w/o this sleep, there could be a way better solution
+						// e.g. run the FD engine and visual updating separately like gaming loops
+						// but I don't know how to implement one right now
 						try {
 							Thread.sleep(50);
 						} catch (Exception e) { 
 							System.out.println(e);
 						}
-						if (monitor.isCanceled()) return CANCEL_STATUS;
+						// Not sure if this is necessary but it should be useful for
+						// cancelling the job in case of a sudden crash/quit
+						if (monitor.isCanceled()) {
+							return CANCEL_STATUS;
+						}
 					}
 				} catch (Exception e) {
 					System.out.println(e);
 				}
+				// Should never return OK to be honest, we keep running unless canceled
 				return OK_STATUS;
 			}
 		};
+		// now make the button submit the job and cancel when pressed again
 		button.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				  System.out.println("FD button is clicked!");
+			  public void actionPerformed(ActionEvent e) {
 				  // Switch running boolean on and off and then submit the layout 
 				  // job to the eclipse concurrency framework
 				  fdlmRunning = !fdlmRunning;
 				  if (fdlmRunning) {
+					  // this means we want to be running, set button text
 					  button.setText("Stop FDLM");
 					  // Submit to concurrency framework
+					  // to be entirely honest, I actually don't know what the first two 
+					  // really does, last command actually starts the job on a separate
+					  // thread
 					  fdlmJob.setUser(true);
 					  fdlmJob.setPriority(Job.LONG);
 					  fdlmJob.schedule();  
 				  } else {
+					  // this means we want to stop, let's change text and cancel the job
 					  button.setText("Run FDLM");
 					  // TODO: This is not guaranteed upon sudden exit or 
 					  // in case of a crash, gotta catch this and guarantee the cancel
@@ -269,8 +282,8 @@ public class LayeredPane extends JLayeredPane
 					  
 					  // TODO: This is not guaranteed to happen post-cancellation
 					  // .join doesn't work either. We need to wait until this is done 
-					  // and _then_ save the positions.  
-					  
+					  // and _then_ save the positions.
+
 					  // Let's dump back into the original file now that we are done 
 					  // re-running the force directed layouting
 					  StringBuilder positionFilePath = new StringBuilder();

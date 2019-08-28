@@ -43,8 +43,6 @@ import rulebender.core.prefuse.networkViewer;
 import rulebender.core.prefuse.networkviewer.CustomizedZoomToFitControl;
 import rulebender.simulate.ResultsFileUtility;
 import rulebender.simulationjournaling.model.SMClickControlDelegate;
-import rulebender.core.prefuse.networkviewer.contactmap.ContactMapPosition;
-import rulebender.contactmap.view.ContactMapView;
 
 //PA
 import rulebender.core.prefuse.networkviewer.contactmap.ForceDirectedLayoutMagic;
