@@ -87,7 +87,6 @@ public class ContactMapView extends ViewPart
 		// large jpanel for the cmap, and an overlayed jpanel for the overview
 		// in the bottom left corner.
 		layeredPane = new LayeredPane(new Dimension(400,600));
-		// layeredPane.setMapView(this);
 		
 		// Add the layered pane to the frame.
 		frame.add(layeredPane);

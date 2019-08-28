@@ -491,7 +491,7 @@ public class ForceDirectedLayoutMagic extends Layout {
 		
 		
 		} else {
-			// unfixNodePositions();
+			unfixNodePositions();
 			// get timestep
 			if (m_lasttime == -1)
 				m_lasttime = System.currentTimeMillis() - 20;
