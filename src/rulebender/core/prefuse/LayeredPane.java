@@ -72,6 +72,8 @@ public class LayeredPane extends JLayeredPane
 	private CMAPNetworkViewer networkViewer;
 	private Job fdlmJob;
 	boolean fdlmRunning = false;
+	private String fname; 
+	private String nPosPath;
 	
 	/**
 	 * Constructor
@@ -237,7 +239,7 @@ public class LayeredPane extends JLayeredPane
 					while (fdlmRunning) {
 						// call the run command, it runs layouting for a small step
 						// and then updates the visual
-						networkViewer.visualizationRun();
+						networkViewer.visualizationRun(nPosPath);
 						// really fast w/o this sleep, there could be a way better solution
 						// e.g. run the FD engine and visual updating separately like gaming loops
 						// but I don't know how to implement one right now
@@ -262,6 +264,11 @@ public class LayeredPane extends JLayeredPane
 		// now make the button submit the job and cancel when pressed again
 		button.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) {
+				  StringBuilder positionFilePath = new StringBuilder();
+				  fname = networkViewer.getFilepath();
+				  positionFilePath.append(fname.substring(0, fname.length()-5));
+				  positionFilePath.append(".pos");
+				  nPosPath = positionFilePath.toString();
 				  // Switch running boolean on and off and then submit the layout 
 				  // job to the eclipse concurrency framework
 				  fdlmRunning = !fdlmRunning;
@@ -272,6 +279,7 @@ public class LayeredPane extends JLayeredPane
 					  // to be entirely honest, I actually don't know what the first two 
 					  // really does, last command actually starts the job on a separate
 					  // thread
+					  ContactMapPosition.writeNodeLocations(nPosPath, networkViewer.getVisualization());
 					  fdlmJob.setUser(true);
 					  fdlmJob.setPriority(Job.LONG);
 					  fdlmJob.schedule();  
@@ -288,11 +296,6 @@ public class LayeredPane extends JLayeredPane
 
 					  // Let's dump back into the original file now that we are done 
 					  // re-running the force directed layouting
-					  StringBuilder positionFilePath = new StringBuilder();
-					  String fname = networkViewer.getFilepath();
-					  positionFilePath.append(fname.substring(0, fname.length()-5));
-					  positionFilePath.append(".pos");
-					  String nPosPath = positionFilePath.toString();
 					  ContactMapPosition.writeNodeLocations(nPosPath, networkViewer.getVisualization());
 				  }
 

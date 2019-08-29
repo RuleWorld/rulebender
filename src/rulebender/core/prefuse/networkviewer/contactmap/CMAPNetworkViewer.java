@@ -654,13 +654,14 @@ public class CMAPNetworkViewer
 	 * this method  updates CMAP according to force directed
 	 */
 	
-	public void visualizationRun()
+	public void visualizationRun(String posPath)
 	{
 		// setting up the force simulator and options
 		ForceDirectedLayoutMagic f2;
 		f2 = new ForceDirectedLayoutMagic(
 				COMPONENT_GRAPH, true, false);
 		f2.setMagicEdges(true);
+		f2.setPositionFilepath(posPath);
 		//Prateek Adurty
 		f2.getForceSimulator().setSpeedLimit(0.5f);
 		// setup the layout action list
