@@ -649,6 +649,10 @@ public class CMAPNetworkViewer
 		return vis.getBounds(COMPONENT_GRAPH);
 	}
 	
+	public String getCompGraph() {
+		return COMPONENT_GRAPH;
+	}
+	
 	//Prateek Adurty
 	/*)
 	 * this method  updates CMAP according to force directed

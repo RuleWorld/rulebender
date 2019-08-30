@@ -507,7 +507,7 @@ public class ForceDirectedLayoutMagic extends Layout {
 			initSimulator(m_fsim);
 			m_fsim.runSimulator(timestep);
 			updateNodePositions();
-			//moveViewToCenter();
+			// moveViewToCenter();
 		}
 
 		if (frac == 1.0) {
@@ -698,7 +698,7 @@ public class ForceDirectedLayoutMagic extends Layout {
 		double w = x1-x2 + (x1-x2)*0.2;
 		double h = y1-y2 + (y1-y2)*0.2;
 
-		Rectangle2D offsetBox = new Rectangle2D.Double(-w/1.5, -h/1.5, w, h);
+		Rectangle2D offsetBox = new Rectangle2D.Double(-w/1.0, -h/1.0, w, h);
 		DisplayLib.fitViewToBounds(m_vis.getDisplay(0), offsetBox, 0);
 	}
 
