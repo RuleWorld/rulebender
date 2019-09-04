@@ -95,7 +95,7 @@ public class CMAPNetworkViewer
 	private boolean draggableAggregates = true;
 	
 	private boolean isGrayscale = false;
-
+	
 	/**
 	 * Constructor accepts a graph structure.
 	 * @param mainDisplaySize 
@@ -191,7 +191,7 @@ public class CMAPNetworkViewer
 		
 	    // Use that iFile to get the results directory
 		String resultsDir = ResultsFileUtility.getSimulationResultsDirectoryForIFile(iFile);
-		
+
 		// Jump up to the parent
 		resultsDir = getParentDirectory(resultsDir);
 		System.out.println(resultsDir);
@@ -570,7 +570,18 @@ public class CMAPNetworkViewer
 		f = new ForceDirectedLayoutMagic(
 				COMPONENT_GRAPH, true, true);
 		f.setMagicEdges(true);
+		
+		
+		//original f.getForceSimulator().setSpeedLimit(3);
+		
+		
+		//Prateek Adurty
 		f.getForceSimulator().setSpeedLimit(3);
+		
+		
+		
+		
+		
 		
 		// Pass in filepath to force simulator
 		// Check to see if a position file is given.  If so, pass in the position file.  Otherwise, pass in the BNGL source path.
@@ -642,8 +653,8 @@ public class CMAPNetworkViewer
 	}
 	
 	//Prateek Adurty
-	/*)
-	 * this method  updates CMAP (the screen after laying out 
+	/*
+	 * this method  updates CMAP the screen after laying out 
 	 * TODO add FDLM modification functionality
 	 */
 	
@@ -652,7 +663,7 @@ public class CMAPNetworkViewer
 		System.out.println("Visualization Run method was excecuted");
 		
 		// layout
-		//ActionList layout = new ActionList(3500);
+//		ActionList layout = new ActionList(3500);
 		ActionList layout = new ActionList();
 		
 		// Create the force directed layout that uses invisible edges in force

@@ -14,10 +14,6 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import rulebender.results.data.DATFileData;
 
-//Adam Kenawell 7/16/19
-import org.jfree.chart.axis.ValueAxis;
-import org.jfree.chart.axis.NumberTickUnit;
-
 public class DATChart {
 
 	/**
@@ -105,19 +101,6 @@ public class DATChart {
 			NumberAxis yAxis = new NumberAxis("Concentration");
 			yAxis.setNumberFormatOverride(myformat);
 			xyPlot.setRangeAxis(yAxis);
-			
-			//Prateek Adurty 7/16/2019
-			double absRange = yAxis.getRange().getUpperBound();
-			double numberOfTicksY = absRange/yAxis.getTickUnit().getSize();
-			
-			if(numberOfTicksY >= 25) // if there are more than 15 ticks then overwrite
-			{
-				
-				//Adam Kenawell 7/16/2019
-				double newTickValue = absRange/10;
-              			yAxis.setTickUnit(new NumberTickUnit(newTickValue));
-			}
-			
 		} else if (yAxisType.equals("log")) {
 			// log
 			LogAxis yAxis = new LogAxis("Concentration");

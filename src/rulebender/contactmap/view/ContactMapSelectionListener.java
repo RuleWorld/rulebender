@@ -100,6 +100,7 @@ public class ContactMapSelectionListener implements ISelectionListener,
 	 * prefuse.Display object and sets it as visible.
 	 */
 	private void setCurrentModel(BNGLModel model) {
+		
 		m_currentModel = model;
 
 		// Get an existing map.

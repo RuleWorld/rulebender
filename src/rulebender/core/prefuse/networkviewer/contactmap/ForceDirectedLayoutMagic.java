@@ -23,10 +23,9 @@ import prefuse.visual.VisualItem;
 import rulebender.contactmap.models.NodePosition;
 import rulebender.simulationjournaling.model.MoleculeCounter;
 
-//PA Added rerun FDLM import statements dont know if needed
+//PA
 import prefuse.Visualization;
 import rulebender.contactmap.prefuse.ContactMapVisual;
-
 /**
  * A modification of the ForceDirectedLayout, which allows to set all edges
  * and/or nodes magic. The forces of magic nodes/edges are still computed even
@@ -56,6 +55,9 @@ public class ForceDirectedLayoutMagic extends Layout {
 	private String m_filePath;
 	
 	private boolean positionMapExists = false;
+	
+	//PA
+	//private Visualization m_vis;
 
 	/**
 	 * Create a new ForceDirectedLayoutMagic. By default, this layout will not
@@ -298,6 +300,7 @@ public class ForceDirectedLayoutMagic extends Layout {
 			ArrayList<NodePosition> positionMap;
 			try {
 				 positionMap = ContactMapPosition.loadMoleculePositions(m_filePath);
+				 System.out.println("this is the position map" + positionMap);
 			} catch (Exception e) {
 				positionMap = null;
 			} //try-catch
@@ -310,7 +313,8 @@ public class ForceDirectedLayoutMagic extends Layout {
  
 			// Initialize the simulator
 			m_fsim.clear();
-			long timestep = 500L;
+			//long timestep = 500L; Prateek Adurty
+			long timestep = 1000L;
 			initSimulator(m_fsim); 
 			
 			if (positionMap != null) {
@@ -478,7 +482,8 @@ public class ForceDirectedLayoutMagic extends Layout {
 				
 				// Run force computations if no position file exists
 				m_fsim.clear();
-				timestep = 500L;
+				//timestep = 500L; prateek Adurty
+				timestep = 1000L;
 				initSimulator(m_fsim);
 
 				for (int i = 0; i < m_iterations; i++) {
@@ -519,6 +524,7 @@ public class ForceDirectedLayoutMagic extends Layout {
 	}
 
 	private void unfixNodePositions() {
+		System.out.println("unfixNodePositions was called");
 		Iterator<?> iter = getMagicIterator(m_nodeGroup);
 		while (iter.hasNext()) {
 			VisualItem item = (NodeItem) iter.next();
@@ -526,7 +532,11 @@ public class ForceDirectedLayoutMagic extends Layout {
 		} //while
 	} //unfixNodePositions
 	
+	
+	
+	//PA
 	private void updateNodePositions() {
+		System.out.println("updateNodePositions was called");
 		Rectangle2D bounds = enforceBounds;
 		double x1 = 0, x2 = 0, y1 = 0, y2 = 0;
 		if (bounds != null) {
@@ -534,11 +544,13 @@ public class ForceDirectedLayoutMagic extends Layout {
 			y1 = bounds.getMinY();
 			x2 = bounds.getMaxX();
 			y2 = bounds.getMaxY();
+			
 		}
-
+		
 		// update positions
 		Iterator<?> iter = getMagicIterator(m_nodeGroup);
 
+		
 		while (iter.hasNext()) {
 			VisualItem item = (VisualItem) iter.next();
 			
@@ -579,6 +591,7 @@ public class ForceDirectedLayoutMagic extends Layout {
 			super.setX(item, referrer, x);
 			super.setY(item, referrer, y);
 		} //while
+		
 	}
 
 	private void moveToCenter() {
@@ -653,11 +666,26 @@ public class ForceDirectedLayoutMagic extends Layout {
 			item.setX(x);
 			item.setY(y);
 		}
+		
+
 	}
 
 	/**
 	 * Reset the force simulation state for all nodes processed by this layout.
 	 */
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public void reset() {
 		Iterator<?> iter = getMagicIterator(m_nodeGroup);
 
@@ -847,12 +875,23 @@ public class ForceDirectedLayoutMagic extends Layout {
 		FORCEITEM_SCHEMA.addColumn(FORCEITEM, ForceItem.class, new ForceItem());
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public Iterator<?> getMagicIterator(String group) {
 
 		if (group.equals(m_nodeGroup)) 
 		{
 			if (magicNodes) 
 			{
+				//ERROR TODO FIX
 				return m_vis.items(group);
 			} 
 			
