@@ -102,6 +102,8 @@ public class ContactMapVisual {
 	// The set contains all the involved nodes in a rule.
 	private final Hashtable<Set<Node>, Node> m_hubNodes;
 
+	
+	//view is wer button is baked in
 	public ContactMapVisual(ContactMapView view, ContactMapModel model_in,
 	    Dimension cMapSize) {
 
@@ -110,11 +112,10 @@ public class ContactMapVisual {
 
 		// Instantiate the NetworkViewer object.
 		m_networkViewer = new CMAPNetworkViewer(m_mainDisplaySize);
-		
-		//PA
-		//sets the view to the new updated CMAP after rerunning fdlm
+
+		//Prateek Adurty sets the view to the new updated CMAP after rerunning fdlm
 		view.setCMAPNetworkViewer(m_networkViewer);
-		
+    
 		// Instantiate the Graph
 		/*
 		 * VisualItem.LABEL [Integer] | COMP_PARENT_LABEL ('molecule') [String] |
