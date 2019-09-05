@@ -47,6 +47,8 @@ import rulebender.simulate.ResultsFileUtility;
 import rulebender.simulationjournaling.model.SMClickControlDelegate;
 
 //PA
+
+import rulebender.core.prefuse.networkviewer.contactmap.CMAPNetworkViewer;
 import rulebender.core.prefuse.networkviewer.contactmap.ForceDirectedLayoutMagic;
 
 public class CMAPNetworkViewer 
@@ -97,7 +99,7 @@ public class CMAPNetworkViewer
 	private boolean draggableAggregates = true;
 	
 	private boolean isGrayscale = false;
-
+	
 	/**
 	 * Constructor accepts a graph structure.
 	 * @param mainDisplaySize 
@@ -193,7 +195,7 @@ public class CMAPNetworkViewer
 		
 	    // Use that iFile to get the results directory
 		String resultsDir = ResultsFileUtility.getSimulationResultsDirectoryForIFile(iFile);
-		
+
 		// Jump up to the parent
 		resultsDir = getParentDirectory(resultsDir);
 		System.out.println(resultsDir);
@@ -572,8 +574,18 @@ public class CMAPNetworkViewer
 		f = new ForceDirectedLayoutMagic(
 				COMPONENT_GRAPH, true, true);
 		f.setMagicEdges(true);
-		f.getForceSimulator().setSpeedLimit(1);
-		f.setIterations(1000);
+		
+		
+		//original f.getForceSimulator().setSpeedLimit(3);
+		
+		
+		//Prateek Adurty
+		f.getForceSimulator().setSpeedLimit(3);
+		
+		
+		
+		
+		
 		
 		// Pass in filepath to force simulator
 		// Check to see if a position file is given.  If so, pass in the position file.  Otherwise, pass in the BNGL source path.
@@ -654,8 +666,9 @@ public class CMAPNetworkViewer
 	}
 	
 	//Prateek Adurty
-	/*)
-	 * this method  updates CMAP according to force directed
+	/*
+	 * this method  updates CMAP the screen after laying out 
+	 * TODO add FDLM modification functionality
 	 */
 	
 	public void visualizationRun(String posPath)
@@ -670,14 +683,110 @@ public class CMAPNetworkViewer
 		f2.getForceSimulator().setSpeedLimit(0.5f);
 		// setup the layout action list
 		ActionList layout = new ActionList();
-		layout.add(f2);	
+		
+		// Create the force directed layout that uses invisible edges in force
+		// calculations as well as the visible ones.
+
+		ForceDirectedLayoutMagic f;
+		f = new ForceDirectedLayoutMagic(
+				COMPONENT_GRAPH, true, true);
+		f.setMagicEdges(true);
+		//f.reset();
+
+		
+		//original f.getForceSimulator().setSpeedLimit(3);
+		
+		
+		//Prateek Adurty
+		f.getForceSimulator().setSpeedLimit(1);
+		
+		System.out.println("Speed limit was set to 1");
+		//f.setMaxTimeStep(100L);
+		
+		//System.out.println("Max Time Step set to 100L");
+		
+		
+		// Pass in filepath to force simulator
+		// Check to see if a position file is given.  If so, pass in the position file.  Otherwise, pass in the BNGL source path.
+		if (m_posPath == null) {
+			f.setPositionFilepath(m_filePath);
+			//PA
+			System.out.println(m_filePath);
+		} else {
+			f.setPositionFilepath(m_posPath);
+			//PA
+			System.out.println(m_posPath);
+		} //if-else
+		
+		System.out.println("this is the pospath for reference" + m_posPath);
+		//f.reset();  //ERROR inducing call
+		layout.add(f);
+		
+		
 		ComponentLayout cl = new ComponentLayout(COMPONENT_GRAPH);
 		layout.add(cl);
+		
+		// I am probably doing twice as much work by adding this here and to the
+		// color action list,
+		// but otherwise I am having trouble getting it to update.
+	
 		layout.add(new AggregateLayout(AGG));
 		layout.add(new LabelLayout(AGG_DEC));
 		layout.add(new RepaintAction());
+		
+		ActionList complayout = new ActionList();
+
+		
+
 		vis.putAction("layout2", layout);
-        vis.run("layout2");
+		
+		vis.run("layout2");
+		
+		// Create the force directed layout that uses invisible edges in force
+		// calculations as well as the visible ones.
+		
+		/*
+		ForceDirectedLayoutMagic f;
+		f = new ForceDirectedLayoutMagic(
+				COMPONENT_GRAPH, true, true);
+		f.setMagicEdges(true);
+		f.getForceSimulator().setSpeedLimit(1);
+		System.out.println("Speed limit was set to 1");
+		f.setMaxTimeStep(100L);
+		System.out.println("Max Time Step set to 100L");
+		f.setIterations(300);
+		System.out.println("Max Time Step set to 100L");
+		*/
+
+
+		//layout.add(f);
+
+		
+		//original f.getForceSimulator().setSpeedLimit(3);
+		
+		
+		//Prateek Adurty
+		
+		
+		
+		/*		
+		// set bounds based on graph size		
+		Rectangle2D bounds;
+		System.out.println("graph size: " + vis.size(COMPONENT_GRAPH));
+		if (vis.size(COMPONENT_GRAPH) > 100) 
+		{
+			bounds = new Rectangle2D.Double(-1200, -1200, 2400, 2400);
+		}
+		else 
+		{
+			bounds = new Rectangle2D.Double(-600, -600, 1200, 1200);
+		}
+		f.setEnforceBounds(bounds);
+		*/
+		//f.setReferrer((VisualItem)vis.items().next());
+		
+		// Currently the anchor is only used for runonce mode
+		//f.setLayoutAnchor(new Point2D.Double(500, 600));
 	}
 } // Close NetworkViewer
 

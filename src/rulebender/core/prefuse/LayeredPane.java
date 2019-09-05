@@ -23,21 +23,11 @@ import rulebender.core.prefuse.overview.Overview;
 
 //Prateek Adurty
 import javax.swing.JButton;
-import prefuse.Visualization;
 import rulebender.core.prefuse.networkviewer.contactmap.CMAPNetworkViewer;
-import rulebender.core.prefuse.networkviewer.contactmap.ContactMapPosition;
-import rulebender.core.prefuse.networkviewer.contactmap.ForceSimulator;
-import rulebender.core.prefuse.networkviewer.contactmap.NodeItem;
-import rulebender.core.prefuse.networkviewer.contactmap.VisualItem;
 import java.awt.event.ActionListener;
 import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
 import java.awt.event.ActionEvent;
-import static org.eclipse.core.runtime.Status.OK_STATUS;
-import static org.eclipse.core.runtime.Status.CANCEL_STATUS;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.jobs.Job;
 
 // trying to center view
 import prefuse.action.layout.Layout;
@@ -69,9 +59,9 @@ public class LayeredPane extends JLayeredPane
 	private JPanel mainJPanel;
 	private JPanel overviewJPanel;
 	
-	//Prateek Adurty Button that reruns FDLM
+	//Prateek Adurty
 	private JPanel buttonJPanel;
-	private JButton button;
+	private JButton b;
 	
 	// The border object that the two JPanels share.
 	private Border border;
@@ -108,16 +98,15 @@ public class LayeredPane extends JLayeredPane
 		mainJPanel.setBorder(border);
 		mainJPanel.setBackground(Color.WHITE);
 		
-		//Instantiate Button for the JPanel and set its border
+		//Prateek Adurty
 		buttonJPanel = new JPanel();
 		buttonJPanel.setBorder(border);
 		buttonJPanel.setBackground(Color.WHITE);
-		
-		
+
 		// Add the JPanels to the JLayeredPane (this object)
 		this.add(mainJPanel, new Integer(0));		
 		this.add(overviewJPanel, new Integer(1));
-		
+
 		//Prateek Adurty
 		this.add(buttonJPanel, new Integer(1));
 		
@@ -130,6 +119,12 @@ public class LayeredPane extends JLayeredPane
 	 * 
 	 * @param display - The prefuse.Display object for the visualization. 
 	 */
+	
+	
+	
+	
+	//Prateek Adurty
+	
 	public void setDisplay(Display display)
 	{
 		
@@ -143,13 +138,13 @@ public class LayeredPane extends JLayeredPane
 		{
 			overviewJPanel.removeAll();
 		}	
-		
+
 		//Prateek Adurty
 		if(buttonJPanel.getComponentCount() > 0)
 		{
 			buttonJPanel.removeAll();
 		}
-		
+
 		// If the passed in display is not null.
 		if(display != null)
 		{
@@ -158,7 +153,14 @@ public class LayeredPane extends JLayeredPane
 						
 	     	// add overview display to panel
 			overviewJPanel.add(new Overview(display));
-		}
+			
+			
+			
+			
+			//Prateek Adurty
+			b = new JButton("Run FDLM");
+			buttonJPanel.add(b);
+			
 		
 		//Prateek Adurty
 		button = new JButton("Run FDLM");
@@ -168,6 +170,7 @@ public class LayeredPane extends JLayeredPane
 		setButtonForFDLM();
 		
 		myResize();
+		}
 	}
 
 	/**
@@ -180,6 +183,8 @@ public class LayeredPane extends JLayeredPane
 		myResize(m_currentSize);
 	}
 	
+	
+
 	/**
 	 * There is a native resize method, but I needed to do more so I created
 	 * this one.
@@ -191,8 +196,9 @@ public class LayeredPane extends JLayeredPane
 	 * 
 	 * @param size
 	 */
-	public void myResize(Dimension size) 
-	{	
+	
+	public void myResize(Dimension size)
+	{
 		m_currentSize = size;
 		
 		int overviewWidth = (int) (m_currentSize.getWidth() * OVERVIEW_WIDTH);
@@ -208,18 +214,19 @@ public class LayeredPane extends JLayeredPane
 			//Prateek Adurty
 			buttonJPanel.setBounds(10, 10, 150, 20);
 
+
 			if(mainJPanel.getComponentCount() == 1 && overviewJPanel.getComponentCount() == 1)
 			{
 				((Display) mainJPanel.getComponent(0)).setSize(new Dimension(m_currentSize.width-BORDER_WIDTH*2, m_currentSize.height-BORDER_WIDTH*2));				
 				((Display) mainJPanel.getComponent(0)).setBounds(BORDER_WIDTH, BORDER_WIDTH, m_currentSize.width-BORDER_WIDTH*2, m_currentSize.height-BORDER_WIDTH*2);
 				((Display) overviewJPanel.getComponent(0)).setBounds(BORDER_WIDTH, BORDER_WIDTH, overviewWidth-BORDER_WIDTH*3, overviewHeight-BORDER_WIDTH*2);
 				((Display) overviewJPanel.getComponent(0)).setSize(new Dimension(overviewWidth-BORDER_WIDTH*3, overviewHeight-BORDER_WIDTH*2));
-				
-				//Prateek Adurty
-				button.setBounds(0, 0, 150, 20);
+				b.setSize(new Dimension(150, 20));
+				b.setBounds(0, 0, 150, 20);
 				
 			}
 		}
+
 	}
 	
 	public void setCMAPNetworkViewer(CMAPNetworkViewer networkViewerInput)
