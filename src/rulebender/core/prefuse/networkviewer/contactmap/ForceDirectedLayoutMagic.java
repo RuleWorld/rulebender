@@ -23,9 +23,9 @@ import prefuse.visual.VisualItem;
 import rulebender.contactmap.models.NodePosition;
 import rulebender.simulationjournaling.model.MoleculeCounter;
 
-//PA
-import prefuse.Visualization;
-import rulebender.contactmap.prefuse.ContactMapVisual;
+// trying to figure out how to fix centering of graphs
+import prefuse.util.display.DisplayLib; 
+
 /**
  * A modification of the ForceDirectedLayout, which allows to set all edges
  * and/or nodes magic. The forces of magic nodes/edges are still computed even
@@ -510,12 +510,10 @@ public class ForceDirectedLayoutMagic extends Layout {
 
 			// run force simulator
 			m_fsim.clear();
-			//timestep = 500L;
-			//System.out.println("time: " + time + " timestep: " + timestep);
 			initSimulator(m_fsim);
 			m_fsim.runSimulator(timestep);
 			updateNodePositions();
-			moveToCenter();
+			// moveViewToCenter();
 		}
 
 		if (frac == 1.0) {
@@ -612,13 +610,7 @@ public class ForceDirectedLayoutMagic extends Layout {
 			VisualItem item = (VisualItem) iter.next();
 			
 			double x = item.getX();
-			double y = item.getY();
-			
-			
-			//if (x > 453) {
-			//	x++;
-			//}
-			
+			double y = item.getY();		
 
 			// find max x
 			if (x > x1) {
@@ -652,8 +644,8 @@ public class ForceDirectedLayoutMagic extends Layout {
 		
 		// compute the offset
 		double offset_x = window_center_x - center_x;
-		double offset_y = window_center_y - center_y;
-
+		double offset_y = window_center_y - center_y;		
+		
 		// move the visual items one by one
 		iter = getMagicIterator(m_nodeGroup);
 		while (iter.hasNext()) {
@@ -669,6 +661,63 @@ public class ForceDirectedLayoutMagic extends Layout {
 		
 
 	}
+	
+	private void moveViewToCenter() {
+		Rectangle2D bounds = enforceBounds;
+		Rectangle2D windowbounds = getLayoutBounds();
+		double x1 = 0, x2 = 0, y1 = 0, y2 = 0;
+		if (bounds != null) {
+			x1 = bounds.getMinX();
+			y1 = bounds.getMinY();
+			x2 = bounds.getMaxX();
+			y2 = bounds.getMaxY();
+		}
+
+		// update positions
+		Iterator<?> iter = getMagicIterator(m_nodeGroup);
+
+		while (iter.hasNext()) {
+			VisualItem item = (VisualItem) iter.next();
+			
+			double x = item.getX();
+			double y = item.getY();		
+
+			// find max x
+			if (x > x1) {
+				x1 = x;
+			}
+
+			// find min x
+			if (x < x2) {
+				x2 = x;
+			}
+
+			// find max y
+			if (y > y1) {
+				y1 = y;
+			}
+
+			// find min y
+			if (y < y2) {
+				y2 = y;
+			}
+
+		}
+
+		// center position of current graph
+		double center_x = (x1 + x2) / 2;
+		double center_y = (y1 + y2) / 2;		
+		
+		// ASS: We gotta move the window and not the items themselves
+		// because this results in massive jitter and constant moving 
+		// of the items around when clicked on
+		double w = x1-x2 + (x1-x2)*0.2;
+		double h = y1-y2 + (y1-y2)*0.2;
+
+		Rectangle2D offsetBox = new Rectangle2D.Double(-w/1.0, -h/1.0, w, h);
+		DisplayLib.fitViewToBounds(m_vis.getDisplay(0), offsetBox, 0);
+	}
+
 
 	/**
 	 * Reset the force simulation state for all nodes processed by this layout.

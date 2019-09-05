@@ -656,19 +656,32 @@ public class CMAPNetworkViewer
 		return mainDisplay;
 	}
 	
-
+	public Rectangle2D getBounds()
+	{
+		return vis.getBounds(COMPONENT_GRAPH);
+	}
+	
+	public String getCompGraph() {
+		return COMPONENT_GRAPH;
+	}
+	
 	//Prateek Adurty
 	/*
 	 * this method  updates CMAP the screen after laying out 
 	 * TODO add FDLM modification functionality
 	 */
 	
-	public void visualizationRun()
+	public void visualizationRun(String posPath)
 	{
-		System.out.println("Visualization Run method was excecuted");
-		
-		// layout
-//		ActionList layout = new ActionList(3500);
+		// setting up the force simulator and options
+		ForceDirectedLayoutMagic f2;
+		f2 = new ForceDirectedLayoutMagic(
+				COMPONENT_GRAPH, true, false);
+		f2.setMagicEdges(true);
+		f2.setPositionFilepath(posPath);
+		//Prateek Adurty
+		f2.getForceSimulator().setSpeedLimit(0.5f);
+		// setup the layout action list
 		ActionList layout = new ActionList();
 		
 		// Create the force directed layout that uses invisible edges in force
