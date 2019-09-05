@@ -113,9 +113,9 @@ public class ContactMapVisual {
 		// Instantiate the NetworkViewer object.
 		m_networkViewer = new CMAPNetworkViewer(m_mainDisplaySize);
 
-		
 		//Prateek Adurty sets the view to the new updated CMAP after rerunning fdlm
 		view.setCMAPNetworkViewer(m_networkViewer);
+    
 		// Instantiate the Graph
 		/*
 		 * VisualItem.LABEL [Integer] | COMP_PARENT_LABEL ('molecule') [String] |

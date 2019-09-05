@@ -23,6 +23,14 @@ import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
+//Prateek durty
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import java.awt.Container;
+import java.awt.Frame;
+
+import rulebender.core.prefuse.networkviewer.contactmap.CMAPNetworkViewer;
+
 /**
  * This class defines the ViewPart subclass that holds the Contact Map.
  * 

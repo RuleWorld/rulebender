@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Locale;
 
 import org.eclipse.core.resources.IFile;
@@ -39,11 +40,14 @@ import prefuse.visual.AggregateTable;
 import prefuse.visual.VisualItem;
 import prefuse.visual.VisualTupleSet;
 import prefuse.visual.expression.InGroupPredicate;
+import rulebender.core.prefuse.NodeItem;
+import rulebender.core.prefuse.networkViewer;
 import rulebender.core.prefuse.networkviewer.CustomizedZoomToFitControl;
 import rulebender.simulate.ResultsFileUtility;
 import rulebender.simulationjournaling.model.SMClickControlDelegate;
 
 //PA
+
 import rulebender.core.prefuse.networkviewer.contactmap.CMAPNetworkViewer;
 import rulebender.core.prefuse.networkviewer.contactmap.ForceDirectedLayoutMagic;
 
@@ -652,6 +656,7 @@ public class CMAPNetworkViewer
 		return mainDisplay;
 	}
 	
+
 	//Prateek Adurty
 	/*
 	 * this method  updates CMAP the screen after laying out 
@@ -769,8 +774,6 @@ public class CMAPNetworkViewer
 		
 		// Currently the anchor is only used for runonce mode
 		//f.setLayoutAnchor(new Point2D.Double(500, 600));
-		
-		
 	}
 } // Close NetworkViewer
 

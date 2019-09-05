@@ -26,6 +26,7 @@ import javax.swing.JButton;
 import rulebender.core.prefuse.networkviewer.contactmap.CMAPNetworkViewer;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 /**
  * This class defines the pane that contains a prefuse.Display object
  * and an overview for that Display.  It is a subclass of the AWT 
@@ -49,30 +50,17 @@ public class LayeredPane extends JLayeredPane
 	private JPanel mainJPanel;
 	private JPanel overviewJPanel;
 	
-	
-	
-	
 	//Prateek Adurty
 	private JPanel buttonJPanel;
 	private JButton b;
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	// The border object that the two JPanels share.
 	private Border border;
 	
+
 	//Add this  
 	private CMAPNetworkViewer newNetworkViewer;
-	
-	
+
 	
 	/**
 	 * Constructor
@@ -99,29 +87,17 @@ public class LayeredPane extends JLayeredPane
 		mainJPanel.setBorder(border);
 		mainJPanel.setBackground(Color.WHITE);
 		
-		
 		//Prateek Adurty
 		buttonJPanel = new JPanel();
 		buttonJPanel.setBorder(border);
 		buttonJPanel.setBackground(Color.WHITE);
-		
-		
-		
-		
-		
-		
-		
+
 		// Add the JPanels to the JLayeredPane (this object)
 		this.add(mainJPanel, new Integer(0));		
 		this.add(overviewJPanel, new Integer(1));
-		
-		
-		
-		
+
 		//Prateek Adurty
 		this.add(buttonJPanel, new Integer(1));
-
-		
 		
 		// Update the sizes of the JPanels and Displays
 		myResize(size);
@@ -151,16 +127,13 @@ public class LayeredPane extends JLayeredPane
 		{
 			overviewJPanel.removeAll();
 		}	
-		
-		
-		
+
 		//Prateek Adurty
 		if(buttonJPanel.getComponentCount() > 0)
 		{
 			buttonJPanel.removeAll();
 		}
-		
-		
+
 		// If the passed in display is not null.
 		if(display != null)
 		{
@@ -177,6 +150,13 @@ public class LayeredPane extends JLayeredPane
 			b = new JButton("Run FDLM");
 			buttonJPanel.add(b);
 			
+		
+		//Prateek Adurty
+		button = new JButton("Run FDLM");
+		button.setPreferredSize(new Dimension(150,20));
+		buttonJPanel.setLayout(null);
+		buttonJPanel.add(button);
+		setButtonForFDLM();
 		
 		myResize();
 		}
@@ -220,31 +200,22 @@ public class LayeredPane extends JLayeredPane
 			
 			overviewJPanel.setBounds(0, size.height-overviewHeight, overviewWidth-BORDER_WIDTH, overviewHeight-BORDER_WIDTH);
 			
-			
 			//Prateek Adurty
 			buttonJPanel.setBounds(10, 10, 150, 20);
 
-			
-			
-			
+
 			if(mainJPanel.getComponentCount() == 1 && overviewJPanel.getComponentCount() == 1)
 			{
 				((Display) mainJPanel.getComponent(0)).setSize(new Dimension(m_currentSize.width-BORDER_WIDTH*2, m_currentSize.height-BORDER_WIDTH*2));				
 				((Display) mainJPanel.getComponent(0)).setBounds(BORDER_WIDTH, BORDER_WIDTH, m_currentSize.width-BORDER_WIDTH*2, m_currentSize.height-BORDER_WIDTH*2);
 				((Display) overviewJPanel.getComponent(0)).setBounds(BORDER_WIDTH, BORDER_WIDTH, overviewWidth-BORDER_WIDTH*3, overviewHeight-BORDER_WIDTH*2);
 				((Display) overviewJPanel.getComponent(0)).setSize(new Dimension(overviewWidth-BORDER_WIDTH*3, overviewHeight-BORDER_WIDTH*2));
-				
-				//Prateek Adurty
 				b.setSize(new Dimension(150, 20));
 				b.setBounds(0, 0, 150, 20);
-				
-				
-				
 				
 			}
 		}
 	}
-		
 	//Prateek Adurty
 	/*
 	 * sets up Force Directed Layout Button by adding ActionListener and hooking up to visualizationRun method which 
