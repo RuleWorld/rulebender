@@ -85,6 +85,7 @@ public class ContactMapSelectionListener implements ISelectionListener,
 	@Override
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		// If it's from the BNGLEditor then we want to set the contact map.
+		System.out.println("selectionChanged: " + part + selection);
 		if (part instanceof BNGLEditor) {
 			bnglEditorSelection((BNGLEditor) part, selection);
 		}
@@ -100,7 +101,6 @@ public class ContactMapSelectionListener implements ISelectionListener,
 	 * prefuse.Display object and sets it as visible.
 	 */
 	private void setCurrentModel(BNGLModel model) {
-		
 		m_currentModel = model;
 
 		// Get an existing map.

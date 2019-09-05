@@ -6,15 +6,7 @@ import java.util.TimerTask;
 
 import javax.swing.JLabel;
 
-//Prateek durty
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import java.awt.Container;
-import java.awt.Frame;
-
-
 import rulebender.core.prefuse.LayeredPane;
-import rulebender.core.prefuse.networkviewer.contactmap.CMAPNetworkViewer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
@@ -65,9 +57,9 @@ public class ContactMapView extends ViewPart
 	// This is the parent that we will add our composite to.
 	private Composite parentComposite;
 	
-	//Prateek Adurty
-	private CMAPNetworkViewer passInView = null;
-
+	//
+	private CMAPNetworkViewer networkViewer; 
+	
 	/**
 	 * Do nothing in the constructor.
 	 */
@@ -98,8 +90,6 @@ public class ContactMapView extends ViewPart
 		
 		// Add the layered pane to the frame.
 		frame.add(layeredPane);
-		
-		
 				
 		// Add a listener that updates the views when the 
 		// parent object is resized. 
@@ -162,11 +152,7 @@ public class ContactMapView extends ViewPart
 		
 		// Set the display in the layered pane
 		layeredPane.setDisplay(d);
-		
-		if (passInView != null)
-		{
-			layeredPane.setupButton(passInView);
-		}
+
 		// Redraw the parent.  This is my solution to the contact map
 		// not being updated when the contact map view is not in focus. 
 		// The overview was updated, but not the main panel.  So,
@@ -196,22 +182,10 @@ public class ContactMapView extends ViewPart
 	
 	//Prateek Adurty
 	public void setCMAPNetworkViewer(CMAPNetworkViewer networkViewerInput)
-	{
-		
-		passInView = networkViewerInput;
-		
-		System.out.println("setCMAPNetworkviewer was executed");
-		
-		//set up layered pane with button here 
-		//layeredPane = new LayeredPane(new Dimension(400,600));
-		
-		//System.out.print() 
-		
-		
-		//frame.getComponent(0).setNetworkViewer();
-		
-		//frame.getComponent(0).etNetorkviewer(network)
+	{	
+		System.out.println("View setCMAP is called");
+		networkViewer = networkViewerInput;
+		layeredPane.setCMAPNetworkViewer(networkViewer);
 	}
-
 
 }

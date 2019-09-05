@@ -23,11 +23,24 @@ import rulebender.core.prefuse.overview.Overview;
 
 //Prateek Adurty
 import javax.swing.JButton;
+import prefuse.Visualization;
+import rulebender.contactmap.models.NodePosition;
 import rulebender.core.prefuse.networkviewer.contactmap.CMAPNetworkViewer;
+import rulebender.core.prefuse.networkviewer.contactmap.ContactMapPosition;
+import rulebender.core.prefuse.networkviewer.contactmap.ForceSimulator;
+import rulebender.core.prefuse.networkviewer.contactmap.NodeItem;
+import rulebender.core.prefuse.networkviewer.contactmap.VisualItem;
 import java.awt.event.ActionListener;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.StringTokenizer;
 import java.awt.event.ActionEvent;
+import static org.eclipse.core.runtime.Status.OK_STATUS;
+import static org.eclipse.core.runtime.Status.CANCEL_STATUS;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.jobs.Job;
 
 // trying to center view
 import prefuse.action.layout.Layout;
@@ -59,9 +72,9 @@ public class LayeredPane extends JLayeredPane
 	private JPanel mainJPanel;
 	private JPanel overviewJPanel;
 	
-	//Prateek Adurty
+	//Prateek Adurty Button that reruns FDLM
 	private JPanel buttonJPanel;
-	private JButton b;
+	private JButton button;
 	
 	// The border object that the two JPanels share.
 	private Border border;
@@ -71,7 +84,8 @@ public class LayeredPane extends JLayeredPane
 	private Job fdlmJob;
 	private boolean fdlmRunning = false;
 	private String fname; 
-	private String nPosPath;
+	private String nPosPath = null;
+	private boolean posLoaded = false;
 	
 	/**
 	 * Constructor
@@ -98,15 +112,16 @@ public class LayeredPane extends JLayeredPane
 		mainJPanel.setBorder(border);
 		mainJPanel.setBackground(Color.WHITE);
 		
-		//Prateek Adurty
+		//Instantiate Button for the JPanel and set its border
 		buttonJPanel = new JPanel();
 		buttonJPanel.setBorder(border);
 		buttonJPanel.setBackground(Color.WHITE);
-
+		
+		
 		// Add the JPanels to the JLayeredPane (this object)
 		this.add(mainJPanel, new Integer(0));		
 		this.add(overviewJPanel, new Integer(1));
-
+		
 		//Prateek Adurty
 		this.add(buttonJPanel, new Integer(1));
 		
@@ -119,12 +134,6 @@ public class LayeredPane extends JLayeredPane
 	 * 
 	 * @param display - The prefuse.Display object for the visualization. 
 	 */
-	
-	
-	
-	
-	//Prateek Adurty
-	
 	public void setDisplay(Display display)
 	{
 		
@@ -138,13 +147,13 @@ public class LayeredPane extends JLayeredPane
 		{
 			overviewJPanel.removeAll();
 		}	
-
+		
 		//Prateek Adurty
 		if(buttonJPanel.getComponentCount() > 0)
 		{
 			buttonJPanel.removeAll();
 		}
-
+		
 		// If the passed in display is not null.
 		if(display != null)
 		{
@@ -153,14 +162,7 @@ public class LayeredPane extends JLayeredPane
 						
 	     	// add overview display to panel
 			overviewJPanel.add(new Overview(display));
-			
-			
-			
-			
-			//Prateek Adurty
-			b = new JButton("Run FDLM");
-			buttonJPanel.add(b);
-			
+		}
 		
 		//Prateek Adurty
 		button = new JButton("Run FDLM");
@@ -170,7 +172,6 @@ public class LayeredPane extends JLayeredPane
 		setButtonForFDLM();
 		
 		myResize();
-		}
 	}
 
 	/**
@@ -183,8 +184,6 @@ public class LayeredPane extends JLayeredPane
 		myResize(m_currentSize);
 	}
 	
-	
-
 	/**
 	 * There is a native resize method, but I needed to do more so I created
 	 * this one.
@@ -196,9 +195,8 @@ public class LayeredPane extends JLayeredPane
 	 * 
 	 * @param size
 	 */
-	
-	public void myResize(Dimension size)
-	{
+	public void myResize(Dimension size) 
+	{	
 		m_currentSize = size;
 		
 		int overviewWidth = (int) (m_currentSize.getWidth() * OVERVIEW_WIDTH);
@@ -214,19 +212,18 @@ public class LayeredPane extends JLayeredPane
 			//Prateek Adurty
 			buttonJPanel.setBounds(10, 10, 150, 20);
 
-
 			if(mainJPanel.getComponentCount() == 1 && overviewJPanel.getComponentCount() == 1)
 			{
 				((Display) mainJPanel.getComponent(0)).setSize(new Dimension(m_currentSize.width-BORDER_WIDTH*2, m_currentSize.height-BORDER_WIDTH*2));				
 				((Display) mainJPanel.getComponent(0)).setBounds(BORDER_WIDTH, BORDER_WIDTH, m_currentSize.width-BORDER_WIDTH*2, m_currentSize.height-BORDER_WIDTH*2);
 				((Display) overviewJPanel.getComponent(0)).setBounds(BORDER_WIDTH, BORDER_WIDTH, overviewWidth-BORDER_WIDTH*3, overviewHeight-BORDER_WIDTH*2);
 				((Display) overviewJPanel.getComponent(0)).setSize(new Dimension(overviewWidth-BORDER_WIDTH*3, overviewHeight-BORDER_WIDTH*2));
-				b.setSize(new Dimension(150, 20));
-				b.setBounds(0, 0, 150, 20);
+				
+				//Prateek Adurty
+				button.setBounds(0, 0, 150, 20);
 				
 			}
 		}
-
 	}
 	
 	public void setCMAPNetworkViewer(CMAPNetworkViewer networkViewerInput)
@@ -243,6 +240,11 @@ public class LayeredPane extends JLayeredPane
 		// TODO: Do we need to use asyncExec at all here? I don't see the point
 		// since it is already running in paralell? 
 		
+		// I don't like this weird entangling of a bunch of parts 
+		// but I need the pos file loaded in here and nowhere else. 
+		// TODO: Load positions from pos file and then setup the button
+		// here. 
+		
 		// setting up a job for the concurrency framework of eclipse
 		fdlmJob = new Job("Running FDLM") {
 			@Override
@@ -253,7 +255,7 @@ public class LayeredPane extends JLayeredPane
 					while (fdlmRunning) {
 						// call the run command, it runs layouting for a small step
 						// and then updates the visual
-						networkViewer.visualizationRun(nPosPath);
+						networkViewer.visualizationRun(nPosPath, false);
 						// really fast w/o this sleep, there could be a way better solution
 						// e.g. run the FD engine and visual updating separately like gaming loops
 						// but I don't know how to implement one right now
@@ -279,15 +281,33 @@ public class LayeredPane extends JLayeredPane
 		// now make the button submit the job and cancel when pressed again
 		button.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) {
-				  StringBuilder positionFilePath = new StringBuilder();
-				  fname = networkViewer.getFilepath();
-				  positionFilePath.append(fname.substring(0, fname.length()-5));
-				  positionFilePath.append(".pos");
-				  nPosPath = positionFilePath.toString();
+				  // Find position file location
+				  if (nPosPath == null) { 
+					  StringBuilder positionFilePath = new StringBuilder();
+					  fname = networkViewer.getFilepath();
+					  positionFilePath.append(fname.substring(0, fname.length()-5));
+					  positionFilePath.append(".pos");
+					  nPosPath = positionFilePath.toString();  
+				  }
+				  if (posLoaded == false) {
+					  networkViewer.visualizationRun(nPosPath, true);  
+					  posLoaded = true;
+				  }
 				  // Switch running boolean on and off and then submit the layout 
 				  // job to the eclipse concurrency framework
 				  fdlmRunning = !fdlmRunning;
 				  if (fdlmRunning) {
+
+					  // use it to load positions
+					  /*
+					  ArrayList<NodePosition> positionMap;
+					  try {
+						   positionMap = ContactMapPosition.loadMoleculePositions(nPosPath);
+						   System.out.println("positions loaded from: " + nPosPath);
+					  } catch (Exception e1) {
+						  positionMap = null;
+					  } //try-catch
+					  */
 					  centerView();
 					  // this means we want to be running, set button text
 					  button.setText("Stop FDLM");
@@ -318,7 +338,6 @@ public class LayeredPane extends JLayeredPane
 	}
 	private void centerView() {
 		String nodeGroup = PrefuseLib.getGroupName(networkViewer.getCompGraph(), Graph.NODES);
-		// update positions
 		Iterator<?> iter = networkViewer.getVisualization().items(nodeGroup);
 		double x1 = 0, x2 = 0, y1 = 0, y2 = 0;
 		while (iter.hasNext()) {
@@ -335,7 +354,7 @@ public class LayeredPane extends JLayeredPane
 			if (x < x2) {
 				x2 = x;
 			}
-
+ 
 			// find max y
 			if (y > y1) {
 				y1 = y;
@@ -353,8 +372,8 @@ public class LayeredPane extends JLayeredPane
 		// ASS: We gotta move the window and not the items themselves
 		// because this results in massive jitter and constant moving 
 		// of the items around when clicked on
-		double w = x1-x2 + (x1-x2)*0.2;
-		double h = y1-y2 + (y1-y2)*0.2;
+		double w = x1-x2 + (x1-x2)*1;
+		double h = y1-y2 + (y1-y2)*1;
 
 		Rectangle2D offsetBox = new Rectangle2D.Double(-w/1.8, -h/1.8, w, h);
 		DisplayLib.fitViewToBounds(networkViewer.getVisualization().getDisplay(0), offsetBox, 0);
