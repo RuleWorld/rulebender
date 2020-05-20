@@ -17,6 +17,8 @@ appropriate distribution for their OS. To install RuleBender, unzip the
 RuleBender distribution file, e.g. RuleBender-2.3-lin64.tar.gz, in the
 directory where you would like RuleBender installed. 
 
+Please click [here](https://www.youtube.com/watch?v=MWoY5iaC8W0) to see a step-by-step instruction video on how to install and start building models with RuleBender.
+
 ## Download Latest Builds
 
 These are the latest stable builds
