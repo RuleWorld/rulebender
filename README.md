@@ -23,9 +23,9 @@ Please click [here](https://www.youtube.com/watch?v=MWoY5iaC8W0) to see a step-b
 
 These are the latest stable builds
 
-* [Linux](https://github.com/RuleWorld/rulebender/releases/download/RuleBender-2.3.0/RuleBender-2.3-lin64.tar.gz)
-* [OSX](https://github.com/RuleWorld/rulebender/releases/download/RuleBender-2.3.0/RuleBender-2.3-osx64.tar.gz)
-* [Windows x64](https://github.com/RuleWorld/rulebender/releases/download/RuleBender-2.3.0/RuleBender-2.3-win64.zip)
+* [Linux](https://github.com/RuleWorld/rulebender/releases/download/RuleBender-2.3.2/RuleBender-2.3.2-linux.tgz)
+* [OSX](https://github.com/RuleWorld/rulebender/releases/download/RuleBender-2.3.2/RuleBender-2.3.2-mac.tgz)
+* [Windows x64](https://github.com/RuleWorld/rulebender/releases/download/RuleBender-2.3.2/RuleBender-2.3.2-win.zip)
 
 ## Compilation from Source
 
