@@ -15,7 +15,9 @@ are instructions for installing RuleBender.
 Most users should head over to the [latest RuleBender release](https://github.com/RuleWorld/rulebender/releases/latest) 
 and download the appropriate distribution for their OS. To install RuleBender, unzip the
 RuleBender distribution file, e.g. RuleBender-2.3-lin64.tar.gz, in the
-directory where you would like RuleBender installed. 
+directory where you would like RuleBender installed. BioNetGen and RuleBender requires Perl 
+which should be installed by default on MacOS and most Linux flavors, Windows users will need to install a 
+Perl distribution (a good one is [Strawberry Perl](http://strawberryperl.com/)).
 
 Please click [here](https://www.youtube.com/watch?v=MWoY5iaC8W0) to see a step-by-step instruction video on how to install and start building models with RuleBender.
 
