@@ -12,6 +12,8 @@ are instructions for installing RuleBender.
 
 # Installation Instructions #
 
+You can find a step-by-step installation guide [here](https://github.com/RuleWorld/rulebender/blob/master/docs/RuleBender-installation-guide.pdf)
+
 Most users should head over to the [latest RuleBender release](https://github.com/RuleWorld/rulebender/releases/latest) 
 and download the appropriate distribution for their OS. To install RuleBender, unzip the
 RuleBender distribution file, e.g. RuleBender-2.3-lin64.tar.gz, in the
